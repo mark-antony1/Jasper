@@ -1,0 +1,96 @@
+type Query {
+  menuItem(menuItemId: ID!): MenuItem
+  menuItemsByUser(userId: ID!): [MenuItem!]!
+	locationsByUser(userId: ID!): [Location!]!
+	ordersByLocationAndStatus(locationId: ID!, status: MealStatus!): [Order]!
+	transactionsByDate(locationId: ID!, first: Int, orderBy: TransactionOrderByInput): [Transaction]!
+}
+
+type Mutation {
+  createUser(name: String!, email: String!, password: String!): User
+	createMenuItem(title: String!, userId: ID!, price: USCurrency!, pictureURL: URL!): MenuItem
+  createTransaction(locationId: ID!, menuItemId: ID!): Transaction
+	createOrder(locationId: ID!, menuItemId: ID!): Order
+	createLocation(address: String!, phoneNumber: PhoneNumber!, email: EmailAddress!, userID: ID!): Location
+  updateUserPassword(userId: ID!, hash: String!): User
+	updateUserEmail(userId: ID!, email: EmailAddress!): User
+	updateUserName(userId: ID!, name: String!): User
+	updateMenuItemTitle(menuItemId: ID!, title: String!): MenuItem
+	updateMenuItemPictureURL(menuItemId: ID!, url: URL!): MenuItem
+	updateMenuItemPrice(menuItemId: ID!, price: USCurrency!): MenuItem
+	updateOrderStatus(orderId: ID!, status: MealStatus!): Order
+	updateLocationAddress(locationId: ID!, address: String!): Location
+	updateLocationEmail(locationId: ID!, email: EmailAddress!): Location
+	updateLocationPhoneNumber(locationId: ID!, phoneNumber: PhoneNumber!): Location
+	deleteUser(userId: ID!): Boolean
+	deleteOrder(orderId: ID!): Boolean
+	deleteLocation(locationId: ID!): Boolean
+	deleteMenuItem(menuItemId: ID!): Boolean
+}
+
+type User {
+  id: ID!
+  email: EmailAddress! 
+	password: String!
+	name: String!
+  menuItems: [MenuItem]!
+	locations: [Location]!
+	createdAt: DateTime!
+}
+
+type MenuItem {
+  id: ID!
+  title: String!
+  price: USCurrency!
+	pictureURL: URL!
+  author: User!
+	createdAt: DateTime!
+}
+
+
+type Location {
+	id: ID!
+	address: String!
+	phoneNumber: PhoneNumber
+	email: EmailAddress
+	owner: User!
+	createdAt: DateTime!
+}
+
+type Order {
+	id: ID!
+	menuItem: MenuItem!
+	location: Location!
+	status: MealStatus!
+	createdAt: DateTime!
+}
+
+type Transaction {
+	id: ID!
+	location: Location!
+	menuItem: MenuItem!
+	createdAt: DateTime!
+}
+
+enum MealStatus {
+  ORDERED
+  INPREPERATION
+  DONE
+	CANCELLED
+}
+
+enum TransactionOrderByInput {
+  createdAt_ASC
+  createdAt_DESC
+}
+
+scalar DateTime
+
+scalar EmailAddress
+
+scalar PhoneNumber
+
+scalar URL
+
+scalar USCurrency
+

@@ -1,0 +1,56 @@
+type User {
+  id: ID! @id
+  email: String @unique
+  password: String!
+  name: String!
+  menuItems: [MenuItem]!
+  locations: [Location]!
+	createdAt: DateTime! @createdAt
+  deletedAt: DateTime
+}
+
+type MenuItem {
+  id: ID! @id
+  title: String!
+  price: Float!
+  pictureURL: String!
+  author: User @relation(link: INLINE)
+  createdAt: DateTime! @createdAt
+  deletedAt: DateTime
+}
+
+type Location {
+	id: ID! @id
+	address: String!
+	phoneNumber: String!
+	email: String!
+	owner: User! @relation(link: INLINE)
+  transactions: [Transaction]!
+  orders: [Order]!
+  createdAt: DateTime! @createdAt
+  deletedAt: DateTime
+}
+
+type Order {
+	id: ID! @id
+	menuItem: MenuItem! @relation(link: INLINE)
+	location: Location! @relation(link: INLINE)
+	status: MealStatus!
+	createdAt: DateTime! @createdAt
+  deletedAt: DateTime
+}
+
+type Transaction {
+	id: ID! @id
+	location: Location! @relation(link: INLINE)
+	menuItem: MenuItem! @relation(link: INLINE)
+	createdAt: DateTime! @createdAt
+  deletedAt: DateTime
+}
+
+enum MealStatus {
+  ORDERED
+  PREPARING
+  DONE
+	CANCELLED
+}
