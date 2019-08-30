@@ -3,8 +3,8 @@ type User {
   email: String @unique
   password: String!
   name: String!
-  menuItems: [MenuItem]!
-  locations: [Location]!
+  menuItems: [MenuItem]! @relation(onDelete: CASCADE)
+  locations: [Location]! @relation(onDelete: CASCADE)
 	createdAt: DateTime! @createdAt
   deletedAt: DateTime
 }
@@ -14,7 +14,9 @@ type MenuItem {
   title: String!
   price: Float!
   pictureURL: String!
-  author: User @relation(link: INLINE)
+  author: User @relation(link: INLINE onDelete: SET_NULL)
+  orders: [Order]! @relation(onDelete: CASCADE)
+  transactions: [Transaction]! @relation(onDelete: CASCADE)
   createdAt: DateTime! @createdAt
   deletedAt: DateTime
 }
@@ -24,17 +26,17 @@ type Location {
 	address: String!
 	phoneNumber: String!
 	email: String!
-	owner: User! @relation(link: INLINE)
-  transactions: [Transaction]!
-  orders: [Order]!
+	owner: User! @relation(link: INLINE onDelete: SET_NULL)
+  transactions: [Transaction]! @relation(onDelete: CASCADE)
+  orders: [Order]! @relation(onDelete: CASCADE)
   createdAt: DateTime! @createdAt
   deletedAt: DateTime
 }
 
 type Order {
 	id: ID! @id
-	menuItem: MenuItem! @relation(link: INLINE)
-	location: Location! @relation(link: INLINE)
+	menuItem: MenuItem! @relation(link: INLINE onDelete: SET_NULL)
+	location: Location! @relation(link: INLINE onDelete: SET_NULL)
 	status: MealStatus!
 	createdAt: DateTime! @createdAt
   deletedAt: DateTime
@@ -42,8 +44,8 @@ type Order {
 
 type Transaction {
 	id: ID! @id
-	location: Location! @relation(link: INLINE)
-	menuItem: MenuItem! @relation(link: INLINE)
+	location: Location! @relation(link: INLINE onDelete: SET_NULL)
+	menuItem: MenuItem! @relation(link: INLINE onDelete: SET_NULL)
 	createdAt: DateTime! @createdAt
   deletedAt: DateTime
 }

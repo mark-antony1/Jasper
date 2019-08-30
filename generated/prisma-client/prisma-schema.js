@@ -435,6 +435,8 @@ type MenuItem {
   price: Float!
   pictureURL: String!
   author: User
+  orders(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Order!]
+  transactions(where: TransactionWhereInput, orderBy: TransactionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Transaction!]
   createdAt: DateTime!
   deletedAt: DateTime
 }
@@ -451,6 +453,8 @@ input MenuItemCreateInput {
   price: Float!
   pictureURL: String!
   author: UserCreateOneWithoutMenuItemsInput
+  orders: OrderCreateManyWithoutMenuItemInput
+  transactions: TransactionCreateManyWithoutMenuItemInput
   deletedAt: DateTime
 }
 
@@ -459,8 +463,13 @@ input MenuItemCreateManyWithoutAuthorInput {
   connect: [MenuItemWhereUniqueInput!]
 }
 
-input MenuItemCreateOneInput {
-  create: MenuItemCreateInput
+input MenuItemCreateOneWithoutOrdersInput {
+  create: MenuItemCreateWithoutOrdersInput
+  connect: MenuItemWhereUniqueInput
+}
+
+input MenuItemCreateOneWithoutTransactionsInput {
+  create: MenuItemCreateWithoutTransactionsInput
   connect: MenuItemWhereUniqueInput
 }
 
@@ -469,6 +478,28 @@ input MenuItemCreateWithoutAuthorInput {
   title: String!
   price: Float!
   pictureURL: String!
+  orders: OrderCreateManyWithoutMenuItemInput
+  transactions: TransactionCreateManyWithoutMenuItemInput
+  deletedAt: DateTime
+}
+
+input MenuItemCreateWithoutOrdersInput {
+  id: ID
+  title: String!
+  price: Float!
+  pictureURL: String!
+  author: UserCreateOneWithoutMenuItemsInput
+  transactions: TransactionCreateManyWithoutMenuItemInput
+  deletedAt: DateTime
+}
+
+input MenuItemCreateWithoutTransactionsInput {
+  id: ID
+  title: String!
+  price: Float!
+  pictureURL: String!
+  author: UserCreateOneWithoutMenuItemsInput
+  orders: OrderCreateManyWithoutMenuItemInput
   deletedAt: DateTime
 }
 
@@ -591,19 +622,13 @@ input MenuItemSubscriptionWhereInput {
   NOT: [MenuItemSubscriptionWhereInput!]
 }
 
-input MenuItemUpdateDataInput {
-  title: String
-  price: Float
-  pictureURL: String
-  author: UserUpdateOneWithoutMenuItemsInput
-  deletedAt: DateTime
-}
-
 input MenuItemUpdateInput {
   title: String
   price: Float
   pictureURL: String
   author: UserUpdateOneWithoutMenuItemsInput
+  orders: OrderUpdateManyWithoutMenuItemInput
+  transactions: TransactionUpdateManyWithoutMenuItemInput
   deletedAt: DateTime
 }
 
@@ -638,10 +663,17 @@ input MenuItemUpdateManyWithWhereNestedInput {
   data: MenuItemUpdateManyDataInput!
 }
 
-input MenuItemUpdateOneRequiredInput {
-  create: MenuItemCreateInput
-  update: MenuItemUpdateDataInput
-  upsert: MenuItemUpsertNestedInput
+input MenuItemUpdateOneRequiredWithoutOrdersInput {
+  create: MenuItemCreateWithoutOrdersInput
+  update: MenuItemUpdateWithoutOrdersDataInput
+  upsert: MenuItemUpsertWithoutOrdersInput
+  connect: MenuItemWhereUniqueInput
+}
+
+input MenuItemUpdateOneRequiredWithoutTransactionsInput {
+  create: MenuItemCreateWithoutTransactionsInput
+  update: MenuItemUpdateWithoutTransactionsDataInput
+  upsert: MenuItemUpsertWithoutTransactionsInput
   connect: MenuItemWhereUniqueInput
 }
 
@@ -649,6 +681,26 @@ input MenuItemUpdateWithoutAuthorDataInput {
   title: String
   price: Float
   pictureURL: String
+  orders: OrderUpdateManyWithoutMenuItemInput
+  transactions: TransactionUpdateManyWithoutMenuItemInput
+  deletedAt: DateTime
+}
+
+input MenuItemUpdateWithoutOrdersDataInput {
+  title: String
+  price: Float
+  pictureURL: String
+  author: UserUpdateOneWithoutMenuItemsInput
+  transactions: TransactionUpdateManyWithoutMenuItemInput
+  deletedAt: DateTime
+}
+
+input MenuItemUpdateWithoutTransactionsDataInput {
+  title: String
+  price: Float
+  pictureURL: String
+  author: UserUpdateOneWithoutMenuItemsInput
+  orders: OrderUpdateManyWithoutMenuItemInput
   deletedAt: DateTime
 }
 
@@ -657,9 +709,14 @@ input MenuItemUpdateWithWhereUniqueWithoutAuthorInput {
   data: MenuItemUpdateWithoutAuthorDataInput!
 }
 
-input MenuItemUpsertNestedInput {
-  update: MenuItemUpdateDataInput!
-  create: MenuItemCreateInput!
+input MenuItemUpsertWithoutOrdersInput {
+  update: MenuItemUpdateWithoutOrdersDataInput!
+  create: MenuItemCreateWithoutOrdersInput!
+}
+
+input MenuItemUpsertWithoutTransactionsInput {
+  update: MenuItemUpdateWithoutTransactionsDataInput!
+  create: MenuItemCreateWithoutTransactionsInput!
 }
 
 input MenuItemUpsertWithWhereUniqueWithoutAuthorInput {
@@ -720,6 +777,12 @@ input MenuItemWhereInput {
   pictureURL_ends_with: String
   pictureURL_not_ends_with: String
   author: UserWhereInput
+  orders_every: OrderWhereInput
+  orders_some: OrderWhereInput
+  orders_none: OrderWhereInput
+  transactions_every: TransactionWhereInput
+  transactions_some: TransactionWhereInput
+  transactions_none: TransactionWhereInput
   createdAt: DateTime
   createdAt_not: DateTime
   createdAt_in: [DateTime!]
@@ -805,7 +868,7 @@ type OrderConnection {
 
 input OrderCreateInput {
   id: ID
-  menuItem: MenuItemCreateOneInput!
+  menuItem: MenuItemCreateOneWithoutOrdersInput!
   location: LocationCreateOneWithoutOrdersInput!
   status: MealStatus!
   deletedAt: DateTime
@@ -816,9 +879,21 @@ input OrderCreateManyWithoutLocationInput {
   connect: [OrderWhereUniqueInput!]
 }
 
+input OrderCreateManyWithoutMenuItemInput {
+  create: [OrderCreateWithoutMenuItemInput!]
+  connect: [OrderWhereUniqueInput!]
+}
+
 input OrderCreateWithoutLocationInput {
   id: ID
-  menuItem: MenuItemCreateOneInput!
+  menuItem: MenuItemCreateOneWithoutOrdersInput!
+  status: MealStatus!
+  deletedAt: DateTime
+}
+
+input OrderCreateWithoutMenuItemInput {
+  id: ID
+  location: LocationCreateOneWithoutOrdersInput!
   status: MealStatus!
   deletedAt: DateTime
 }
@@ -905,7 +980,7 @@ input OrderSubscriptionWhereInput {
 }
 
 input OrderUpdateInput {
-  menuItem: MenuItemUpdateOneRequiredInput
+  menuItem: MenuItemUpdateOneRequiredWithoutOrdersInput
   location: LocationUpdateOneRequiredWithoutOrdersInput
   status: MealStatus
   deletedAt: DateTime
@@ -933,13 +1008,31 @@ input OrderUpdateManyWithoutLocationInput {
   updateMany: [OrderUpdateManyWithWhereNestedInput!]
 }
 
+input OrderUpdateManyWithoutMenuItemInput {
+  create: [OrderCreateWithoutMenuItemInput!]
+  delete: [OrderWhereUniqueInput!]
+  connect: [OrderWhereUniqueInput!]
+  set: [OrderWhereUniqueInput!]
+  disconnect: [OrderWhereUniqueInput!]
+  update: [OrderUpdateWithWhereUniqueWithoutMenuItemInput!]
+  upsert: [OrderUpsertWithWhereUniqueWithoutMenuItemInput!]
+  deleteMany: [OrderScalarWhereInput!]
+  updateMany: [OrderUpdateManyWithWhereNestedInput!]
+}
+
 input OrderUpdateManyWithWhereNestedInput {
   where: OrderScalarWhereInput!
   data: OrderUpdateManyDataInput!
 }
 
 input OrderUpdateWithoutLocationDataInput {
-  menuItem: MenuItemUpdateOneRequiredInput
+  menuItem: MenuItemUpdateOneRequiredWithoutOrdersInput
+  status: MealStatus
+  deletedAt: DateTime
+}
+
+input OrderUpdateWithoutMenuItemDataInput {
+  location: LocationUpdateOneRequiredWithoutOrdersInput
   status: MealStatus
   deletedAt: DateTime
 }
@@ -949,10 +1042,21 @@ input OrderUpdateWithWhereUniqueWithoutLocationInput {
   data: OrderUpdateWithoutLocationDataInput!
 }
 
+input OrderUpdateWithWhereUniqueWithoutMenuItemInput {
+  where: OrderWhereUniqueInput!
+  data: OrderUpdateWithoutMenuItemDataInput!
+}
+
 input OrderUpsertWithWhereUniqueWithoutLocationInput {
   where: OrderWhereUniqueInput!
   update: OrderUpdateWithoutLocationDataInput!
   create: OrderCreateWithoutLocationInput!
+}
+
+input OrderUpsertWithWhereUniqueWithoutMenuItemInput {
+  where: OrderWhereUniqueInput!
+  update: OrderUpdateWithoutMenuItemDataInput!
+  create: OrderCreateWithoutMenuItemInput!
 }
 
 input OrderWhereInput {
@@ -1052,7 +1156,7 @@ type TransactionConnection {
 input TransactionCreateInput {
   id: ID
   location: LocationCreateOneWithoutTransactionsInput!
-  menuItem: MenuItemCreateOneInput!
+  menuItem: MenuItemCreateOneWithoutTransactionsInput!
   deletedAt: DateTime
 }
 
@@ -1061,9 +1165,20 @@ input TransactionCreateManyWithoutLocationInput {
   connect: [TransactionWhereUniqueInput!]
 }
 
+input TransactionCreateManyWithoutMenuItemInput {
+  create: [TransactionCreateWithoutMenuItemInput!]
+  connect: [TransactionWhereUniqueInput!]
+}
+
 input TransactionCreateWithoutLocationInput {
   id: ID
-  menuItem: MenuItemCreateOneInput!
+  menuItem: MenuItemCreateOneWithoutTransactionsInput!
+  deletedAt: DateTime
+}
+
+input TransactionCreateWithoutMenuItemInput {
+  id: ID
+  location: LocationCreateOneWithoutTransactionsInput!
   deletedAt: DateTime
 }
 
@@ -1143,7 +1258,7 @@ input TransactionSubscriptionWhereInput {
 
 input TransactionUpdateInput {
   location: LocationUpdateOneRequiredWithoutTransactionsInput
-  menuItem: MenuItemUpdateOneRequiredInput
+  menuItem: MenuItemUpdateOneRequiredWithoutTransactionsInput
   deletedAt: DateTime
 }
 
@@ -1167,13 +1282,30 @@ input TransactionUpdateManyWithoutLocationInput {
   updateMany: [TransactionUpdateManyWithWhereNestedInput!]
 }
 
+input TransactionUpdateManyWithoutMenuItemInput {
+  create: [TransactionCreateWithoutMenuItemInput!]
+  delete: [TransactionWhereUniqueInput!]
+  connect: [TransactionWhereUniqueInput!]
+  set: [TransactionWhereUniqueInput!]
+  disconnect: [TransactionWhereUniqueInput!]
+  update: [TransactionUpdateWithWhereUniqueWithoutMenuItemInput!]
+  upsert: [TransactionUpsertWithWhereUniqueWithoutMenuItemInput!]
+  deleteMany: [TransactionScalarWhereInput!]
+  updateMany: [TransactionUpdateManyWithWhereNestedInput!]
+}
+
 input TransactionUpdateManyWithWhereNestedInput {
   where: TransactionScalarWhereInput!
   data: TransactionUpdateManyDataInput!
 }
 
 input TransactionUpdateWithoutLocationDataInput {
-  menuItem: MenuItemUpdateOneRequiredInput
+  menuItem: MenuItemUpdateOneRequiredWithoutTransactionsInput
+  deletedAt: DateTime
+}
+
+input TransactionUpdateWithoutMenuItemDataInput {
+  location: LocationUpdateOneRequiredWithoutTransactionsInput
   deletedAt: DateTime
 }
 
@@ -1182,10 +1314,21 @@ input TransactionUpdateWithWhereUniqueWithoutLocationInput {
   data: TransactionUpdateWithoutLocationDataInput!
 }
 
+input TransactionUpdateWithWhereUniqueWithoutMenuItemInput {
+  where: TransactionWhereUniqueInput!
+  data: TransactionUpdateWithoutMenuItemDataInput!
+}
+
 input TransactionUpsertWithWhereUniqueWithoutLocationInput {
   where: TransactionWhereUniqueInput!
   update: TransactionUpdateWithoutLocationDataInput!
   create: TransactionCreateWithoutLocationInput!
+}
+
+input TransactionUpsertWithWhereUniqueWithoutMenuItemInput {
+  where: TransactionWhereUniqueInput!
+  update: TransactionUpdateWithoutMenuItemDataInput!
+  create: TransactionCreateWithoutMenuItemInput!
 }
 
 input TransactionWhereInput {

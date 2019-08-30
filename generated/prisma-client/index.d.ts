@@ -277,15 +277,11 @@ export type MenuItemOrderByInput =
   | "deletedAt_ASC"
   | "deletedAt_DESC";
 
-export type LocationOrderByInput =
+export type OrderOrderByInput =
   | "id_ASC"
   | "id_DESC"
-  | "address_ASC"
-  | "address_DESC"
-  | "phoneNumber_ASC"
-  | "phoneNumber_DESC"
-  | "email_ASC"
-  | "email_DESC"
+  | "status_ASC"
+  | "status_DESC"
   | "createdAt_ASC"
   | "createdAt_DESC"
   | "deletedAt_ASC"
@@ -299,11 +295,15 @@ export type TransactionOrderByInput =
   | "deletedAt_ASC"
   | "deletedAt_DESC";
 
-export type OrderOrderByInput =
+export type LocationOrderByInput =
   | "id_ASC"
   | "id_DESC"
-  | "status_ASC"
-  | "status_DESC"
+  | "address_ASC"
+  | "address_DESC"
+  | "phoneNumber_ASC"
+  | "phoneNumber_DESC"
+  | "email_ASC"
+  | "email_DESC"
   | "createdAt_ASC"
   | "createdAt_DESC"
   | "deletedAt_ASC"
@@ -325,10 +325,9 @@ export type UserOrderByInput =
 
 export type MutationType = "CREATED" | "UPDATED" | "DELETED";
 
-export interface MenuItemUpdateManyDataInput {
-  title?: Maybe<String>;
-  price?: Maybe<Float>;
-  pictureURL?: Maybe<String>;
+export interface OrderUpdateWithoutMenuItemDataInput {
+  location?: Maybe<LocationUpdateOneRequiredWithoutOrdersInput>;
+  status?: Maybe<MealStatus>;
   deletedAt?: Maybe<DateTimeInput>;
 }
 
@@ -336,11 +335,9 @@ export type LocationWhereUniqueInput = AtLeastOne<{
   id: Maybe<ID_Input>;
 }>;
 
-export interface MenuItemUpdateOneRequiredInput {
-  create?: Maybe<MenuItemCreateInput>;
-  update?: Maybe<MenuItemUpdateDataInput>;
-  upsert?: Maybe<MenuItemUpsertNestedInput>;
-  connect?: Maybe<MenuItemWhereUniqueInput>;
+export interface TransactionUpdateWithoutLocationDataInput {
+  menuItem?: Maybe<MenuItemUpdateOneRequiredWithoutTransactionsInput>;
+  deletedAt?: Maybe<DateTimeInput>;
 }
 
 export interface TransactionWhereInput {
@@ -381,12 +378,11 @@ export interface TransactionWhereInput {
   NOT?: Maybe<TransactionWhereInput[] | TransactionWhereInput>;
 }
 
-export interface MenuItemUpdateDataInput {
-  title?: Maybe<String>;
-  price?: Maybe<Float>;
-  pictureURL?: Maybe<String>;
-  author?: Maybe<UserUpdateOneWithoutMenuItemsInput>;
-  deletedAt?: Maybe<DateTimeInput>;
+export interface MenuItemUpdateOneRequiredWithoutTransactionsInput {
+  create?: Maybe<MenuItemCreateWithoutTransactionsInput>;
+  update?: Maybe<MenuItemUpdateWithoutTransactionsDataInput>;
+  upsert?: Maybe<MenuItemUpsertWithoutTransactionsInput>;
+  connect?: Maybe<MenuItemWhereUniqueInput>;
 }
 
 export interface OrderWhereInput {
@@ -431,13 +427,13 @@ export interface OrderWhereInput {
   NOT?: Maybe<OrderWhereInput[] | OrderWhereInput>;
 }
 
-export interface UserUpdateOneWithoutMenuItemsInput {
-  create?: Maybe<UserCreateWithoutMenuItemsInput>;
-  update?: Maybe<UserUpdateWithoutMenuItemsDataInput>;
-  upsert?: Maybe<UserUpsertWithoutMenuItemsInput>;
-  delete?: Maybe<Boolean>;
-  disconnect?: Maybe<Boolean>;
-  connect?: Maybe<UserWhereUniqueInput>;
+export interface MenuItemUpdateWithoutTransactionsDataInput {
+  title?: Maybe<String>;
+  price?: Maybe<Float>;
+  pictureURL?: Maybe<String>;
+  author?: Maybe<UserUpdateOneWithoutMenuItemsInput>;
+  orders?: Maybe<OrderUpdateManyWithoutMenuItemInput>;
+  deletedAt?: Maybe<DateTimeInput>;
 }
 
 export interface UserWhereInput {
@@ -524,34 +520,119 @@ export interface UserWhereInput {
   NOT?: Maybe<UserWhereInput[] | UserWhereInput>;
 }
 
-export interface OrderCreateManyWithoutLocationInput {
-  create?: Maybe<
-    OrderCreateWithoutLocationInput[] | OrderCreateWithoutLocationInput
-  >;
-  connect?: Maybe<OrderWhereUniqueInput[] | OrderWhereUniqueInput>;
-}
-
-export interface MenuItemUpdateInput {
-  title?: Maybe<String>;
-  price?: Maybe<Float>;
-  pictureURL?: Maybe<String>;
-  author?: Maybe<UserUpdateOneWithoutMenuItemsInput>;
-  deletedAt?: Maybe<DateTimeInput>;
-}
-
-export interface OrderCreateWithoutLocationInput {
+export interface TransactionCreateWithoutMenuItemInput {
   id?: Maybe<ID_Input>;
-  menuItem: MenuItemCreateOneInput;
-  status: MealStatus;
+  location: LocationCreateOneWithoutTransactionsInput;
   deletedAt?: Maybe<DateTimeInput>;
 }
 
-export interface UserUpdateWithoutMenuItemsDataInput {
-  email?: Maybe<String>;
-  password?: Maybe<String>;
-  name?: Maybe<String>;
-  locations?: Maybe<LocationUpdateManyWithoutOwnerInput>;
+export interface TransactionUpsertWithWhereUniqueWithoutLocationInput {
+  where: TransactionWhereUniqueInput;
+  update: TransactionUpdateWithoutLocationDataInput;
+  create: TransactionCreateWithoutLocationInput;
+}
+
+export interface LocationCreateOneWithoutTransactionsInput {
+  create?: Maybe<LocationCreateWithoutTransactionsInput>;
+  connect?: Maybe<LocationWhereUniqueInput>;
+}
+
+export interface UserUpdateOneWithoutMenuItemsInput {
+  create?: Maybe<UserCreateWithoutMenuItemsInput>;
+  update?: Maybe<UserUpdateWithoutMenuItemsDataInput>;
+  upsert?: Maybe<UserUpsertWithoutMenuItemsInput>;
+  delete?: Maybe<Boolean>;
+  disconnect?: Maybe<Boolean>;
+  connect?: Maybe<UserWhereUniqueInput>;
+}
+
+export interface LocationCreateWithoutTransactionsInput {
+  id?: Maybe<ID_Input>;
+  address: String;
+  phoneNumber: String;
+  email: String;
+  owner: UserCreateOneWithoutLocationsInput;
+  orders?: Maybe<OrderCreateManyWithoutLocationInput>;
   deletedAt?: Maybe<DateTimeInput>;
+}
+
+export interface MenuItemWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  title?: Maybe<String>;
+  title_not?: Maybe<String>;
+  title_in?: Maybe<String[] | String>;
+  title_not_in?: Maybe<String[] | String>;
+  title_lt?: Maybe<String>;
+  title_lte?: Maybe<String>;
+  title_gt?: Maybe<String>;
+  title_gte?: Maybe<String>;
+  title_contains?: Maybe<String>;
+  title_not_contains?: Maybe<String>;
+  title_starts_with?: Maybe<String>;
+  title_not_starts_with?: Maybe<String>;
+  title_ends_with?: Maybe<String>;
+  title_not_ends_with?: Maybe<String>;
+  price?: Maybe<Float>;
+  price_not?: Maybe<Float>;
+  price_in?: Maybe<Float[] | Float>;
+  price_not_in?: Maybe<Float[] | Float>;
+  price_lt?: Maybe<Float>;
+  price_lte?: Maybe<Float>;
+  price_gt?: Maybe<Float>;
+  price_gte?: Maybe<Float>;
+  pictureURL?: Maybe<String>;
+  pictureURL_not?: Maybe<String>;
+  pictureURL_in?: Maybe<String[] | String>;
+  pictureURL_not_in?: Maybe<String[] | String>;
+  pictureURL_lt?: Maybe<String>;
+  pictureURL_lte?: Maybe<String>;
+  pictureURL_gt?: Maybe<String>;
+  pictureURL_gte?: Maybe<String>;
+  pictureURL_contains?: Maybe<String>;
+  pictureURL_not_contains?: Maybe<String>;
+  pictureURL_starts_with?: Maybe<String>;
+  pictureURL_not_starts_with?: Maybe<String>;
+  pictureURL_ends_with?: Maybe<String>;
+  pictureURL_not_ends_with?: Maybe<String>;
+  author?: Maybe<UserWhereInput>;
+  orders_every?: Maybe<OrderWhereInput>;
+  orders_some?: Maybe<OrderWhereInput>;
+  orders_none?: Maybe<OrderWhereInput>;
+  transactions_every?: Maybe<TransactionWhereInput>;
+  transactions_some?: Maybe<TransactionWhereInput>;
+  transactions_none?: Maybe<TransactionWhereInput>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
+  deletedAt?: Maybe<DateTimeInput>;
+  deletedAt_not?: Maybe<DateTimeInput>;
+  deletedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  deletedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  deletedAt_lt?: Maybe<DateTimeInput>;
+  deletedAt_lte?: Maybe<DateTimeInput>;
+  deletedAt_gt?: Maybe<DateTimeInput>;
+  deletedAt_gte?: Maybe<DateTimeInput>;
+  AND?: Maybe<MenuItemWhereInput[] | MenuItemWhereInput>;
+  OR?: Maybe<MenuItemWhereInput[] | MenuItemWhereInput>;
+  NOT?: Maybe<MenuItemWhereInput[] | MenuItemWhereInput>;
 }
 
 export interface LocationUpdateInput {
@@ -562,24 +643,6 @@ export interface LocationUpdateInput {
   transactions?: Maybe<TransactionUpdateManyWithoutLocationInput>;
   orders?: Maybe<OrderUpdateManyWithoutLocationInput>;
   deletedAt?: Maybe<DateTimeInput>;
-}
-
-export interface UserSubscriptionWhereInput {
-  mutation_in?: Maybe<MutationType[] | MutationType>;
-  updatedFields_contains?: Maybe<String>;
-  updatedFields_contains_every?: Maybe<String[] | String>;
-  updatedFields_contains_some?: Maybe<String[] | String>;
-  node?: Maybe<UserWhereInput>;
-  AND?: Maybe<UserSubscriptionWhereInput[] | UserSubscriptionWhereInput>;
-  OR?: Maybe<UserSubscriptionWhereInput[] | UserSubscriptionWhereInput>;
-  NOT?: Maybe<UserSubscriptionWhereInput[] | UserSubscriptionWhereInput>;
-}
-
-export interface UserUpdateOneRequiredWithoutLocationsInput {
-  create?: Maybe<UserCreateWithoutLocationsInput>;
-  update?: Maybe<UserUpdateWithoutLocationsDataInput>;
-  upsert?: Maybe<UserUpsertWithoutLocationsInput>;
-  connect?: Maybe<UserWhereUniqueInput>;
 }
 
 export interface OrderSubscriptionWhereInput {
@@ -593,12 +656,11 @@ export interface OrderSubscriptionWhereInput {
   NOT?: Maybe<OrderSubscriptionWhereInput[] | OrderSubscriptionWhereInput>;
 }
 
-export interface UserUpdateWithoutLocationsDataInput {
-  email?: Maybe<String>;
-  password?: Maybe<String>;
-  name?: Maybe<String>;
-  menuItems?: Maybe<MenuItemUpdateManyWithoutAuthorInput>;
-  deletedAt?: Maybe<DateTimeInput>;
+export interface UserUpdateOneRequiredWithoutLocationsInput {
+  create?: Maybe<UserCreateWithoutLocationsInput>;
+  update?: Maybe<UserUpdateWithoutLocationsDataInput>;
+  upsert?: Maybe<UserUpsertWithoutLocationsInput>;
+  connect?: Maybe<UserWhereUniqueInput>;
 }
 
 export interface LocationSubscriptionWhereInput {
@@ -614,6 +676,23 @@ export interface LocationSubscriptionWhereInput {
   NOT?: Maybe<
     LocationSubscriptionWhereInput[] | LocationSubscriptionWhereInput
   >;
+}
+
+export interface UserUpdateWithoutLocationsDataInput {
+  email?: Maybe<String>;
+  password?: Maybe<String>;
+  name?: Maybe<String>;
+  menuItems?: Maybe<MenuItemUpdateManyWithoutAuthorInput>;
+  deletedAt?: Maybe<DateTimeInput>;
+}
+
+export interface UserUpdateInput {
+  email?: Maybe<String>;
+  password?: Maybe<String>;
+  name?: Maybe<String>;
+  menuItems?: Maybe<MenuItemUpdateManyWithoutAuthorInput>;
+  locations?: Maybe<LocationUpdateManyWithoutOwnerInput>;
+  deletedAt?: Maybe<DateTimeInput>;
 }
 
 export interface MenuItemUpdateManyWithoutAuthorInput {
@@ -639,43 +718,69 @@ export interface MenuItemUpdateManyWithoutAuthorInput {
   >;
 }
 
-export interface UserUpdateInput {
-  email?: Maybe<String>;
-  password?: Maybe<String>;
-  name?: Maybe<String>;
-  menuItems?: Maybe<MenuItemUpdateManyWithoutAuthorInput>;
-  locations?: Maybe<LocationUpdateManyWithoutOwnerInput>;
-  deletedAt?: Maybe<DateTimeInput>;
-}
+export type MenuItemWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+}>;
 
 export interface MenuItemUpdateWithWhereUniqueWithoutAuthorInput {
   where: MenuItemWhereUniqueInput;
   data: MenuItemUpdateWithoutAuthorDataInput;
 }
 
-export type MenuItemWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-}>;
+export interface TransactionUpdateInput {
+  location?: Maybe<LocationUpdateOneRequiredWithoutTransactionsInput>;
+  menuItem?: Maybe<MenuItemUpdateOneRequiredWithoutTransactionsInput>;
+  deletedAt?: Maybe<DateTimeInput>;
+}
 
 export interface MenuItemUpdateWithoutAuthorDataInput {
   title?: Maybe<String>;
   price?: Maybe<Float>;
   pictureURL?: Maybe<String>;
+  orders?: Maybe<OrderUpdateManyWithoutMenuItemInput>;
+  transactions?: Maybe<TransactionUpdateManyWithoutMenuItemInput>;
   deletedAt?: Maybe<DateTimeInput>;
 }
 
-export interface LocationUpsertWithoutTransactionsInput {
-  update: LocationUpdateWithoutTransactionsDataInput;
-  create: LocationCreateWithoutTransactionsInput;
-}
-
-export interface MenuItemUpsertWithWhereUniqueWithoutAuthorInput {
-  where: MenuItemWhereUniqueInput;
-  update: MenuItemUpdateWithoutAuthorDataInput;
-  create: MenuItemCreateWithoutAuthorInput;
-}
-
 export type OrderWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+}>;
+
+export interface OrderUpdateManyWithoutMenuItemInput {
+  create?: Maybe<
+    OrderCreateWithoutMenuItemInput[] | OrderCreateWithoutMenuItemInput
+  >;
+  delete?: Maybe<OrderWhereUniqueInput[] | OrderWhereUniqueInput>;
+  connect?: Maybe<OrderWhereUniqueInput[] | OrderWhereUniqueInput>;
+  set?: Maybe<OrderWhereUniqueInput[] | OrderWhereUniqueInput>;
+  disconnect?: Maybe<OrderWhereUniqueInput[] | OrderWhereUniqueInput>;
+  update?: Maybe<
+    | OrderUpdateWithWhereUniqueWithoutMenuItemInput[]
+    | OrderUpdateWithWhereUniqueWithoutMenuItemInput
+  >;
+  upsert?: Maybe<
+    | OrderUpsertWithWhereUniqueWithoutMenuItemInput[]
+    | OrderUpsertWithWhereUniqueWithoutMenuItemInput
+  >;
+  deleteMany?: Maybe<OrderScalarWhereInput[] | OrderScalarWhereInput>;
+  updateMany?: Maybe<
+    OrderUpdateManyWithWhereNestedInput[] | OrderUpdateManyWithWhereNestedInput
+  >;
+}
+
+export interface OrderUpdateInput {
+  menuItem?: Maybe<MenuItemUpdateOneRequiredWithoutOrdersInput>;
+  location?: Maybe<LocationUpdateOneRequiredWithoutOrdersInput>;
+  status?: Maybe<MealStatus>;
+  deletedAt?: Maybe<DateTimeInput>;
+}
+
+export interface OrderUpdateWithWhereUniqueWithoutMenuItemInput {
+  where: OrderWhereUniqueInput;
+  data: OrderUpdateWithoutMenuItemDataInput;
+}
+
+export type TransactionWhereUniqueInput = AtLeastOne<{
   id: Maybe<ID_Input>;
 }>;
 
@@ -751,35 +856,34 @@ export interface MenuItemScalarWhereInput {
   NOT?: Maybe<MenuItemScalarWhereInput[] | MenuItemScalarWhereInput>;
 }
 
-export interface TransactionUpdateInput {
-  location?: Maybe<LocationUpdateOneRequiredWithoutTransactionsInput>;
-  menuItem?: Maybe<MenuItemUpdateOneRequiredInput>;
+export interface MenuItemUpdateInput {
+  title?: Maybe<String>;
+  price?: Maybe<Float>;
+  pictureURL?: Maybe<String>;
+  author?: Maybe<UserUpdateOneWithoutMenuItemsInput>;
+  orders?: Maybe<OrderUpdateManyWithoutMenuItemInput>;
+  transactions?: Maybe<TransactionUpdateManyWithoutMenuItemInput>;
   deletedAt?: Maybe<DateTimeInput>;
 }
 
-export interface MenuItemUpdateManyWithWhereNestedInput {
-  where: MenuItemScalarWhereInput;
-  data: MenuItemUpdateManyDataInput;
+export interface LocationUpdateOneRequiredWithoutOrdersInput {
+  create?: Maybe<LocationCreateWithoutOrdersInput>;
+  update?: Maybe<LocationUpdateWithoutOrdersDataInput>;
+  upsert?: Maybe<LocationUpsertWithoutOrdersInput>;
+  connect?: Maybe<LocationWhereUniqueInput>;
 }
 
-export type TransactionWhereUniqueInput = AtLeastOne<{
+export type UserWhereUniqueInput = AtLeastOne<{
   id: Maybe<ID_Input>;
+  email?: Maybe<String>;
 }>;
 
-export interface LocationCreateWithoutOrdersInput {
-  id?: Maybe<ID_Input>;
-  address: String;
-  phoneNumber: String;
-  email: String;
-  owner: UserCreateOneWithoutLocationsInput;
-  transactions?: Maybe<TransactionCreateManyWithoutLocationInput>;
-  deletedAt?: Maybe<DateTimeInput>;
-}
-
-export interface TransactionCreateInput {
-  id?: Maybe<ID_Input>;
-  location: LocationCreateOneWithoutTransactionsInput;
-  menuItem: MenuItemCreateOneInput;
+export interface LocationUpdateWithoutOrdersDataInput {
+  address?: Maybe<String>;
+  phoneNumber?: Maybe<String>;
+  email?: Maybe<String>;
+  owner?: Maybe<UserUpdateOneRequiredWithoutLocationsInput>;
+  transactions?: Maybe<TransactionUpdateManyWithoutLocationInput>;
   deletedAt?: Maybe<DateTimeInput>;
 }
 
@@ -787,11 +891,6 @@ export interface UserUpsertWithoutLocationsInput {
   update: UserUpdateWithoutLocationsDataInput;
   create: UserCreateWithoutLocationsInput;
 }
-
-export type UserWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-  email?: Maybe<String>;
-}>;
 
 export interface TransactionUpdateManyWithoutLocationInput {
   create?: Maybe<
@@ -821,30 +920,14 @@ export interface TransactionUpdateManyWithoutLocationInput {
   >;
 }
 
-export interface LocationUpdateWithoutOrdersDataInput {
-  address?: Maybe<String>;
-  phoneNumber?: Maybe<String>;
-  email?: Maybe<String>;
-  owner?: Maybe<UserUpdateOneRequiredWithoutLocationsInput>;
-  transactions?: Maybe<TransactionUpdateManyWithoutLocationInput>;
-  deletedAt?: Maybe<DateTimeInput>;
+export interface MenuItemUpdateManyWithWhereNestedInput {
+  where: MenuItemScalarWhereInput;
+  data: MenuItemUpdateManyDataInput;
 }
 
 export interface TransactionUpdateWithWhereUniqueWithoutLocationInput {
   where: TransactionWhereUniqueInput;
   data: TransactionUpdateWithoutLocationDataInput;
-}
-
-export interface OrderUpdateInput {
-  menuItem?: Maybe<MenuItemUpdateOneRequiredInput>;
-  location?: Maybe<LocationUpdateOneRequiredWithoutOrdersInput>;
-  status?: Maybe<MealStatus>;
-  deletedAt?: Maybe<DateTimeInput>;
-}
-
-export interface TransactionUpdateWithoutLocationDataInput {
-  menuItem?: Maybe<MenuItemUpdateOneRequiredInput>;
-  deletedAt?: Maybe<DateTimeInput>;
 }
 
 export interface LocationCreateInput {
@@ -858,9 +941,10 @@ export interface LocationCreateInput {
   deletedAt?: Maybe<DateTimeInput>;
 }
 
-export interface LocationCreateOneWithoutOrdersInput {
-  create?: Maybe<LocationCreateWithoutOrdersInput>;
-  connect?: Maybe<LocationWhereUniqueInput>;
+export interface MenuItemUpsertWithWhereUniqueWithoutAuthorInput {
+  where: MenuItemWhereUniqueInput;
+  update: MenuItemUpdateWithoutAuthorDataInput;
+  create: MenuItemCreateWithoutAuthorInput;
 }
 
 export interface UserCreateWithoutLocationsInput {
@@ -962,36 +1046,50 @@ export interface MenuItemCreateWithoutAuthorInput {
   title: String;
   price: Float;
   pictureURL: String;
+  orders?: Maybe<OrderCreateManyWithoutMenuItemInput>;
+  transactions?: Maybe<TransactionCreateManyWithoutMenuItemInput>;
   deletedAt?: Maybe<DateTimeInput>;
 }
 
-export interface OrderCreateInput {
+export interface OrderUpsertWithWhereUniqueWithoutMenuItemInput {
+  where: OrderWhereUniqueInput;
+  update: OrderUpdateWithoutMenuItemDataInput;
+  create: OrderCreateWithoutMenuItemInput;
+}
+
+export interface OrderCreateWithoutMenuItemInput {
   id?: Maybe<ID_Input>;
-  menuItem: MenuItemCreateOneInput;
   location: LocationCreateOneWithoutOrdersInput;
   status: MealStatus;
   deletedAt?: Maybe<DateTimeInput>;
 }
 
+export interface LocationUpsertWithoutOrdersInput {
+  update: LocationUpdateWithoutOrdersDataInput;
+  create: LocationCreateWithoutOrdersInput;
+}
+
+export interface LocationCreateWithoutOrdersInput {
+  id?: Maybe<ID_Input>;
+  address: String;
+  phoneNumber: String;
+  email: String;
+  owner: UserCreateOneWithoutLocationsInput;
+  transactions?: Maybe<TransactionCreateManyWithoutLocationInput>;
+  deletedAt?: Maybe<DateTimeInput>;
+}
+
+export interface UserUpdateWithoutMenuItemsDataInput {
+  email?: Maybe<String>;
+  password?: Maybe<String>;
+  name?: Maybe<String>;
+  locations?: Maybe<LocationUpdateManyWithoutOwnerInput>;
+  deletedAt?: Maybe<DateTimeInput>;
+}
+
 export interface TransactionCreateWithoutLocationInput {
   id?: Maybe<ID_Input>;
-  menuItem: MenuItemCreateOneInput;
-  deletedAt?: Maybe<DateTimeInput>;
-}
-
-export interface MenuItemUpdateManyMutationInput {
-  title?: Maybe<String>;
-  price?: Maybe<Float>;
-  pictureURL?: Maybe<String>;
-  deletedAt?: Maybe<DateTimeInput>;
-}
-
-export interface MenuItemCreateInput {
-  id?: Maybe<ID_Input>;
-  title: String;
-  price: Float;
-  pictureURL: String;
-  author?: Maybe<UserCreateOneWithoutMenuItemsInput>;
+  menuItem: MenuItemCreateOneWithoutTransactionsInput;
   deletedAt?: Maybe<DateTimeInput>;
 }
 
@@ -1018,12 +1116,13 @@ export interface LocationUpdateManyWithoutOwnerInput {
   >;
 }
 
-export interface UserCreateWithoutMenuItemsInput {
+export interface MenuItemCreateWithoutTransactionsInput {
   id?: Maybe<ID_Input>;
-  email?: Maybe<String>;
-  password: String;
-  name: String;
-  locations?: Maybe<LocationCreateManyWithoutOwnerInput>;
+  title: String;
+  price: Float;
+  pictureURL: String;
+  author?: Maybe<UserCreateOneWithoutMenuItemsInput>;
+  orders?: Maybe<OrderCreateManyWithoutMenuItemInput>;
   deletedAt?: Maybe<DateTimeInput>;
 }
 
@@ -1032,13 +1131,12 @@ export interface LocationUpdateWithWhereUniqueWithoutOwnerInput {
   data: LocationUpdateWithoutOwnerDataInput;
 }
 
-export interface LocationCreateWithoutOwnerInput {
+export interface UserCreateWithoutMenuItemsInput {
   id?: Maybe<ID_Input>;
-  address: String;
-  phoneNumber: String;
-  email: String;
-  transactions?: Maybe<TransactionCreateManyWithoutLocationInput>;
-  orders?: Maybe<OrderCreateManyWithoutLocationInput>;
+  email?: Maybe<String>;
+  password: String;
+  name: String;
+  locations?: Maybe<LocationCreateManyWithoutOwnerInput>;
   deletedAt?: Maybe<DateTimeInput>;
 }
 
@@ -1051,21 +1149,14 @@ export interface LocationUpdateWithoutOwnerDataInput {
   deletedAt?: Maybe<DateTimeInput>;
 }
 
-export interface TransactionSubscriptionWhereInput {
-  mutation_in?: Maybe<MutationType[] | MutationType>;
-  updatedFields_contains?: Maybe<String>;
-  updatedFields_contains_every?: Maybe<String[] | String>;
-  updatedFields_contains_some?: Maybe<String[] | String>;
-  node?: Maybe<TransactionWhereInput>;
-  AND?: Maybe<
-    TransactionSubscriptionWhereInput[] | TransactionSubscriptionWhereInput
-  >;
-  OR?: Maybe<
-    TransactionSubscriptionWhereInput[] | TransactionSubscriptionWhereInput
-  >;
-  NOT?: Maybe<
-    TransactionSubscriptionWhereInput[] | TransactionSubscriptionWhereInput
-  >;
+export interface LocationCreateWithoutOwnerInput {
+  id?: Maybe<ID_Input>;
+  address: String;
+  phoneNumber: String;
+  email: String;
+  transactions?: Maybe<TransactionCreateManyWithoutLocationInput>;
+  orders?: Maybe<OrderCreateManyWithoutLocationInput>;
+  deletedAt?: Maybe<DateTimeInput>;
 }
 
 export interface OrderUpdateManyWithoutLocationInput {
@@ -1090,10 +1181,10 @@ export interface OrderUpdateManyWithoutLocationInput {
   >;
 }
 
-export interface UserUpdateManyMutationInput {
-  email?: Maybe<String>;
-  password?: Maybe<String>;
-  name?: Maybe<String>;
+export interface OrderCreateWithoutLocationInput {
+  id?: Maybe<ID_Input>;
+  menuItem: MenuItemCreateOneWithoutOrdersInput;
+  status: MealStatus;
   deletedAt?: Maybe<DateTimeInput>;
 }
 
@@ -1102,13 +1193,135 @@ export interface OrderUpdateWithWhereUniqueWithoutLocationInput {
   data: OrderUpdateWithoutLocationDataInput;
 }
 
-export interface TransactionUpdateManyMutationInput {
+export interface MenuItemCreateWithoutOrdersInput {
+  id?: Maybe<ID_Input>;
+  title: String;
+  price: Float;
+  pictureURL: String;
+  author?: Maybe<UserCreateOneWithoutMenuItemsInput>;
+  transactions?: Maybe<TransactionCreateManyWithoutMenuItemInput>;
   deletedAt?: Maybe<DateTimeInput>;
 }
 
 export interface OrderUpdateWithoutLocationDataInput {
-  menuItem?: Maybe<MenuItemUpdateOneRequiredInput>;
+  menuItem?: Maybe<MenuItemUpdateOneRequiredWithoutOrdersInput>;
   status?: Maybe<MealStatus>;
+  deletedAt?: Maybe<DateTimeInput>;
+}
+
+export interface UserSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<UserWhereInput>;
+  AND?: Maybe<UserSubscriptionWhereInput[] | UserSubscriptionWhereInput>;
+  OR?: Maybe<UserSubscriptionWhereInput[] | UserSubscriptionWhereInput>;
+  NOT?: Maybe<UserSubscriptionWhereInput[] | UserSubscriptionWhereInput>;
+}
+
+export interface MenuItemUpdateOneRequiredWithoutOrdersInput {
+  create?: Maybe<MenuItemCreateWithoutOrdersInput>;
+  update?: Maybe<MenuItemUpdateWithoutOrdersDataInput>;
+  upsert?: Maybe<MenuItemUpsertWithoutOrdersInput>;
+  connect?: Maybe<MenuItemWhereUniqueInput>;
+}
+
+export interface MenuItemSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<MenuItemWhereInput>;
+  AND?: Maybe<
+    MenuItemSubscriptionWhereInput[] | MenuItemSubscriptionWhereInput
+  >;
+  OR?: Maybe<MenuItemSubscriptionWhereInput[] | MenuItemSubscriptionWhereInput>;
+  NOT?: Maybe<
+    MenuItemSubscriptionWhereInput[] | MenuItemSubscriptionWhereInput
+  >;
+}
+
+export interface MenuItemUpdateWithoutOrdersDataInput {
+  title?: Maybe<String>;
+  price?: Maybe<Float>;
+  pictureURL?: Maybe<String>;
+  author?: Maybe<UserUpdateOneWithoutMenuItemsInput>;
+  transactions?: Maybe<TransactionUpdateManyWithoutMenuItemInput>;
+  deletedAt?: Maybe<DateTimeInput>;
+}
+
+export interface UserCreateInput {
+  id?: Maybe<ID_Input>;
+  email?: Maybe<String>;
+  password: String;
+  name: String;
+  menuItems?: Maybe<MenuItemCreateManyWithoutAuthorInput>;
+  locations?: Maybe<LocationCreateManyWithoutOwnerInput>;
+  deletedAt?: Maybe<DateTimeInput>;
+}
+
+export interface TransactionUpdateManyWithoutMenuItemInput {
+  create?: Maybe<
+    | TransactionCreateWithoutMenuItemInput[]
+    | TransactionCreateWithoutMenuItemInput
+  >;
+  delete?: Maybe<TransactionWhereUniqueInput[] | TransactionWhereUniqueInput>;
+  connect?: Maybe<TransactionWhereUniqueInput[] | TransactionWhereUniqueInput>;
+  set?: Maybe<TransactionWhereUniqueInput[] | TransactionWhereUniqueInput>;
+  disconnect?: Maybe<
+    TransactionWhereUniqueInput[] | TransactionWhereUniqueInput
+  >;
+  update?: Maybe<
+    | TransactionUpdateWithWhereUniqueWithoutMenuItemInput[]
+    | TransactionUpdateWithWhereUniqueWithoutMenuItemInput
+  >;
+  upsert?: Maybe<
+    | TransactionUpsertWithWhereUniqueWithoutMenuItemInput[]
+    | TransactionUpsertWithWhereUniqueWithoutMenuItemInput
+  >;
+  deleteMany?: Maybe<
+    TransactionScalarWhereInput[] | TransactionScalarWhereInput
+  >;
+  updateMany?: Maybe<
+    | TransactionUpdateManyWithWhereNestedInput[]
+    | TransactionUpdateManyWithWhereNestedInput
+  >;
+}
+
+export interface TransactionCreateInput {
+  id?: Maybe<ID_Input>;
+  location: LocationCreateOneWithoutTransactionsInput;
+  menuItem: MenuItemCreateOneWithoutTransactionsInput;
+  deletedAt?: Maybe<DateTimeInput>;
+}
+
+export interface TransactionUpdateWithWhereUniqueWithoutMenuItemInput {
+  where: TransactionWhereUniqueInput;
+  data: TransactionUpdateWithoutMenuItemDataInput;
+}
+
+export interface OrderCreateInput {
+  id?: Maybe<ID_Input>;
+  menuItem: MenuItemCreateOneWithoutOrdersInput;
+  location: LocationCreateOneWithoutOrdersInput;
+  status: MealStatus;
+  deletedAt?: Maybe<DateTimeInput>;
+}
+
+export interface TransactionUpdateWithoutMenuItemDataInput {
+  location?: Maybe<LocationUpdateOneRequiredWithoutTransactionsInput>;
+  deletedAt?: Maybe<DateTimeInput>;
+}
+
+export interface MenuItemCreateInput {
+  id?: Maybe<ID_Input>;
+  title: String;
+  price: Float;
+  pictureURL: String;
+  author?: Maybe<UserCreateOneWithoutMenuItemsInput>;
+  orders?: Maybe<OrderCreateManyWithoutMenuItemInput>;
+  transactions?: Maybe<TransactionCreateManyWithoutMenuItemInput>;
   deletedAt?: Maybe<DateTimeInput>;
 }
 
@@ -1119,15 +1332,139 @@ export interface LocationUpdateOneRequiredWithoutTransactionsInput {
   connect?: Maybe<LocationWhereUniqueInput>;
 }
 
+export interface MenuItemUpdateManyDataInput {
+  title?: Maybe<String>;
+  price?: Maybe<Float>;
+  pictureURL?: Maybe<String>;
+  deletedAt?: Maybe<DateTimeInput>;
+}
+
+export interface LocationUpdateWithoutTransactionsDataInput {
+  address?: Maybe<String>;
+  phoneNumber?: Maybe<String>;
+  email?: Maybe<String>;
+  owner?: Maybe<UserUpdateOneRequiredWithoutLocationsInput>;
+  orders?: Maybe<OrderUpdateManyWithoutLocationInput>;
+  deletedAt?: Maybe<DateTimeInput>;
+}
+
+export interface UserCreateOneWithoutLocationsInput {
+  create?: Maybe<UserCreateWithoutLocationsInput>;
+  connect?: Maybe<UserWhereUniqueInput>;
+}
+
+export interface LocationUpsertWithoutTransactionsInput {
+  update: LocationUpdateWithoutTransactionsDataInput;
+  create: LocationCreateWithoutTransactionsInput;
+}
+
+export interface OrderCreateManyWithoutMenuItemInput {
+  create?: Maybe<
+    OrderCreateWithoutMenuItemInput[] | OrderCreateWithoutMenuItemInput
+  >;
+  connect?: Maybe<OrderWhereUniqueInput[] | OrderWhereUniqueInput>;
+}
+
+export interface TransactionUpsertWithWhereUniqueWithoutMenuItemInput {
+  where: TransactionWhereUniqueInput;
+  update: TransactionUpdateWithoutMenuItemDataInput;
+  create: TransactionCreateWithoutMenuItemInput;
+}
+
+export interface TransactionCreateManyWithoutLocationInput {
+  create?: Maybe<
+    | TransactionCreateWithoutLocationInput[]
+    | TransactionCreateWithoutLocationInput
+  >;
+  connect?: Maybe<TransactionWhereUniqueInput[] | TransactionWhereUniqueInput>;
+}
+
+export interface TransactionScalarWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
+  deletedAt?: Maybe<DateTimeInput>;
+  deletedAt_not?: Maybe<DateTimeInput>;
+  deletedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  deletedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  deletedAt_lt?: Maybe<DateTimeInput>;
+  deletedAt_lte?: Maybe<DateTimeInput>;
+  deletedAt_gt?: Maybe<DateTimeInput>;
+  deletedAt_gte?: Maybe<DateTimeInput>;
+  AND?: Maybe<TransactionScalarWhereInput[] | TransactionScalarWhereInput>;
+  OR?: Maybe<TransactionScalarWhereInput[] | TransactionScalarWhereInput>;
+  NOT?: Maybe<TransactionScalarWhereInput[] | TransactionScalarWhereInput>;
+}
+
+export interface UserCreateOneWithoutMenuItemsInput {
+  create?: Maybe<UserCreateWithoutMenuItemsInput>;
+  connect?: Maybe<UserWhereUniqueInput>;
+}
+
+export interface TransactionUpdateManyWithWhereNestedInput {
+  where: TransactionScalarWhereInput;
+  data: TransactionUpdateManyDataInput;
+}
+
+export interface OrderCreateManyWithoutLocationInput {
+  create?: Maybe<
+    OrderCreateWithoutLocationInput[] | OrderCreateWithoutLocationInput
+  >;
+  connect?: Maybe<OrderWhereUniqueInput[] | OrderWhereUniqueInput>;
+}
+
+export interface TransactionUpdateManyDataInput {
+  deletedAt?: Maybe<DateTimeInput>;
+}
+
+export interface TransactionCreateManyWithoutMenuItemInput {
+  create?: Maybe<
+    | TransactionCreateWithoutMenuItemInput[]
+    | TransactionCreateWithoutMenuItemInput
+  >;
+  connect?: Maybe<TransactionWhereUniqueInput[] | TransactionWhereUniqueInput>;
+}
+
+export interface MenuItemUpsertWithoutOrdersInput {
+  update: MenuItemUpdateWithoutOrdersDataInput;
+  create: MenuItemCreateWithoutOrdersInput;
+}
+
+export interface UserUpdateManyMutationInput {
+  email?: Maybe<String>;
+  password?: Maybe<String>;
+  name?: Maybe<String>;
+  deletedAt?: Maybe<DateTimeInput>;
+}
+
 export interface OrderUpsertWithWhereUniqueWithoutLocationInput {
   where: OrderWhereUniqueInput;
   update: OrderUpdateWithoutLocationDataInput;
   create: OrderCreateWithoutLocationInput;
 }
 
-export interface LocationCreateOneWithoutTransactionsInput {
-  create?: Maybe<LocationCreateWithoutTransactionsInput>;
-  connect?: Maybe<LocationWhereUniqueInput>;
+export interface OrderUpdateManyMutationInput {
+  status?: Maybe<MealStatus>;
+  deletedAt?: Maybe<DateTimeInput>;
 }
 
 export interface OrderScalarWhereInput {
@@ -1170,9 +1507,11 @@ export interface OrderScalarWhereInput {
   NOT?: Maybe<OrderScalarWhereInput[] | OrderScalarWhereInput>;
 }
 
-export interface LocationUpsertWithoutOrdersInput {
-  update: LocationUpdateWithoutOrdersDataInput;
-  create: LocationCreateWithoutOrdersInput;
+export interface LocationUpdateManyMutationInput {
+  address?: Maybe<String>;
+  phoneNumber?: Maybe<String>;
+  email?: Maybe<String>;
+  deletedAt?: Maybe<DateTimeInput>;
 }
 
 export interface OrderUpdateManyWithWhereNestedInput {
@@ -1192,8 +1531,8 @@ export interface OrderUpdateManyDataInput {
   deletedAt?: Maybe<DateTimeInput>;
 }
 
-export interface MenuItemCreateOneInput {
-  create?: Maybe<MenuItemCreateInput>;
+export interface MenuItemCreateOneWithoutTransactionsInput {
+  create?: Maybe<MenuItemCreateWithoutTransactionsInput>;
   connect?: Maybe<MenuItemWhereUniqueInput>;
 }
 
@@ -1203,11 +1542,9 @@ export interface LocationUpsertWithWhereUniqueWithoutOwnerInput {
   create: LocationCreateWithoutOwnerInput;
 }
 
-export interface LocationCreateManyWithoutOwnerInput {
-  create?: Maybe<
-    LocationCreateWithoutOwnerInput[] | LocationCreateWithoutOwnerInput
-  >;
-  connect?: Maybe<LocationWhereUniqueInput[] | LocationWhereUniqueInput>;
+export interface MenuItemCreateOneWithoutOrdersInput {
+  create?: Maybe<MenuItemCreateWithoutOrdersInput>;
+  connect?: Maybe<MenuItemWhereUniqueInput>;
 }
 
 export interface LocationScalarWhereInput {
@@ -1288,33 +1625,18 @@ export interface LocationScalarWhereInput {
   NOT?: Maybe<LocationScalarWhereInput[] | LocationScalarWhereInput>;
 }
 
-export interface MenuItemSubscriptionWhereInput {
-  mutation_in?: Maybe<MutationType[] | MutationType>;
-  updatedFields_contains?: Maybe<String>;
-  updatedFields_contains_every?: Maybe<String[] | String>;
-  updatedFields_contains_some?: Maybe<String[] | String>;
-  node?: Maybe<MenuItemWhereInput>;
-  AND?: Maybe<
-    MenuItemSubscriptionWhereInput[] | MenuItemSubscriptionWhereInput
-  >;
-  OR?: Maybe<MenuItemSubscriptionWhereInput[] | MenuItemSubscriptionWhereInput>;
-  NOT?: Maybe<
-    MenuItemSubscriptionWhereInput[] | MenuItemSubscriptionWhereInput
-  >;
-}
-
-export interface LocationUpdateManyWithWhereNestedInput {
-  where: LocationScalarWhereInput;
-  data: LocationUpdateManyDataInput;
-}
-
-export interface LocationUpdateWithoutTransactionsDataInput {
-  address?: Maybe<String>;
-  phoneNumber?: Maybe<String>;
-  email?: Maybe<String>;
-  owner?: Maybe<UserUpdateOneRequiredWithoutLocationsInput>;
-  orders?: Maybe<OrderUpdateManyWithoutLocationInput>;
+export interface TransactionUpdateManyMutationInput {
   deletedAt?: Maybe<DateTimeInput>;
+}
+
+export interface MenuItemUpsertWithoutTransactionsInput {
+  update: MenuItemUpdateWithoutTransactionsDataInput;
+  create: MenuItemCreateWithoutTransactionsInput;
+}
+
+export interface UserUpsertWithoutMenuItemsInput {
+  update: UserUpdateWithoutMenuItemsDataInput;
+  create: UserCreateWithoutMenuItemsInput;
 }
 
 export interface LocationUpdateManyDataInput {
@@ -1324,195 +1646,45 @@ export interface LocationUpdateManyDataInput {
   deletedAt?: Maybe<DateTimeInput>;
 }
 
-export interface OrderUpdateManyMutationInput {
-  status?: Maybe<MealStatus>;
-  deletedAt?: Maybe<DateTimeInput>;
+export interface LocationUpdateManyWithWhereNestedInput {
+  where: LocationScalarWhereInput;
+  data: LocationUpdateManyDataInput;
 }
 
-export interface UserUpsertWithoutMenuItemsInput {
-  update: UserUpdateWithoutMenuItemsDataInput;
-  create: UserCreateWithoutMenuItemsInput;
-}
-
-export interface UserCreateOneWithoutLocationsInput {
-  create?: Maybe<UserCreateWithoutLocationsInput>;
-  connect?: Maybe<UserWhereUniqueInput>;
-}
-
-export interface MenuItemUpsertNestedInput {
-  update: MenuItemUpdateDataInput;
-  create: MenuItemCreateInput;
-}
-
-export interface UserCreateOneWithoutMenuItemsInput {
-  create?: Maybe<UserCreateWithoutMenuItemsInput>;
-  connect?: Maybe<UserWhereUniqueInput>;
-}
-
-export interface TransactionUpsertWithWhereUniqueWithoutLocationInput {
-  where: TransactionWhereUniqueInput;
-  update: TransactionUpdateWithoutLocationDataInput;
-  create: TransactionCreateWithoutLocationInput;
-}
-
-export interface UserCreateInput {
-  id?: Maybe<ID_Input>;
-  email?: Maybe<String>;
-  password: String;
-  name: String;
-  menuItems?: Maybe<MenuItemCreateManyWithoutAuthorInput>;
-  locations?: Maybe<LocationCreateManyWithoutOwnerInput>;
-  deletedAt?: Maybe<DateTimeInput>;
-}
-
-export interface LocationUpdateManyMutationInput {
-  address?: Maybe<String>;
-  phoneNumber?: Maybe<String>;
-  email?: Maybe<String>;
-  deletedAt?: Maybe<DateTimeInput>;
-}
-
-export interface TransactionUpdateManyDataInput {
-  deletedAt?: Maybe<DateTimeInput>;
-}
-
-export interface TransactionUpdateManyWithWhereNestedInput {
-  where: TransactionScalarWhereInput;
-  data: TransactionUpdateManyDataInput;
-}
-
-export interface TransactionScalarWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  createdAt?: Maybe<DateTimeInput>;
-  createdAt_not?: Maybe<DateTimeInput>;
-  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_lt?: Maybe<DateTimeInput>;
-  createdAt_lte?: Maybe<DateTimeInput>;
-  createdAt_gt?: Maybe<DateTimeInput>;
-  createdAt_gte?: Maybe<DateTimeInput>;
-  deletedAt?: Maybe<DateTimeInput>;
-  deletedAt_not?: Maybe<DateTimeInput>;
-  deletedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  deletedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  deletedAt_lt?: Maybe<DateTimeInput>;
-  deletedAt_lte?: Maybe<DateTimeInput>;
-  deletedAt_gt?: Maybe<DateTimeInput>;
-  deletedAt_gte?: Maybe<DateTimeInput>;
-  AND?: Maybe<TransactionScalarWhereInput[] | TransactionScalarWhereInput>;
-  OR?: Maybe<TransactionScalarWhereInput[] | TransactionScalarWhereInput>;
-  NOT?: Maybe<TransactionScalarWhereInput[] | TransactionScalarWhereInput>;
-}
-
-export interface LocationCreateWithoutTransactionsInput {
-  id?: Maybe<ID_Input>;
-  address: String;
-  phoneNumber: String;
-  email: String;
-  owner: UserCreateOneWithoutLocationsInput;
-  orders?: Maybe<OrderCreateManyWithoutLocationInput>;
-  deletedAt?: Maybe<DateTimeInput>;
-}
-
-export interface MenuItemWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  title?: Maybe<String>;
-  title_not?: Maybe<String>;
-  title_in?: Maybe<String[] | String>;
-  title_not_in?: Maybe<String[] | String>;
-  title_lt?: Maybe<String>;
-  title_lte?: Maybe<String>;
-  title_gt?: Maybe<String>;
-  title_gte?: Maybe<String>;
-  title_contains?: Maybe<String>;
-  title_not_contains?: Maybe<String>;
-  title_starts_with?: Maybe<String>;
-  title_not_starts_with?: Maybe<String>;
-  title_ends_with?: Maybe<String>;
-  title_not_ends_with?: Maybe<String>;
-  price?: Maybe<Float>;
-  price_not?: Maybe<Float>;
-  price_in?: Maybe<Float[] | Float>;
-  price_not_in?: Maybe<Float[] | Float>;
-  price_lt?: Maybe<Float>;
-  price_lte?: Maybe<Float>;
-  price_gt?: Maybe<Float>;
-  price_gte?: Maybe<Float>;
-  pictureURL?: Maybe<String>;
-  pictureURL_not?: Maybe<String>;
-  pictureURL_in?: Maybe<String[] | String>;
-  pictureURL_not_in?: Maybe<String[] | String>;
-  pictureURL_lt?: Maybe<String>;
-  pictureURL_lte?: Maybe<String>;
-  pictureURL_gt?: Maybe<String>;
-  pictureURL_gte?: Maybe<String>;
-  pictureURL_contains?: Maybe<String>;
-  pictureURL_not_contains?: Maybe<String>;
-  pictureURL_starts_with?: Maybe<String>;
-  pictureURL_not_starts_with?: Maybe<String>;
-  pictureURL_ends_with?: Maybe<String>;
-  pictureURL_not_ends_with?: Maybe<String>;
-  author?: Maybe<UserWhereInput>;
-  createdAt?: Maybe<DateTimeInput>;
-  createdAt_not?: Maybe<DateTimeInput>;
-  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_lt?: Maybe<DateTimeInput>;
-  createdAt_lte?: Maybe<DateTimeInput>;
-  createdAt_gt?: Maybe<DateTimeInput>;
-  createdAt_gte?: Maybe<DateTimeInput>;
-  deletedAt?: Maybe<DateTimeInput>;
-  deletedAt_not?: Maybe<DateTimeInput>;
-  deletedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  deletedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  deletedAt_lt?: Maybe<DateTimeInput>;
-  deletedAt_lte?: Maybe<DateTimeInput>;
-  deletedAt_gt?: Maybe<DateTimeInput>;
-  deletedAt_gte?: Maybe<DateTimeInput>;
-  AND?: Maybe<MenuItemWhereInput[] | MenuItemWhereInput>;
-  OR?: Maybe<MenuItemWhereInput[] | MenuItemWhereInput>;
-  NOT?: Maybe<MenuItemWhereInput[] | MenuItemWhereInput>;
-}
-
-export interface TransactionCreateManyWithoutLocationInput {
-  create?: Maybe<
-    | TransactionCreateWithoutLocationInput[]
-    | TransactionCreateWithoutLocationInput
-  >;
-  connect?: Maybe<TransactionWhereUniqueInput[] | TransactionWhereUniqueInput>;
-}
-
-export interface LocationUpdateOneRequiredWithoutOrdersInput {
+export interface LocationCreateOneWithoutOrdersInput {
   create?: Maybe<LocationCreateWithoutOrdersInput>;
-  update?: Maybe<LocationUpdateWithoutOrdersDataInput>;
-  upsert?: Maybe<LocationUpsertWithoutOrdersInput>;
   connect?: Maybe<LocationWhereUniqueInput>;
+}
+
+export interface MenuItemUpdateManyMutationInput {
+  title?: Maybe<String>;
+  price?: Maybe<Float>;
+  pictureURL?: Maybe<String>;
+  deletedAt?: Maybe<DateTimeInput>;
+}
+
+export interface TransactionSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<TransactionWhereInput>;
+  AND?: Maybe<
+    TransactionSubscriptionWhereInput[] | TransactionSubscriptionWhereInput
+  >;
+  OR?: Maybe<
+    TransactionSubscriptionWhereInput[] | TransactionSubscriptionWhereInput
+  >;
+  NOT?: Maybe<
+    TransactionSubscriptionWhereInput[] | TransactionSubscriptionWhereInput
+  >;
+}
+
+export interface LocationCreateManyWithoutOwnerInput {
+  create?: Maybe<
+    LocationCreateWithoutOwnerInput[] | LocationCreateWithoutOwnerInput
+  >;
+  connect?: Maybe<LocationWhereUniqueInput[] | LocationWhereUniqueInput>;
 }
 
 export interface NodeNode {
@@ -1581,6 +1753,24 @@ export interface MenuItemPromise extends Promise<MenuItem>, Fragmentable {
   price: () => Promise<Float>;
   pictureURL: () => Promise<String>;
   author: <T = UserPromise>() => T;
+  orders: <T = FragmentableArray<Order>>(args?: {
+    where?: OrderWhereInput;
+    orderBy?: OrderOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  transactions: <T = FragmentableArray<Transaction>>(args?: {
+    where?: TransactionWhereInput;
+    orderBy?: TransactionOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
   createdAt: () => Promise<DateTimeOutput>;
   deletedAt: () => Promise<DateTimeOutput>;
 }
@@ -1593,6 +1783,24 @@ export interface MenuItemSubscription
   price: () => Promise<AsyncIterator<Float>>;
   pictureURL: () => Promise<AsyncIterator<String>>;
   author: <T = UserSubscription>() => T;
+  orders: <T = Promise<AsyncIterator<OrderSubscription>>>(args?: {
+    where?: OrderWhereInput;
+    orderBy?: OrderOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  transactions: <T = Promise<AsyncIterator<TransactionSubscription>>>(args?: {
+    where?: TransactionWhereInput;
+    orderBy?: TransactionOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   deletedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
@@ -1605,6 +1813,24 @@ export interface MenuItemNullablePromise
   price: () => Promise<Float>;
   pictureURL: () => Promise<String>;
   author: <T = UserPromise>() => T;
+  orders: <T = FragmentableArray<Order>>(args?: {
+    where?: OrderWhereInput;
+    orderBy?: OrderOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  transactions: <T = FragmentableArray<Transaction>>(args?: {
+    where?: TransactionWhereInput;
+    orderBy?: TransactionOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
   createdAt: () => Promise<DateTimeOutput>;
   deletedAt: () => Promise<DateTimeOutput>;
 }
@@ -1693,20 +1919,93 @@ export interface LocationEdgeSubscription
   cursor: () => Promise<AsyncIterator<String>>;
 }
 
-export interface BatchPayload {
-  count: Long;
+export interface TransactionPreviousValues {
+  id: ID_Output;
+  createdAt: DateTimeOutput;
+  deletedAt?: DateTimeOutput;
 }
 
-export interface BatchPayloadPromise
-  extends Promise<BatchPayload>,
+export interface TransactionPreviousValuesPromise
+  extends Promise<TransactionPreviousValues>,
     Fragmentable {
-  count: () => Promise<Long>;
+  id: () => Promise<ID_Output>;
+  createdAt: () => Promise<DateTimeOutput>;
+  deletedAt: () => Promise<DateTimeOutput>;
 }
 
-export interface BatchPayloadSubscription
-  extends Promise<AsyncIterator<BatchPayload>>,
+export interface TransactionPreviousValuesSubscription
+  extends Promise<AsyncIterator<TransactionPreviousValues>>,
     Fragmentable {
-  count: () => Promise<AsyncIterator<Long>>;
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  deletedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+}
+
+export interface UserEdge {
+  node: User;
+  cursor: String;
+}
+
+export interface UserEdgePromise extends Promise<UserEdge>, Fragmentable {
+  node: <T = UserPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface UserEdgeSubscription
+  extends Promise<AsyncIterator<UserEdge>>,
+    Fragmentable {
+  node: <T = UserSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface TransactionSubscriptionPayload {
+  mutation: MutationType;
+  node: Transaction;
+  updatedFields: String[];
+  previousValues: TransactionPreviousValues;
+}
+
+export interface TransactionSubscriptionPayloadPromise
+  extends Promise<TransactionSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = TransactionPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = TransactionPreviousValuesPromise>() => T;
+}
+
+export interface TransactionSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<TransactionSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = TransactionSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = TransactionPreviousValuesSubscription>() => T;
+}
+
+export interface UserSubscriptionPayload {
+  mutation: MutationType;
+  node: User;
+  updatedFields: String[];
+  previousValues: UserPreviousValues;
+}
+
+export interface UserSubscriptionPayloadPromise
+  extends Promise<UserSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = UserPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = UserPreviousValuesPromise>() => T;
+}
+
+export interface UserSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<UserSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = UserSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = UserPreviousValuesSubscription>() => T;
 }
 
 export interface Transaction {
@@ -1743,162 +2042,42 @@ export interface TransactionNullablePromise
   deletedAt: () => Promise<DateTimeOutput>;
 }
 
-export interface TransactionSubscriptionPayload {
-  mutation: MutationType;
-  node: Transaction;
-  updatedFields: String[];
-  previousValues: TransactionPreviousValues;
-}
-
-export interface TransactionSubscriptionPayloadPromise
-  extends Promise<TransactionSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = TransactionPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = TransactionPreviousValuesPromise>() => T;
-}
-
-export interface TransactionSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<TransactionSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = TransactionSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = TransactionPreviousValuesSubscription>() => T;
-}
-
-export interface UserEdge {
-  node: User;
-  cursor: String;
-}
-
-export interface UserEdgePromise extends Promise<UserEdge>, Fragmentable {
-  node: <T = UserPromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface UserEdgeSubscription
-  extends Promise<AsyncIterator<UserEdge>>,
-    Fragmentable {
-  node: <T = UserSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface User {
+export interface Order {
   id: ID_Output;
-  email?: String;
-  password: String;
-  name: String;
+  status: MealStatus;
   createdAt: DateTimeOutput;
   deletedAt?: DateTimeOutput;
 }
 
-export interface UserPromise extends Promise<User>, Fragmentable {
+export interface OrderPromise extends Promise<Order>, Fragmentable {
   id: () => Promise<ID_Output>;
-  email: () => Promise<String>;
-  password: () => Promise<String>;
-  name: () => Promise<String>;
-  menuItems: <T = FragmentableArray<MenuItem>>(args?: {
-    where?: MenuItemWhereInput;
-    orderBy?: MenuItemOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-  locations: <T = FragmentableArray<Location>>(args?: {
-    where?: LocationWhereInput;
-    orderBy?: LocationOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
+  menuItem: <T = MenuItemPromise>() => T;
+  location: <T = LocationPromise>() => T;
+  status: () => Promise<MealStatus>;
   createdAt: () => Promise<DateTimeOutput>;
   deletedAt: () => Promise<DateTimeOutput>;
 }
 
-export interface UserSubscription
-  extends Promise<AsyncIterator<User>>,
+export interface OrderSubscription
+  extends Promise<AsyncIterator<Order>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
-  email: () => Promise<AsyncIterator<String>>;
-  password: () => Promise<AsyncIterator<String>>;
-  name: () => Promise<AsyncIterator<String>>;
-  menuItems: <T = Promise<AsyncIterator<MenuItemSubscription>>>(args?: {
-    where?: MenuItemWhereInput;
-    orderBy?: MenuItemOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-  locations: <T = Promise<AsyncIterator<LocationSubscription>>>(args?: {
-    where?: LocationWhereInput;
-    orderBy?: LocationOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
+  menuItem: <T = MenuItemSubscription>() => T;
+  location: <T = LocationSubscription>() => T;
+  status: () => Promise<AsyncIterator<MealStatus>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   deletedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
-export interface UserNullablePromise
-  extends Promise<User | null>,
+export interface OrderNullablePromise
+  extends Promise<Order | null>,
     Fragmentable {
   id: () => Promise<ID_Output>;
-  email: () => Promise<String>;
-  password: () => Promise<String>;
-  name: () => Promise<String>;
-  menuItems: <T = FragmentableArray<MenuItem>>(args?: {
-    where?: MenuItemWhereInput;
-    orderBy?: MenuItemOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-  locations: <T = FragmentableArray<Location>>(args?: {
-    where?: LocationWhereInput;
-    orderBy?: LocationOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
+  menuItem: <T = MenuItemPromise>() => T;
+  location: <T = LocationPromise>() => T;
+  status: () => Promise<MealStatus>;
   createdAt: () => Promise<DateTimeOutput>;
   deletedAt: () => Promise<DateTimeOutput>;
-}
-
-export interface TransactionPreviousValues {
-  id: ID_Output;
-  createdAt: DateTimeOutput;
-  deletedAt?: DateTimeOutput;
-}
-
-export interface TransactionPreviousValuesPromise
-  extends Promise<TransactionPreviousValues>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  createdAt: () => Promise<DateTimeOutput>;
-  deletedAt: () => Promise<DateTimeOutput>;
-}
-
-export interface TransactionPreviousValuesSubscription
-  extends Promise<AsyncIterator<TransactionPreviousValues>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  deletedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
 export interface PageInfo {
@@ -2133,29 +2312,20 @@ export interface LocationPreviousValuesSubscription
   deletedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
-export interface UserSubscriptionPayload {
-  mutation: MutationType;
-  node: User;
-  updatedFields: String[];
-  previousValues: UserPreviousValues;
+export interface AggregateUser {
+  count: Int;
 }
 
-export interface UserSubscriptionPayloadPromise
-  extends Promise<UserSubscriptionPayload>,
+export interface AggregateUserPromise
+  extends Promise<AggregateUser>,
     Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = UserPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = UserPreviousValuesPromise>() => T;
+  count: () => Promise<Int>;
 }
 
-export interface UserSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<UserSubscriptionPayload>>,
+export interface AggregateUserSubscription
+  extends Promise<AsyncIterator<AggregateUser>>,
     Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = UserSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = UserPreviousValuesSubscription>() => T;
+  count: () => Promise<AsyncIterator<Int>>;
 }
 
 export interface LocationConnection {
@@ -2179,25 +2349,20 @@ export interface LocationConnectionSubscription
   aggregate: <T = AggregateLocationSubscription>() => T;
 }
 
-export interface UserConnection {
-  pageInfo: PageInfo;
-  edges: UserEdge[];
+export interface BatchPayload {
+  count: Long;
 }
 
-export interface UserConnectionPromise
-  extends Promise<UserConnection>,
+export interface BatchPayloadPromise
+  extends Promise<BatchPayload>,
     Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<UserEdge>>() => T;
-  aggregate: <T = AggregateUserPromise>() => T;
+  count: () => Promise<Long>;
 }
 
-export interface UserConnectionSubscription
-  extends Promise<AsyncIterator<UserConnection>>,
+export interface BatchPayloadSubscription
+  extends Promise<AsyncIterator<BatchPayload>>,
     Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<UserEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateUserSubscription>() => T;
+  count: () => Promise<AsyncIterator<Long>>;
 }
 
 export interface TransactionConnection {
@@ -2246,40 +2411,96 @@ export interface OrderSubscriptionPayloadSubscription
   previousValues: <T = OrderPreviousValuesSubscription>() => T;
 }
 
-export interface Order {
+export interface User {
   id: ID_Output;
-  status: MealStatus;
+  email?: String;
+  password: String;
+  name: String;
   createdAt: DateTimeOutput;
   deletedAt?: DateTimeOutput;
 }
 
-export interface OrderPromise extends Promise<Order>, Fragmentable {
+export interface UserPromise extends Promise<User>, Fragmentable {
   id: () => Promise<ID_Output>;
-  menuItem: <T = MenuItemPromise>() => T;
-  location: <T = LocationPromise>() => T;
-  status: () => Promise<MealStatus>;
+  email: () => Promise<String>;
+  password: () => Promise<String>;
+  name: () => Promise<String>;
+  menuItems: <T = FragmentableArray<MenuItem>>(args?: {
+    where?: MenuItemWhereInput;
+    orderBy?: MenuItemOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  locations: <T = FragmentableArray<Location>>(args?: {
+    where?: LocationWhereInput;
+    orderBy?: LocationOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
   createdAt: () => Promise<DateTimeOutput>;
   deletedAt: () => Promise<DateTimeOutput>;
 }
 
-export interface OrderSubscription
-  extends Promise<AsyncIterator<Order>>,
+export interface UserSubscription
+  extends Promise<AsyncIterator<User>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
-  menuItem: <T = MenuItemSubscription>() => T;
-  location: <T = LocationSubscription>() => T;
-  status: () => Promise<AsyncIterator<MealStatus>>;
+  email: () => Promise<AsyncIterator<String>>;
+  password: () => Promise<AsyncIterator<String>>;
+  name: () => Promise<AsyncIterator<String>>;
+  menuItems: <T = Promise<AsyncIterator<MenuItemSubscription>>>(args?: {
+    where?: MenuItemWhereInput;
+    orderBy?: MenuItemOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  locations: <T = Promise<AsyncIterator<LocationSubscription>>>(args?: {
+    where?: LocationWhereInput;
+    orderBy?: LocationOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   deletedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
-export interface OrderNullablePromise
-  extends Promise<Order | null>,
+export interface UserNullablePromise
+  extends Promise<User | null>,
     Fragmentable {
   id: () => Promise<ID_Output>;
-  menuItem: <T = MenuItemPromise>() => T;
-  location: <T = LocationPromise>() => T;
-  status: () => Promise<MealStatus>;
+  email: () => Promise<String>;
+  password: () => Promise<String>;
+  name: () => Promise<String>;
+  menuItems: <T = FragmentableArray<MenuItem>>(args?: {
+    where?: MenuItemWhereInput;
+    orderBy?: MenuItemOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  locations: <T = FragmentableArray<Location>>(args?: {
+    where?: LocationWhereInput;
+    orderBy?: LocationOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
   createdAt: () => Promise<DateTimeOutput>;
   deletedAt: () => Promise<DateTimeOutput>;
 }
@@ -2373,20 +2594,25 @@ export interface AggregateTransactionSubscription
   count: () => Promise<AsyncIterator<Int>>;
 }
 
-export interface AggregateUser {
-  count: Int;
+export interface UserConnection {
+  pageInfo: PageInfo;
+  edges: UserEdge[];
 }
 
-export interface AggregateUserPromise
-  extends Promise<AggregateUser>,
+export interface UserConnectionPromise
+  extends Promise<UserConnection>,
     Fragmentable {
-  count: () => Promise<Int>;
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<UserEdge>>() => T;
+  aggregate: <T = AggregateUserPromise>() => T;
 }
 
-export interface AggregateUserSubscription
-  extends Promise<AsyncIterator<AggregateUser>>,
+export interface UserConnectionSubscription
+  extends Promise<AsyncIterator<UserConnection>>,
     Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<UserEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateUserSubscription>() => T;
 }
 
 export interface AggregateMenuItem {
@@ -2405,8 +2631,6 @@ export interface AggregateMenuItemSubscription
   count: () => Promise<AsyncIterator<Int>>;
 }
 
-export type Long = string;
-
 /*
 The `Float` scalar type represents signed double-precision fractional values as specified by [IEEE 754](https://en.wikipedia.org/wiki/IEEE_floating_point). 
 */
@@ -2423,20 +2647,22 @@ DateTime scalar output type, which is always a string
 export type DateTimeOutput = string;
 
 /*
-The `ID` scalar type represents a unique identifier, often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as `"4"`) or integer (such as `4`) input value will be accepted as an ID.
-*/
-export type ID_Input = string | number;
-export type ID_Output = string;
-
-/*
 The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.
 */
 export type String = string;
+
+export type Long = string;
 
 /*
 The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1. 
 */
 export type Int = number;
+
+/*
+The `ID` scalar type represents a unique identifier, often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as `"4"`) or integer (such as `4`) input value will be accepted as an ID.
+*/
+export type ID_Input = string | number;
+export type ID_Output = string;
 
 /*
 The `Boolean` scalar type represents `true` or `false`.

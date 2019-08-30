@@ -11,21 +11,15 @@ type Mutation {
 	createMenuItem(title: String!, userId: ID!, price: USCurrency!, pictureURL: URL!): MenuItem
   createTransaction(locationId: ID!, menuItemId: ID!): Transaction
 	createOrder(locationId: ID!, menuItemId: ID!): Order
-	createLocation(address: String!, phoneNumber: PhoneNumber!, email: EmailAddress!, userID: ID!): Location
-  updateUserPassword(userId: ID!, hash: String!): User
-	updateUserEmail(userId: ID!, email: EmailAddress!): User
-	updateUserName(userId: ID!, name: String!): User
-	updateMenuItemTitle(menuItemId: ID!, title: String!): MenuItem
-	updateMenuItemPictureURL(menuItemId: ID!, url: URL!): MenuItem
-	updateMenuItemPrice(menuItemId: ID!, price: USCurrency!): MenuItem
-	updateOrderStatus(orderId: ID!, status: MealStatus!): Order
-	updateLocationAddress(locationId: ID!, address: String!): Location
-	updateLocationEmail(locationId: ID!, email: EmailAddress!): Location
-	updateLocationPhoneNumber(locationId: ID!, phoneNumber: PhoneNumber!): Location
-	deleteUser(userId: ID!): Boolean
-	deleteOrder(orderId: ID!): Boolean
-	deleteLocation(locationId: ID!): Boolean
-	deleteMenuItem(menuItemId: ID!): Boolean
+	createLocation(address: String!, phoneNumber: PhoneNumber!, email: EmailAddress!, userId: ID!): Location
+  updateUser(userId: ID!, password: String!, email: EmailAddress!, name: String!): User
+	updateMenuItem(menuItemId: ID!, title: String!, url: URL!, price: USCurrency!): MenuItem
+	updateOrder(orderId: ID!, status: MealStatus!): Order
+	updateLocation(locationId: ID!, address: String!, email: EmailAddress!, phoneNumber: PhoneNumber!): Location
+	deleteUser(userId: ID!): User
+	deleteOrder(orderId: ID!): Order
+	deleteLocation(locationId: ID!): Location
+	deleteMenuItem(menuItemId: ID!): MenuItem
 }
 
 type User {
