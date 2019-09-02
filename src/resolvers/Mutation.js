@@ -77,6 +77,9 @@ function createOrder(root, args, context) {
 				id: args.locationId,
 			}
 		},
+		ingredients: {
+			connect: args.ingredients.map((val) => { return {id: val} })
+		},
 		status: "ORDERED"
 	})
 }

@@ -36,6 +36,9 @@ function ordersByLocationAndStatus(root, args, context) {
 			status: args.status
 		}
 	})
+	.$fragment(
+		`{ id status createdAt ingredients { name } }`
+	 );
 }
 
 function transactionsByDate(root, args, context) {
