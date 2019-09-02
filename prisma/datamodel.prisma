@@ -5,7 +5,7 @@ type User {
   name: String!
   menuItems: [MenuItem]! @relation(onDelete: CASCADE)
   locations: [Location]! @relation(onDelete: CASCADE)
-  menuCategories: [MenuCategory]! @relation(onDelete: CASCADE)
+  MenuCategories: [MenuCategory]! @relation(onDelete: CASCADE)
 	createdAt: DateTime! @createdAt
   deletedAt: DateTime
 }
@@ -16,10 +16,10 @@ type MenuItem {
   price: Float!
   pictureURL: String!
   author: User @relation(link: INLINE onDelete: SET_NULL)
+  category: MenuCategory @relation(link: INLINE onDelete: SET_NULL)
   orders: [Order]! @relation(onDelete: CASCADE)
   transactions: [Transaction]! @relation(onDelete: CASCADE)
   ingredients: [Ingredient!] @relation(onDelete: CASCADE)
-  category: MenuCategory @relation(link: INLINE onDelete: SET_NULL)
   createdAt: DateTime! @createdAt
   deletedAt: DateTime
 }
@@ -62,7 +62,6 @@ type MenuCategory {
 	createdAt: DateTime! @createdAt
   deletedAt: DateTime
 }
-
 
 type Ingredient {
   id: ID! @id

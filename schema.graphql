@@ -1,25 +1,32 @@
 type Query {
   menuItem(menuItemId: ID!): MenuItem
-  menuItemsByUser(userId: ID!): [MenuItem!]!
-	locationsByUser(userId: ID!): [Location!]!
+  menuItems: [MenuItem!]!
+	locations: [Location!]!
 	ordersByLocationAndStatus(locationId: ID!, status: MealStatus!): [Order]!
 	transactionsByDate(locationId: ID!, first: Int, orderBy: TransactionOrderByInput): [Transaction]!
+	menuItemsByCategory(menuCategoryId: ID!): [MenuItem]!
 }
 
 type Mutation {
-  createUser(name: String!, email: String!, password: String!): User
-	createMenuItem(title: String!, userId: ID!, price: USCurrency!, pictureURL: URL!): MenuItem
+	createMenuItem(title: String!, price: USCurrency!, pictureURL: URL!, categoryId: ID!): MenuItem
   createTransaction(locationId: ID!, menuItemId: ID!): Transaction
 	createOrder(locationId: ID!, menuItemId: ID!): Order
-	createLocation(address: String!, phoneNumber: PhoneNumber!, email: EmailAddress!, userId: ID!): Location
-  updateUser(userId: ID!, password: String!, email: EmailAddress!, name: String!): User
+	createLocation(address: String!, phoneNumber: PhoneNumber!, email: EmailAddress!): Location
+	createIngredient(menuItemId: ID!, name: String!, status: IngredientStatus!, price: USCurrency!): Ingredient
+	createMenuCategory(name: String!): MenuCategory
+  uploadMenuItemPicture(file: Upload!, menuItemId: ID!): MenuItem
+  updateUser(password: String!, email: EmailAddress!, name: String!): User
 	updateMenuItem(menuItemId: ID!, title: String!, url: URL!, price: USCurrency!): MenuItem
 	updateOrder(orderId: ID!, status: MealStatus!): Order
 	updateLocation(locationId: ID!, address: String!, email: EmailAddress!, phoneNumber: PhoneNumber!): Location
-	deleteUser(userId: ID!): User
+	updateMenuCategory(name: String!): MenuCategory
+	updateIngredient(name: String!, status: IngredientStatus!, price: USCurrency!): Ingredient
+	deleteUser: User
 	deleteOrder(orderId: ID!): Order
 	deleteLocation(locationId: ID!): Location
 	deleteMenuItem(menuItemId: ID!): MenuItem
+	signup(email: String!, password: String!, name: String!): AuthPayload
+  login(email: String!, password: String!): AuthPayload
 }
 
 type User {
@@ -29,6 +36,7 @@ type User {
 	name: String!
   menuItems: [MenuItem]!
 	locations: [Location]!
+	MenuCategories: [MenuCategory]! 
 	createdAt: DateTime!
 }
 
@@ -38,6 +46,8 @@ type MenuItem {
   price: USCurrency!
 	pictureURL: URL!
   author: User!
+	ingredients: [Ingredient]!
+	category: MenuCategory!
 	createdAt: DateTime!
 }
 
@@ -54,6 +64,7 @@ type Location {
 type Order {
 	id: ID!
 	menuItem: MenuItem!
+	ingredients: [Ingredient]!
 	location: Location!
 	status: MealStatus!
 	createdAt: DateTime!
@@ -66,11 +77,38 @@ type Transaction {
 	createdAt: DateTime!
 }
 
+type MenuCategory {
+	id: ID!
+	owner: User!
+	name: String!
+	createdAt: DateTime!
+}
+
+type Ingredient {
+  id: ID!
+  menuItem: MenuItem!
+	name: String!
+  status: IngredientStatus!
+  price: USCurrency
+	createdAt: DateTime!
+}
+
+type AuthPayload {
+  token: String
+  user: User
+}
+
 enum MealStatus {
   ORDERED
   INPREPERATION
   DONE
 	CANCELLED
+}
+
+enum IngredientStatus {
+  DEFAULT_IN_ITEM
+  FREE_ADD_ONN
+  PAYED_ADD_ONN
 }
 
 enum TransactionOrderByInput {
@@ -88,3 +126,4 @@ scalar URL
 
 scalar USCurrency
 
+scalar Upload

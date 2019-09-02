@@ -753,7 +753,6 @@ enum MealStatus {
 type MenuCategory {
   id: ID!
   owner: User!
-  menuItems(where: MenuItemWhereInput, orderBy: MenuItemOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [MenuItem!]
   name: String!
   createdAt: DateTime!
   deletedAt: DateTime
@@ -768,7 +767,6 @@ type MenuCategoryConnection {
 input MenuCategoryCreateInput {
   id: ID
   owner: UserCreateOneWithoutMenuCategoriesInput!
-  menuItems: MenuItemCreateManyWithoutCategoryInput
   name: String!
   deletedAt: DateTime
 }
@@ -778,21 +776,13 @@ input MenuCategoryCreateManyWithoutOwnerInput {
   connect: [MenuCategoryWhereUniqueInput!]
 }
 
-input MenuCategoryCreateOneWithoutMenuItemsInput {
-  create: MenuCategoryCreateWithoutMenuItemsInput
+input MenuCategoryCreateOneInput {
+  create: MenuCategoryCreateInput
   connect: MenuCategoryWhereUniqueInput
-}
-
-input MenuCategoryCreateWithoutMenuItemsInput {
-  id: ID
-  owner: UserCreateOneWithoutMenuCategoriesInput!
-  name: String!
-  deletedAt: DateTime
 }
 
 input MenuCategoryCreateWithoutOwnerInput {
   id: ID
-  menuItems: MenuItemCreateManyWithoutCategoryInput
   name: String!
   deletedAt: DateTime
 }
@@ -888,9 +878,14 @@ input MenuCategorySubscriptionWhereInput {
   NOT: [MenuCategorySubscriptionWhereInput!]
 }
 
+input MenuCategoryUpdateDataInput {
+  owner: UserUpdateOneRequiredWithoutMenuCategoriesInput
+  name: String
+  deletedAt: DateTime
+}
+
 input MenuCategoryUpdateInput {
   owner: UserUpdateOneRequiredWithoutMenuCategoriesInput
-  menuItems: MenuItemUpdateManyWithoutCategoryInput
   name: String
   deletedAt: DateTime
 }
@@ -922,23 +917,16 @@ input MenuCategoryUpdateManyWithWhereNestedInput {
   data: MenuCategoryUpdateManyDataInput!
 }
 
-input MenuCategoryUpdateOneWithoutMenuItemsInput {
-  create: MenuCategoryCreateWithoutMenuItemsInput
-  update: MenuCategoryUpdateWithoutMenuItemsDataInput
-  upsert: MenuCategoryUpsertWithoutMenuItemsInput
+input MenuCategoryUpdateOneInput {
+  create: MenuCategoryCreateInput
+  update: MenuCategoryUpdateDataInput
+  upsert: MenuCategoryUpsertNestedInput
   delete: Boolean
   disconnect: Boolean
   connect: MenuCategoryWhereUniqueInput
 }
 
-input MenuCategoryUpdateWithoutMenuItemsDataInput {
-  owner: UserUpdateOneRequiredWithoutMenuCategoriesInput
-  name: String
-  deletedAt: DateTime
-}
-
 input MenuCategoryUpdateWithoutOwnerDataInput {
-  menuItems: MenuItemUpdateManyWithoutCategoryInput
   name: String
   deletedAt: DateTime
 }
@@ -948,9 +936,9 @@ input MenuCategoryUpdateWithWhereUniqueWithoutOwnerInput {
   data: MenuCategoryUpdateWithoutOwnerDataInput!
 }
 
-input MenuCategoryUpsertWithoutMenuItemsInput {
-  update: MenuCategoryUpdateWithoutMenuItemsDataInput!
-  create: MenuCategoryCreateWithoutMenuItemsInput!
+input MenuCategoryUpsertNestedInput {
+  update: MenuCategoryUpdateDataInput!
+  create: MenuCategoryCreateInput!
 }
 
 input MenuCategoryUpsertWithWhereUniqueWithoutOwnerInput {
@@ -975,9 +963,6 @@ input MenuCategoryWhereInput {
   id_ends_with: ID
   id_not_ends_with: ID
   owner: UserWhereInput
-  menuItems_every: MenuItemWhereInput
-  menuItems_some: MenuItemWhereInput
-  menuItems_none: MenuItemWhereInput
   name: String
   name_not: String
   name_in: [String!]
@@ -1046,17 +1031,12 @@ input MenuItemCreateInput {
   orders: OrderCreateManyWithoutMenuItemInput
   transactions: TransactionCreateManyWithoutMenuItemInput
   ingredients: IngredientCreateManyWithoutMenuItemInput
-  category: MenuCategoryCreateOneWithoutMenuItemsInput
+  category: MenuCategoryCreateOneInput
   deletedAt: DateTime
 }
 
 input MenuItemCreateManyWithoutAuthorInput {
   create: [MenuItemCreateWithoutAuthorInput!]
-  connect: [MenuItemWhereUniqueInput!]
-}
-
-input MenuItemCreateManyWithoutCategoryInput {
-  create: [MenuItemCreateWithoutCategoryInput!]
   connect: [MenuItemWhereUniqueInput!]
 }
 
@@ -1083,19 +1063,7 @@ input MenuItemCreateWithoutAuthorInput {
   orders: OrderCreateManyWithoutMenuItemInput
   transactions: TransactionCreateManyWithoutMenuItemInput
   ingredients: IngredientCreateManyWithoutMenuItemInput
-  category: MenuCategoryCreateOneWithoutMenuItemsInput
-  deletedAt: DateTime
-}
-
-input MenuItemCreateWithoutCategoryInput {
-  id: ID
-  title: String!
-  price: Float!
-  pictureURL: String!
-  author: UserCreateOneWithoutMenuItemsInput
-  orders: OrderCreateManyWithoutMenuItemInput
-  transactions: TransactionCreateManyWithoutMenuItemInput
-  ingredients: IngredientCreateManyWithoutMenuItemInput
+  category: MenuCategoryCreateOneInput
   deletedAt: DateTime
 }
 
@@ -1107,7 +1075,7 @@ input MenuItemCreateWithoutIngredientsInput {
   author: UserCreateOneWithoutMenuItemsInput
   orders: OrderCreateManyWithoutMenuItemInput
   transactions: TransactionCreateManyWithoutMenuItemInput
-  category: MenuCategoryCreateOneWithoutMenuItemsInput
+  category: MenuCategoryCreateOneInput
   deletedAt: DateTime
 }
 
@@ -1119,7 +1087,7 @@ input MenuItemCreateWithoutOrdersInput {
   author: UserCreateOneWithoutMenuItemsInput
   transactions: TransactionCreateManyWithoutMenuItemInput
   ingredients: IngredientCreateManyWithoutMenuItemInput
-  category: MenuCategoryCreateOneWithoutMenuItemsInput
+  category: MenuCategoryCreateOneInput
   deletedAt: DateTime
 }
 
@@ -1131,7 +1099,7 @@ input MenuItemCreateWithoutTransactionsInput {
   author: UserCreateOneWithoutMenuItemsInput
   orders: OrderCreateManyWithoutMenuItemInput
   ingredients: IngredientCreateManyWithoutMenuItemInput
-  category: MenuCategoryCreateOneWithoutMenuItemsInput
+  category: MenuCategoryCreateOneInput
   deletedAt: DateTime
 }
 
@@ -1262,7 +1230,7 @@ input MenuItemUpdateInput {
   orders: OrderUpdateManyWithoutMenuItemInput
   transactions: TransactionUpdateManyWithoutMenuItemInput
   ingredients: IngredientUpdateManyWithoutMenuItemInput
-  category: MenuCategoryUpdateOneWithoutMenuItemsInput
+  category: MenuCategoryUpdateOneInput
   deletedAt: DateTime
 }
 
@@ -1288,18 +1256,6 @@ input MenuItemUpdateManyWithoutAuthorInput {
   disconnect: [MenuItemWhereUniqueInput!]
   update: [MenuItemUpdateWithWhereUniqueWithoutAuthorInput!]
   upsert: [MenuItemUpsertWithWhereUniqueWithoutAuthorInput!]
-  deleteMany: [MenuItemScalarWhereInput!]
-  updateMany: [MenuItemUpdateManyWithWhereNestedInput!]
-}
-
-input MenuItemUpdateManyWithoutCategoryInput {
-  create: [MenuItemCreateWithoutCategoryInput!]
-  delete: [MenuItemWhereUniqueInput!]
-  connect: [MenuItemWhereUniqueInput!]
-  set: [MenuItemWhereUniqueInput!]
-  disconnect: [MenuItemWhereUniqueInput!]
-  update: [MenuItemUpdateWithWhereUniqueWithoutCategoryInput!]
-  upsert: [MenuItemUpsertWithWhereUniqueWithoutCategoryInput!]
   deleteMany: [MenuItemScalarWhereInput!]
   updateMany: [MenuItemUpdateManyWithWhereNestedInput!]
 }
@@ -1337,18 +1293,7 @@ input MenuItemUpdateWithoutAuthorDataInput {
   orders: OrderUpdateManyWithoutMenuItemInput
   transactions: TransactionUpdateManyWithoutMenuItemInput
   ingredients: IngredientUpdateManyWithoutMenuItemInput
-  category: MenuCategoryUpdateOneWithoutMenuItemsInput
-  deletedAt: DateTime
-}
-
-input MenuItemUpdateWithoutCategoryDataInput {
-  title: String
-  price: Float
-  pictureURL: String
-  author: UserUpdateOneWithoutMenuItemsInput
-  orders: OrderUpdateManyWithoutMenuItemInput
-  transactions: TransactionUpdateManyWithoutMenuItemInput
-  ingredients: IngredientUpdateManyWithoutMenuItemInput
+  category: MenuCategoryUpdateOneInput
   deletedAt: DateTime
 }
 
@@ -1359,7 +1304,7 @@ input MenuItemUpdateWithoutIngredientsDataInput {
   author: UserUpdateOneWithoutMenuItemsInput
   orders: OrderUpdateManyWithoutMenuItemInput
   transactions: TransactionUpdateManyWithoutMenuItemInput
-  category: MenuCategoryUpdateOneWithoutMenuItemsInput
+  category: MenuCategoryUpdateOneInput
   deletedAt: DateTime
 }
 
@@ -1370,7 +1315,7 @@ input MenuItemUpdateWithoutOrdersDataInput {
   author: UserUpdateOneWithoutMenuItemsInput
   transactions: TransactionUpdateManyWithoutMenuItemInput
   ingredients: IngredientUpdateManyWithoutMenuItemInput
-  category: MenuCategoryUpdateOneWithoutMenuItemsInput
+  category: MenuCategoryUpdateOneInput
   deletedAt: DateTime
 }
 
@@ -1381,18 +1326,13 @@ input MenuItemUpdateWithoutTransactionsDataInput {
   author: UserUpdateOneWithoutMenuItemsInput
   orders: OrderUpdateManyWithoutMenuItemInput
   ingredients: IngredientUpdateManyWithoutMenuItemInput
-  category: MenuCategoryUpdateOneWithoutMenuItemsInput
+  category: MenuCategoryUpdateOneInput
   deletedAt: DateTime
 }
 
 input MenuItemUpdateWithWhereUniqueWithoutAuthorInput {
   where: MenuItemWhereUniqueInput!
   data: MenuItemUpdateWithoutAuthorDataInput!
-}
-
-input MenuItemUpdateWithWhereUniqueWithoutCategoryInput {
-  where: MenuItemWhereUniqueInput!
-  data: MenuItemUpdateWithoutCategoryDataInput!
 }
 
 input MenuItemUpsertWithoutIngredientsInput {
@@ -1414,12 +1354,6 @@ input MenuItemUpsertWithWhereUniqueWithoutAuthorInput {
   where: MenuItemWhereUniqueInput!
   update: MenuItemUpdateWithoutAuthorDataInput!
   create: MenuItemCreateWithoutAuthorInput!
-}
-
-input MenuItemUpsertWithWhereUniqueWithoutCategoryInput {
-  where: MenuItemWhereUniqueInput!
-  update: MenuItemUpdateWithoutCategoryDataInput!
-  create: MenuItemCreateWithoutCategoryInput!
 }
 
 input MenuItemWhereInput {
@@ -2111,7 +2045,7 @@ type User {
   name: String!
   menuItems(where: MenuItemWhereInput, orderBy: MenuItemOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [MenuItem!]
   locations(where: LocationWhereInput, orderBy: LocationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Location!]
-  menuCategories(where: MenuCategoryWhereInput, orderBy: MenuCategoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [MenuCategory!]
+  MenuCategories(where: MenuCategoryWhereInput, orderBy: MenuCategoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [MenuCategory!]
   createdAt: DateTime!
   deletedAt: DateTime
 }
@@ -2129,7 +2063,7 @@ input UserCreateInput {
   name: String!
   menuItems: MenuItemCreateManyWithoutAuthorInput
   locations: LocationCreateManyWithoutOwnerInput
-  menuCategories: MenuCategoryCreateManyWithoutOwnerInput
+  MenuCategories: MenuCategoryCreateManyWithoutOwnerInput
   deletedAt: DateTime
 }
 
@@ -2154,7 +2088,7 @@ input UserCreateWithoutLocationsInput {
   password: String!
   name: String!
   menuItems: MenuItemCreateManyWithoutAuthorInput
-  menuCategories: MenuCategoryCreateManyWithoutOwnerInput
+  MenuCategories: MenuCategoryCreateManyWithoutOwnerInput
   deletedAt: DateTime
 }
 
@@ -2174,7 +2108,7 @@ input UserCreateWithoutMenuItemsInput {
   password: String!
   name: String!
   locations: LocationCreateManyWithoutOwnerInput
-  menuCategories: MenuCategoryCreateManyWithoutOwnerInput
+  MenuCategories: MenuCategoryCreateManyWithoutOwnerInput
   deletedAt: DateTime
 }
 
@@ -2231,7 +2165,7 @@ input UserUpdateInput {
   name: String
   menuItems: MenuItemUpdateManyWithoutAuthorInput
   locations: LocationUpdateManyWithoutOwnerInput
-  menuCategories: MenuCategoryUpdateManyWithoutOwnerInput
+  MenuCategories: MenuCategoryUpdateManyWithoutOwnerInput
   deletedAt: DateTime
 }
 
@@ -2270,7 +2204,7 @@ input UserUpdateWithoutLocationsDataInput {
   password: String
   name: String
   menuItems: MenuItemUpdateManyWithoutAuthorInput
-  menuCategories: MenuCategoryUpdateManyWithoutOwnerInput
+  MenuCategories: MenuCategoryUpdateManyWithoutOwnerInput
   deletedAt: DateTime
 }
 
@@ -2288,7 +2222,7 @@ input UserUpdateWithoutMenuItemsDataInput {
   password: String
   name: String
   locations: LocationUpdateManyWithoutOwnerInput
-  menuCategories: MenuCategoryUpdateManyWithoutOwnerInput
+  MenuCategories: MenuCategoryUpdateManyWithoutOwnerInput
   deletedAt: DateTime
 }
 
@@ -2370,9 +2304,9 @@ input UserWhereInput {
   locations_every: LocationWhereInput
   locations_some: LocationWhereInput
   locations_none: LocationWhereInput
-  menuCategories_every: MenuCategoryWhereInput
-  menuCategories_some: MenuCategoryWhereInput
-  menuCategories_none: MenuCategoryWhereInput
+  MenuCategories_every: MenuCategoryWhereInput
+  MenuCategories_some: MenuCategoryWhereInput
+  MenuCategories_none: MenuCategoryWhereInput
   createdAt: DateTime
   createdAt_not: DateTime
   createdAt_in: [DateTime!]

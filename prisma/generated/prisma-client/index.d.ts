@@ -588,9 +588,9 @@ export interface UserWhereInput {
   locations_every?: Maybe<LocationWhereInput>;
   locations_some?: Maybe<LocationWhereInput>;
   locations_none?: Maybe<LocationWhereInput>;
-  menuCategories_every?: Maybe<MenuCategoryWhereInput>;
-  menuCategories_some?: Maybe<MenuCategoryWhereInput>;
-  menuCategories_none?: Maybe<MenuCategoryWhereInput>;
+  MenuCategories_every?: Maybe<MenuCategoryWhereInput>;
+  MenuCategories_some?: Maybe<MenuCategoryWhereInput>;
+  MenuCategories_none?: Maybe<MenuCategoryWhereInput>;
   createdAt?: Maybe<DateTimeInput>;
   createdAt_not?: Maybe<DateTimeInput>;
   createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
@@ -859,9 +859,6 @@ export interface MenuCategoryWhereInput {
   id_ends_with?: Maybe<ID_Input>;
   id_not_ends_with?: Maybe<ID_Input>;
   owner?: Maybe<UserWhereInput>;
-  menuItems_every?: Maybe<MenuItemWhereInput>;
-  menuItems_some?: Maybe<MenuItemWhereInput>;
-  menuItems_none?: Maybe<MenuItemWhereInput>;
   name?: Maybe<String>;
   name_not?: Maybe<String>;
   name_in?: Maybe<String[] | String>;
@@ -944,7 +941,7 @@ export interface MenuItemCreateWithoutIngredientsInput {
   author?: Maybe<UserCreateOneWithoutMenuItemsInput>;
   orders?: Maybe<OrderCreateManyWithoutMenuItemInput>;
   transactions?: Maybe<TransactionCreateManyWithoutMenuItemInput>;
-  category?: Maybe<MenuCategoryCreateOneWithoutMenuItemsInput>;
+  category?: Maybe<MenuCategoryCreateOneInput>;
   deletedAt?: Maybe<DateTimeInput>;
 }
 
@@ -959,7 +956,7 @@ export interface UserCreateWithoutMenuItemsInput {
   password: String;
   name: String;
   locations?: Maybe<LocationCreateManyWithoutOwnerInput>;
-  menuCategories?: Maybe<MenuCategoryCreateManyWithoutOwnerInput>;
+  MenuCategories?: Maybe<MenuCategoryCreateManyWithoutOwnerInput>;
   deletedAt?: Maybe<DateTimeInput>;
 }
 
@@ -1007,7 +1004,7 @@ export interface MenuItemCreateWithoutTransactionsInput {
   author?: Maybe<UserCreateOneWithoutMenuItemsInput>;
   orders?: Maybe<OrderCreateManyWithoutMenuItemInput>;
   ingredients?: Maybe<IngredientCreateManyWithoutMenuItemInput>;
-  category?: Maybe<MenuCategoryCreateOneWithoutMenuItemsInput>;
+  category?: Maybe<MenuCategoryCreateOneInput>;
   deletedAt?: Maybe<DateTimeInput>;
 }
 
@@ -1057,7 +1054,7 @@ export interface UserCreateWithoutLocationsInput {
   password: String;
   name: String;
   menuItems?: Maybe<MenuItemCreateManyWithoutAuthorInput>;
-  menuCategories?: Maybe<MenuCategoryCreateManyWithoutOwnerInput>;
+  MenuCategories?: Maybe<MenuCategoryCreateManyWithoutOwnerInput>;
   deletedAt?: Maybe<DateTimeInput>;
 }
 
@@ -1076,7 +1073,7 @@ export interface MenuItemCreateWithoutAuthorInput {
   orders?: Maybe<OrderCreateManyWithoutMenuItemInput>;
   transactions?: Maybe<TransactionCreateManyWithoutMenuItemInput>;
   ingredients?: Maybe<IngredientCreateManyWithoutMenuItemInput>;
-  category?: Maybe<MenuCategoryCreateOneWithoutMenuItemsInput>;
+  category?: Maybe<MenuCategoryCreateOneInput>;
   deletedAt?: Maybe<DateTimeInput>;
 }
 
@@ -1137,7 +1134,7 @@ export interface MenuItemCreateWithoutOrdersInput {
   author?: Maybe<UserCreateOneWithoutMenuItemsInput>;
   transactions?: Maybe<TransactionCreateManyWithoutMenuItemInput>;
   ingredients?: Maybe<IngredientCreateManyWithoutMenuItemInput>;
-  category?: Maybe<MenuCategoryCreateOneWithoutMenuItemsInput>;
+  category?: Maybe<MenuCategoryCreateOneInput>;
   deletedAt?: Maybe<DateTimeInput>;
 }
 
@@ -1157,12 +1154,12 @@ export interface IngredientCreateWithoutMenuItemInput {
   deletedAt?: Maybe<DateTimeInput>;
 }
 
-export interface MenuCategoryCreateOneWithoutMenuItemsInput {
-  create?: Maybe<MenuCategoryCreateWithoutMenuItemsInput>;
+export interface MenuCategoryCreateOneInput {
+  create?: Maybe<MenuCategoryCreateInput>;
   connect?: Maybe<MenuCategoryWhereUniqueInput>;
 }
 
-export interface MenuCategoryCreateWithoutMenuItemsInput {
+export interface MenuCategoryCreateInput {
   id?: Maybe<ID_Input>;
   owner: UserCreateOneWithoutMenuCategoriesInput;
   name: String;
@@ -1195,27 +1192,7 @@ export interface MenuCategoryCreateManyWithoutOwnerInput {
 
 export interface MenuCategoryCreateWithoutOwnerInput {
   id?: Maybe<ID_Input>;
-  menuItems?: Maybe<MenuItemCreateManyWithoutCategoryInput>;
   name: String;
-  deletedAt?: Maybe<DateTimeInput>;
-}
-
-export interface MenuItemCreateManyWithoutCategoryInput {
-  create?: Maybe<
-    MenuItemCreateWithoutCategoryInput[] | MenuItemCreateWithoutCategoryInput
-  >;
-  connect?: Maybe<MenuItemWhereUniqueInput[] | MenuItemWhereUniqueInput>;
-}
-
-export interface MenuItemCreateWithoutCategoryInput {
-  id?: Maybe<ID_Input>;
-  title: String;
-  price: Float;
-  pictureURL: String;
-  author?: Maybe<UserCreateOneWithoutMenuItemsInput>;
-  orders?: Maybe<OrderCreateManyWithoutMenuItemInput>;
-  transactions?: Maybe<TransactionCreateManyWithoutMenuItemInput>;
-  ingredients?: Maybe<IngredientCreateManyWithoutMenuItemInput>;
   deletedAt?: Maybe<DateTimeInput>;
 }
 
@@ -1241,7 +1218,7 @@ export interface MenuItemUpdateWithoutIngredientsDataInput {
   author?: Maybe<UserUpdateOneWithoutMenuItemsInput>;
   orders?: Maybe<OrderUpdateManyWithoutMenuItemInput>;
   transactions?: Maybe<TransactionUpdateManyWithoutMenuItemInput>;
-  category?: Maybe<MenuCategoryUpdateOneWithoutMenuItemsInput>;
+  category?: Maybe<MenuCategoryUpdateOneInput>;
   deletedAt?: Maybe<DateTimeInput>;
 }
 
@@ -1259,7 +1236,7 @@ export interface UserUpdateWithoutMenuItemsDataInput {
   password?: Maybe<String>;
   name?: Maybe<String>;
   locations?: Maybe<LocationUpdateManyWithoutOwnerInput>;
-  menuCategories?: Maybe<MenuCategoryUpdateManyWithoutOwnerInput>;
+  MenuCategories?: Maybe<MenuCategoryUpdateManyWithoutOwnerInput>;
   deletedAt?: Maybe<DateTimeInput>;
 }
 
@@ -1352,7 +1329,7 @@ export interface MenuItemUpdateWithoutTransactionsDataInput {
   author?: Maybe<UserUpdateOneWithoutMenuItemsInput>;
   orders?: Maybe<OrderUpdateManyWithoutMenuItemInput>;
   ingredients?: Maybe<IngredientUpdateManyWithoutMenuItemInput>;
-  category?: Maybe<MenuCategoryUpdateOneWithoutMenuItemsInput>;
+  category?: Maybe<MenuCategoryUpdateOneInput>;
   deletedAt?: Maybe<DateTimeInput>;
 }
 
@@ -1532,7 +1509,7 @@ export interface UserUpdateWithoutLocationsDataInput {
   password?: Maybe<String>;
   name?: Maybe<String>;
   menuItems?: Maybe<MenuItemUpdateManyWithoutAuthorInput>;
-  menuCategories?: Maybe<MenuCategoryUpdateManyWithoutOwnerInput>;
+  MenuCategories?: Maybe<MenuCategoryUpdateManyWithoutOwnerInput>;
   deletedAt?: Maybe<DateTimeInput>;
 }
 
@@ -1571,7 +1548,7 @@ export interface MenuItemUpdateWithoutAuthorDataInput {
   orders?: Maybe<OrderUpdateManyWithoutMenuItemInput>;
   transactions?: Maybe<TransactionUpdateManyWithoutMenuItemInput>;
   ingredients?: Maybe<IngredientUpdateManyWithoutMenuItemInput>;
-  category?: Maybe<MenuCategoryUpdateOneWithoutMenuItemsInput>;
+  category?: Maybe<MenuCategoryUpdateOneInput>;
   deletedAt?: Maybe<DateTimeInput>;
 }
 
@@ -1677,7 +1654,7 @@ export interface MenuItemUpdateWithoutOrdersDataInput {
   author?: Maybe<UserUpdateOneWithoutMenuItemsInput>;
   transactions?: Maybe<TransactionUpdateManyWithoutMenuItemInput>;
   ingredients?: Maybe<IngredientUpdateManyWithoutMenuItemInput>;
-  category?: Maybe<MenuCategoryUpdateOneWithoutMenuItemsInput>;
+  category?: Maybe<MenuCategoryUpdateOneInput>;
   deletedAt?: Maybe<DateTimeInput>;
 }
 
@@ -1723,16 +1700,16 @@ export interface IngredientUpsertWithWhereUniqueWithoutMenuItemInput {
   create: IngredientCreateWithoutMenuItemInput;
 }
 
-export interface MenuCategoryUpdateOneWithoutMenuItemsInput {
-  create?: Maybe<MenuCategoryCreateWithoutMenuItemsInput>;
-  update?: Maybe<MenuCategoryUpdateWithoutMenuItemsDataInput>;
-  upsert?: Maybe<MenuCategoryUpsertWithoutMenuItemsInput>;
+export interface MenuCategoryUpdateOneInput {
+  create?: Maybe<MenuCategoryCreateInput>;
+  update?: Maybe<MenuCategoryUpdateDataInput>;
+  upsert?: Maybe<MenuCategoryUpsertNestedInput>;
   delete?: Maybe<Boolean>;
   disconnect?: Maybe<Boolean>;
   connect?: Maybe<MenuCategoryWhereUniqueInput>;
 }
 
-export interface MenuCategoryUpdateWithoutMenuItemsDataInput {
+export interface MenuCategoryUpdateDataInput {
   owner?: Maybe<UserUpdateOneRequiredWithoutMenuCategoriesInput>;
   name?: Maybe<String>;
   deletedAt?: Maybe<DateTimeInput>;
@@ -1759,9 +1736,9 @@ export interface UserUpsertWithoutMenuCategoriesInput {
   create: UserCreateWithoutMenuCategoriesInput;
 }
 
-export interface MenuCategoryUpsertWithoutMenuItemsInput {
-  update: MenuCategoryUpdateWithoutMenuItemsDataInput;
-  create: MenuCategoryCreateWithoutMenuItemsInput;
+export interface MenuCategoryUpsertNestedInput {
+  update: MenuCategoryUpdateDataInput;
+  create: MenuCategoryCreateInput;
 }
 
 export interface MenuItemUpsertWithoutOrdersInput {
@@ -2006,54 +1983,8 @@ export interface MenuCategoryUpdateWithWhereUniqueWithoutOwnerInput {
 }
 
 export interface MenuCategoryUpdateWithoutOwnerDataInput {
-  menuItems?: Maybe<MenuItemUpdateManyWithoutCategoryInput>;
   name?: Maybe<String>;
   deletedAt?: Maybe<DateTimeInput>;
-}
-
-export interface MenuItemUpdateManyWithoutCategoryInput {
-  create?: Maybe<
-    MenuItemCreateWithoutCategoryInput[] | MenuItemCreateWithoutCategoryInput
-  >;
-  delete?: Maybe<MenuItemWhereUniqueInput[] | MenuItemWhereUniqueInput>;
-  connect?: Maybe<MenuItemWhereUniqueInput[] | MenuItemWhereUniqueInput>;
-  set?: Maybe<MenuItemWhereUniqueInput[] | MenuItemWhereUniqueInput>;
-  disconnect?: Maybe<MenuItemWhereUniqueInput[] | MenuItemWhereUniqueInput>;
-  update?: Maybe<
-    | MenuItemUpdateWithWhereUniqueWithoutCategoryInput[]
-    | MenuItemUpdateWithWhereUniqueWithoutCategoryInput
-  >;
-  upsert?: Maybe<
-    | MenuItemUpsertWithWhereUniqueWithoutCategoryInput[]
-    | MenuItemUpsertWithWhereUniqueWithoutCategoryInput
-  >;
-  deleteMany?: Maybe<MenuItemScalarWhereInput[] | MenuItemScalarWhereInput>;
-  updateMany?: Maybe<
-    | MenuItemUpdateManyWithWhereNestedInput[]
-    | MenuItemUpdateManyWithWhereNestedInput
-  >;
-}
-
-export interface MenuItemUpdateWithWhereUniqueWithoutCategoryInput {
-  where: MenuItemWhereUniqueInput;
-  data: MenuItemUpdateWithoutCategoryDataInput;
-}
-
-export interface MenuItemUpdateWithoutCategoryDataInput {
-  title?: Maybe<String>;
-  price?: Maybe<Float>;
-  pictureURL?: Maybe<String>;
-  author?: Maybe<UserUpdateOneWithoutMenuItemsInput>;
-  orders?: Maybe<OrderUpdateManyWithoutMenuItemInput>;
-  transactions?: Maybe<TransactionUpdateManyWithoutMenuItemInput>;
-  ingredients?: Maybe<IngredientUpdateManyWithoutMenuItemInput>;
-  deletedAt?: Maybe<DateTimeInput>;
-}
-
-export interface MenuItemUpsertWithWhereUniqueWithoutCategoryInput {
-  where: MenuItemWhereUniqueInput;
-  update: MenuItemUpdateWithoutCategoryDataInput;
-  create: MenuItemCreateWithoutCategoryInput;
 }
 
 export interface MenuCategoryUpsertWithWhereUniqueWithoutOwnerInput {
@@ -2290,17 +2221,8 @@ export interface LocationUpdateManyMutationInput {
   deletedAt?: Maybe<DateTimeInput>;
 }
 
-export interface MenuCategoryCreateInput {
-  id?: Maybe<ID_Input>;
-  owner: UserCreateOneWithoutMenuCategoriesInput;
-  menuItems?: Maybe<MenuItemCreateManyWithoutCategoryInput>;
-  name: String;
-  deletedAt?: Maybe<DateTimeInput>;
-}
-
 export interface MenuCategoryUpdateInput {
   owner?: Maybe<UserUpdateOneRequiredWithoutMenuCategoriesInput>;
-  menuItems?: Maybe<MenuItemUpdateManyWithoutCategoryInput>;
   name?: Maybe<String>;
   deletedAt?: Maybe<DateTimeInput>;
 }
@@ -2319,7 +2241,7 @@ export interface MenuItemCreateInput {
   orders?: Maybe<OrderCreateManyWithoutMenuItemInput>;
   transactions?: Maybe<TransactionCreateManyWithoutMenuItemInput>;
   ingredients?: Maybe<IngredientCreateManyWithoutMenuItemInput>;
-  category?: Maybe<MenuCategoryCreateOneWithoutMenuItemsInput>;
+  category?: Maybe<MenuCategoryCreateOneInput>;
   deletedAt?: Maybe<DateTimeInput>;
 }
 
@@ -2331,7 +2253,7 @@ export interface MenuItemUpdateInput {
   orders?: Maybe<OrderUpdateManyWithoutMenuItemInput>;
   transactions?: Maybe<TransactionUpdateManyWithoutMenuItemInput>;
   ingredients?: Maybe<IngredientUpdateManyWithoutMenuItemInput>;
-  category?: Maybe<MenuCategoryUpdateOneWithoutMenuItemsInput>;
+  category?: Maybe<MenuCategoryUpdateOneInput>;
   deletedAt?: Maybe<DateTimeInput>;
 }
 
@@ -2388,7 +2310,7 @@ export interface UserCreateInput {
   name: String;
   menuItems?: Maybe<MenuItemCreateManyWithoutAuthorInput>;
   locations?: Maybe<LocationCreateManyWithoutOwnerInput>;
-  menuCategories?: Maybe<MenuCategoryCreateManyWithoutOwnerInput>;
+  MenuCategories?: Maybe<MenuCategoryCreateManyWithoutOwnerInput>;
   deletedAt?: Maybe<DateTimeInput>;
 }
 
@@ -2398,7 +2320,7 @@ export interface UserUpdateInput {
   name?: Maybe<String>;
   menuItems?: Maybe<MenuItemUpdateManyWithoutAuthorInput>;
   locations?: Maybe<LocationUpdateManyWithoutOwnerInput>;
-  menuCategories?: Maybe<MenuCategoryUpdateManyWithoutOwnerInput>;
+  MenuCategories?: Maybe<MenuCategoryUpdateManyWithoutOwnerInput>;
   deletedAt?: Maybe<DateTimeInput>;
 }
 
@@ -2718,7 +2640,7 @@ export interface UserPromise extends Promise<User>, Fragmentable {
     first?: Int;
     last?: Int;
   }) => T;
-  menuCategories: <T = FragmentableArray<MenuCategory>>(args?: {
+  MenuCategories: <T = FragmentableArray<MenuCategory>>(args?: {
     where?: MenuCategoryWhereInput;
     orderBy?: MenuCategoryOrderByInput;
     skip?: Int;
@@ -2756,7 +2678,7 @@ export interface UserSubscription
     first?: Int;
     last?: Int;
   }) => T;
-  menuCategories: <
+  MenuCategories: <
     T = Promise<AsyncIterator<MenuCategorySubscription>>
   >(args?: {
     where?: MenuCategoryWhereInput;
@@ -2796,7 +2718,7 @@ export interface UserNullablePromise
     first?: Int;
     last?: Int;
   }) => T;
-  menuCategories: <T = FragmentableArray<MenuCategory>>(args?: {
+  MenuCategories: <T = FragmentableArray<MenuCategory>>(args?: {
     where?: MenuCategoryWhereInput;
     orderBy?: MenuCategoryOrderByInput;
     skip?: Int;
@@ -3017,15 +2939,6 @@ export interface MenuCategoryPromise
     Fragmentable {
   id: () => Promise<ID_Output>;
   owner: <T = UserPromise>() => T;
-  menuItems: <T = FragmentableArray<MenuItem>>(args?: {
-    where?: MenuItemWhereInput;
-    orderBy?: MenuItemOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
   name: () => Promise<String>;
   createdAt: () => Promise<DateTimeOutput>;
   deletedAt: () => Promise<DateTimeOutput>;
@@ -3036,15 +2949,6 @@ export interface MenuCategorySubscription
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
   owner: <T = UserSubscription>() => T;
-  menuItems: <T = Promise<AsyncIterator<MenuItemSubscription>>>(args?: {
-    where?: MenuItemWhereInput;
-    orderBy?: MenuItemOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
   name: () => Promise<AsyncIterator<String>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   deletedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
@@ -3055,15 +2959,6 @@ export interface MenuCategoryNullablePromise
     Fragmentable {
   id: () => Promise<ID_Output>;
   owner: <T = UserPromise>() => T;
-  menuItems: <T = FragmentableArray<MenuItem>>(args?: {
-    where?: MenuItemWhereInput;
-    orderBy?: MenuItemOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
   name: () => Promise<String>;
   createdAt: () => Promise<DateTimeOutput>;
   deletedAt: () => Promise<DateTimeOutput>;
