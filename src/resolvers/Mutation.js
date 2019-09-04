@@ -9,6 +9,7 @@ function createMenuItem(root, args, context) {
 		price: args.price,
 		title: args.title,
 		pictureURL: args.pictureURL,
+		description: args.description,
 		author: {
 			connect: {
 				id: userId,
@@ -123,9 +124,15 @@ function updateMenuItem(root, args, context) {
 	return context.prisma.updateMenuItem({
 		where: { id: args.menuItemId },
 		data: { 
+			description: args.description,
 			title: args.title,
 			pictureURL: args.url,
-			price: args.price
+			price: args.price,
+			menuItemToUpsell: {
+				connect: {
+					id: args.menuItemToUpsell
+				}
+			}
 		}
 	})
 }

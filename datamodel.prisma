@@ -13,12 +13,14 @@ type User {
 type MenuItem {
   id: ID! @id
   title: String!
+  description: String!
   price: Float!
   pictureURL: String!
   author: User @relation(link: INLINE onDelete: SET_NULL)
   orders: [Order]! @relation(onDelete: CASCADE)
   transactions: [Transaction]! @relation(onDelete: CASCADE)
   ingredients: [Ingredient!] @relation(onDelete: CASCADE)
+  menuItemToUpsell: MenuItem @relation(name: "MenuItemToUpsell")
   category: MenuCategory @relation(link: INLINE onDelete: SET_NULL)
   createdAt: DateTime! @createdAt
   deletedAt: DateTime

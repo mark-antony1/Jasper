@@ -8,7 +8,7 @@ type Query {
 }
 
 type Mutation {
-	createMenuItem(title: String!, price: USCurrency!, pictureURL: URL!, categoryId: ID!): MenuItem
+	createMenuItem(title: String!, price: USCurrency!, pictureURL: URL!, categoryId: ID!, description: String!): MenuItem
   createTransaction(locationId: ID!, menuItemId: ID!): Transaction
 	createOrder(locationId: ID!, menuItemId: ID!, ingredients: [String]!): Order
 	createLocation(address: String!, phoneNumber: PhoneNumber!, email: EmailAddress!): Location
@@ -16,7 +16,7 @@ type Mutation {
 	createMenuCategory(name: String!): MenuCategory
   uploadMenuItemPicture(file: Upload!, menuItemId: ID!): MenuItem
   updateUser(password: String!, email: EmailAddress!, name: String!): User
-	updateMenuItem(menuItemId: ID!, title: String!, url: URL!, price: USCurrency!): MenuItem
+	updateMenuItem(menuItemId: ID!, title: String!, description: String!, url: URL!, price: USCurrency!, menuItemToUpsell: ID): MenuItem
 	updateOrder(orderId: ID!, status: MealStatus!): Order
 	updateLocation(locationId: ID!, address: String!, email: EmailAddress!, phoneNumber: PhoneNumber!): Location
 	updateMenuCategory(name: String!): MenuCategory
@@ -43,11 +43,13 @@ type User {
 type MenuItem {
   id: ID!
   title: String!
+	description: String!
   price: USCurrency!
 	pictureURL: URL!
   author: User!
 	ingredients: [Ingredient]!
 	category: MenuCategory!
+	menuItemToUpsell: MenuItem
 	createdAt: DateTime!
 }
 

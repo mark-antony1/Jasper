@@ -17,6 +17,7 @@
 *.local
 *.log
 *.log.gz
+prisma.yml
 
 # used by deploy-node-app
 tmp/
