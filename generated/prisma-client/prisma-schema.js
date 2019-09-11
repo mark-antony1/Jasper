@@ -3,11 +3,7 @@ module.exports = {
   // Please don't change this file manually but run `prisma generate` to update it.
   // For more information, please read the docs: https://www.prisma.io/docs/prisma-client/
 
-/* GraphQL */ `type AggregateIngredient {
-  count: Int!
-}
-
-type AggregateLocation {
+/* GraphQL */ `type AggregateLocation {
   count: Int!
 }
 
@@ -16,6 +12,14 @@ type AggregateMenuCategory {
 }
 
 type AggregateMenuItem {
+  count: Int!
+}
+
+type AggregateOption {
+  count: Int!
+}
+
+type AggregateOptionValue {
   count: Int!
 }
 
@@ -36,319 +40,6 @@ type BatchPayload {
 }
 
 scalar DateTime
-
-type Ingredient {
-  id: ID!
-  menuItem: MenuItem!
-  name: String!
-  status: IngredientStatus!
-  price: Float
-  createdAt: DateTime!
-  deletedAt: DateTime
-}
-
-type IngredientConnection {
-  pageInfo: PageInfo!
-  edges: [IngredientEdge]!
-  aggregate: AggregateIngredient!
-}
-
-input IngredientCreateInput {
-  id: ID
-  menuItem: MenuItemCreateOneWithoutIngredientsInput!
-  name: String!
-  status: IngredientStatus!
-  price: Float
-  deletedAt: DateTime
-}
-
-input IngredientCreateManyInput {
-  create: [IngredientCreateInput!]
-  connect: [IngredientWhereUniqueInput!]
-}
-
-input IngredientCreateManyWithoutMenuItemInput {
-  create: [IngredientCreateWithoutMenuItemInput!]
-  connect: [IngredientWhereUniqueInput!]
-}
-
-input IngredientCreateWithoutMenuItemInput {
-  id: ID
-  name: String!
-  status: IngredientStatus!
-  price: Float
-  deletedAt: DateTime
-}
-
-type IngredientEdge {
-  node: Ingredient!
-  cursor: String!
-}
-
-enum IngredientOrderByInput {
-  id_ASC
-  id_DESC
-  name_ASC
-  name_DESC
-  status_ASC
-  status_DESC
-  price_ASC
-  price_DESC
-  createdAt_ASC
-  createdAt_DESC
-  deletedAt_ASC
-  deletedAt_DESC
-}
-
-type IngredientPreviousValues {
-  id: ID!
-  name: String!
-  status: IngredientStatus!
-  price: Float
-  createdAt: DateTime!
-  deletedAt: DateTime
-}
-
-input IngredientScalarWhereInput {
-  id: ID
-  id_not: ID
-  id_in: [ID!]
-  id_not_in: [ID!]
-  id_lt: ID
-  id_lte: ID
-  id_gt: ID
-  id_gte: ID
-  id_contains: ID
-  id_not_contains: ID
-  id_starts_with: ID
-  id_not_starts_with: ID
-  id_ends_with: ID
-  id_not_ends_with: ID
-  name: String
-  name_not: String
-  name_in: [String!]
-  name_not_in: [String!]
-  name_lt: String
-  name_lte: String
-  name_gt: String
-  name_gte: String
-  name_contains: String
-  name_not_contains: String
-  name_starts_with: String
-  name_not_starts_with: String
-  name_ends_with: String
-  name_not_ends_with: String
-  status: IngredientStatus
-  status_not: IngredientStatus
-  status_in: [IngredientStatus!]
-  status_not_in: [IngredientStatus!]
-  price: Float
-  price_not: Float
-  price_in: [Float!]
-  price_not_in: [Float!]
-  price_lt: Float
-  price_lte: Float
-  price_gt: Float
-  price_gte: Float
-  createdAt: DateTime
-  createdAt_not: DateTime
-  createdAt_in: [DateTime!]
-  createdAt_not_in: [DateTime!]
-  createdAt_lt: DateTime
-  createdAt_lte: DateTime
-  createdAt_gt: DateTime
-  createdAt_gte: DateTime
-  deletedAt: DateTime
-  deletedAt_not: DateTime
-  deletedAt_in: [DateTime!]
-  deletedAt_not_in: [DateTime!]
-  deletedAt_lt: DateTime
-  deletedAt_lte: DateTime
-  deletedAt_gt: DateTime
-  deletedAt_gte: DateTime
-  AND: [IngredientScalarWhereInput!]
-  OR: [IngredientScalarWhereInput!]
-  NOT: [IngredientScalarWhereInput!]
-}
-
-enum IngredientStatus {
-  DEFAULT_IN_ITEM
-  FREE_ADD_ONN
-  PAYED_ADD_ONN
-}
-
-type IngredientSubscriptionPayload {
-  mutation: MutationType!
-  node: Ingredient
-  updatedFields: [String!]
-  previousValues: IngredientPreviousValues
-}
-
-input IngredientSubscriptionWhereInput {
-  mutation_in: [MutationType!]
-  updatedFields_contains: String
-  updatedFields_contains_every: [String!]
-  updatedFields_contains_some: [String!]
-  node: IngredientWhereInput
-  AND: [IngredientSubscriptionWhereInput!]
-  OR: [IngredientSubscriptionWhereInput!]
-  NOT: [IngredientSubscriptionWhereInput!]
-}
-
-input IngredientUpdateDataInput {
-  menuItem: MenuItemUpdateOneRequiredWithoutIngredientsInput
-  name: String
-  status: IngredientStatus
-  price: Float
-  deletedAt: DateTime
-}
-
-input IngredientUpdateInput {
-  menuItem: MenuItemUpdateOneRequiredWithoutIngredientsInput
-  name: String
-  status: IngredientStatus
-  price: Float
-  deletedAt: DateTime
-}
-
-input IngredientUpdateManyDataInput {
-  name: String
-  status: IngredientStatus
-  price: Float
-  deletedAt: DateTime
-}
-
-input IngredientUpdateManyInput {
-  create: [IngredientCreateInput!]
-  update: [IngredientUpdateWithWhereUniqueNestedInput!]
-  upsert: [IngredientUpsertWithWhereUniqueNestedInput!]
-  delete: [IngredientWhereUniqueInput!]
-  connect: [IngredientWhereUniqueInput!]
-  set: [IngredientWhereUniqueInput!]
-  disconnect: [IngredientWhereUniqueInput!]
-  deleteMany: [IngredientScalarWhereInput!]
-  updateMany: [IngredientUpdateManyWithWhereNestedInput!]
-}
-
-input IngredientUpdateManyMutationInput {
-  name: String
-  status: IngredientStatus
-  price: Float
-  deletedAt: DateTime
-}
-
-input IngredientUpdateManyWithoutMenuItemInput {
-  create: [IngredientCreateWithoutMenuItemInput!]
-  delete: [IngredientWhereUniqueInput!]
-  connect: [IngredientWhereUniqueInput!]
-  set: [IngredientWhereUniqueInput!]
-  disconnect: [IngredientWhereUniqueInput!]
-  update: [IngredientUpdateWithWhereUniqueWithoutMenuItemInput!]
-  upsert: [IngredientUpsertWithWhereUniqueWithoutMenuItemInput!]
-  deleteMany: [IngredientScalarWhereInput!]
-  updateMany: [IngredientUpdateManyWithWhereNestedInput!]
-}
-
-input IngredientUpdateManyWithWhereNestedInput {
-  where: IngredientScalarWhereInput!
-  data: IngredientUpdateManyDataInput!
-}
-
-input IngredientUpdateWithoutMenuItemDataInput {
-  name: String
-  status: IngredientStatus
-  price: Float
-  deletedAt: DateTime
-}
-
-input IngredientUpdateWithWhereUniqueNestedInput {
-  where: IngredientWhereUniqueInput!
-  data: IngredientUpdateDataInput!
-}
-
-input IngredientUpdateWithWhereUniqueWithoutMenuItemInput {
-  where: IngredientWhereUniqueInput!
-  data: IngredientUpdateWithoutMenuItemDataInput!
-}
-
-input IngredientUpsertWithWhereUniqueNestedInput {
-  where: IngredientWhereUniqueInput!
-  update: IngredientUpdateDataInput!
-  create: IngredientCreateInput!
-}
-
-input IngredientUpsertWithWhereUniqueWithoutMenuItemInput {
-  where: IngredientWhereUniqueInput!
-  update: IngredientUpdateWithoutMenuItemDataInput!
-  create: IngredientCreateWithoutMenuItemInput!
-}
-
-input IngredientWhereInput {
-  id: ID
-  id_not: ID
-  id_in: [ID!]
-  id_not_in: [ID!]
-  id_lt: ID
-  id_lte: ID
-  id_gt: ID
-  id_gte: ID
-  id_contains: ID
-  id_not_contains: ID
-  id_starts_with: ID
-  id_not_starts_with: ID
-  id_ends_with: ID
-  id_not_ends_with: ID
-  menuItem: MenuItemWhereInput
-  name: String
-  name_not: String
-  name_in: [String!]
-  name_not_in: [String!]
-  name_lt: String
-  name_lte: String
-  name_gt: String
-  name_gte: String
-  name_contains: String
-  name_not_contains: String
-  name_starts_with: String
-  name_not_starts_with: String
-  name_ends_with: String
-  name_not_ends_with: String
-  status: IngredientStatus
-  status_not: IngredientStatus
-  status_in: [IngredientStatus!]
-  status_not_in: [IngredientStatus!]
-  price: Float
-  price_not: Float
-  price_in: [Float!]
-  price_not_in: [Float!]
-  price_lt: Float
-  price_lte: Float
-  price_gt: Float
-  price_gte: Float
-  createdAt: DateTime
-  createdAt_not: DateTime
-  createdAt_in: [DateTime!]
-  createdAt_not_in: [DateTime!]
-  createdAt_lt: DateTime
-  createdAt_lte: DateTime
-  createdAt_gt: DateTime
-  createdAt_gte: DateTime
-  deletedAt: DateTime
-  deletedAt_not: DateTime
-  deletedAt_in: [DateTime!]
-  deletedAt_not_in: [DateTime!]
-  deletedAt_lt: DateTime
-  deletedAt_lte: DateTime
-  deletedAt_gt: DateTime
-  deletedAt_gte: DateTime
-  AND: [IngredientWhereInput!]
-  OR: [IngredientWhereInput!]
-  NOT: [IngredientWhereInput!]
-}
-
-input IngredientWhereUniqueInput {
-  id: ID
-}
 
 type Location {
   id: ID!
@@ -1026,7 +717,7 @@ type MenuItem {
   author: User
   orders(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Order!]
   transactions(where: TransactionWhereInput, orderBy: TransactionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Transaction!]
-  ingredients(where: IngredientWhereInput, orderBy: IngredientOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Ingredient!]
+  options(where: OptionWhereInput, orderBy: OptionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Option!]
   menuItemToUpsell: MenuItem
   category: MenuCategory
   createdAt: DateTime!
@@ -1048,7 +739,7 @@ input MenuItemCreateInput {
   author: UserCreateOneWithoutMenuItemsInput
   orders: OrderCreateManyWithoutMenuItemInput
   transactions: TransactionCreateManyWithoutMenuItemInput
-  ingredients: IngredientCreateManyWithoutMenuItemInput
+  options: OptionCreateManyWithoutMenuItemInput
   menuItemToUpsell: MenuItemCreateOneWithoutMenuItemToUpsellInput
   category: MenuCategoryCreateOneWithoutMenuItemsInput
   deletedAt: DateTime
@@ -1064,13 +755,13 @@ input MenuItemCreateManyWithoutCategoryInput {
   connect: [MenuItemWhereUniqueInput!]
 }
 
-input MenuItemCreateOneWithoutIngredientsInput {
-  create: MenuItemCreateWithoutIngredientsInput
+input MenuItemCreateOneWithoutMenuItemToUpsellInput {
+  create: MenuItemCreateWithoutMenuItemToUpsellInput
   connect: MenuItemWhereUniqueInput
 }
 
-input MenuItemCreateOneWithoutMenuItemToUpsellInput {
-  create: MenuItemCreateWithoutMenuItemToUpsellInput
+input MenuItemCreateOneWithoutOptionsInput {
+  create: MenuItemCreateWithoutOptionsInput
   connect: MenuItemWhereUniqueInput
 }
 
@@ -1092,7 +783,7 @@ input MenuItemCreateWithoutAuthorInput {
   pictureURL: String!
   orders: OrderCreateManyWithoutMenuItemInput
   transactions: TransactionCreateManyWithoutMenuItemInput
-  ingredients: IngredientCreateManyWithoutMenuItemInput
+  options: OptionCreateManyWithoutMenuItemInput
   menuItemToUpsell: MenuItemCreateOneWithoutMenuItemToUpsellInput
   category: MenuCategoryCreateOneWithoutMenuItemsInput
   deletedAt: DateTime
@@ -1107,22 +798,8 @@ input MenuItemCreateWithoutCategoryInput {
   author: UserCreateOneWithoutMenuItemsInput
   orders: OrderCreateManyWithoutMenuItemInput
   transactions: TransactionCreateManyWithoutMenuItemInput
-  ingredients: IngredientCreateManyWithoutMenuItemInput
+  options: OptionCreateManyWithoutMenuItemInput
   menuItemToUpsell: MenuItemCreateOneWithoutMenuItemToUpsellInput
-  deletedAt: DateTime
-}
-
-input MenuItemCreateWithoutIngredientsInput {
-  id: ID
-  title: String!
-  description: String!
-  price: Float!
-  pictureURL: String!
-  author: UserCreateOneWithoutMenuItemsInput
-  orders: OrderCreateManyWithoutMenuItemInput
-  transactions: TransactionCreateManyWithoutMenuItemInput
-  menuItemToUpsell: MenuItemCreateOneWithoutMenuItemToUpsellInput
-  category: MenuCategoryCreateOneWithoutMenuItemsInput
   deletedAt: DateTime
 }
 
@@ -1135,7 +812,21 @@ input MenuItemCreateWithoutMenuItemToUpsellInput {
   author: UserCreateOneWithoutMenuItemsInput
   orders: OrderCreateManyWithoutMenuItemInput
   transactions: TransactionCreateManyWithoutMenuItemInput
-  ingredients: IngredientCreateManyWithoutMenuItemInput
+  options: OptionCreateManyWithoutMenuItemInput
+  category: MenuCategoryCreateOneWithoutMenuItemsInput
+  deletedAt: DateTime
+}
+
+input MenuItemCreateWithoutOptionsInput {
+  id: ID
+  title: String!
+  description: String!
+  price: Float!
+  pictureURL: String!
+  author: UserCreateOneWithoutMenuItemsInput
+  orders: OrderCreateManyWithoutMenuItemInput
+  transactions: TransactionCreateManyWithoutMenuItemInput
+  menuItemToUpsell: MenuItemCreateOneWithoutMenuItemToUpsellInput
   category: MenuCategoryCreateOneWithoutMenuItemsInput
   deletedAt: DateTime
 }
@@ -1148,7 +839,7 @@ input MenuItemCreateWithoutOrdersInput {
   pictureURL: String!
   author: UserCreateOneWithoutMenuItemsInput
   transactions: TransactionCreateManyWithoutMenuItemInput
-  ingredients: IngredientCreateManyWithoutMenuItemInput
+  options: OptionCreateManyWithoutMenuItemInput
   menuItemToUpsell: MenuItemCreateOneWithoutMenuItemToUpsellInput
   category: MenuCategoryCreateOneWithoutMenuItemsInput
   deletedAt: DateTime
@@ -1162,7 +853,7 @@ input MenuItemCreateWithoutTransactionsInput {
   pictureURL: String!
   author: UserCreateOneWithoutMenuItemsInput
   orders: OrderCreateManyWithoutMenuItemInput
-  ingredients: IngredientCreateManyWithoutMenuItemInput
+  options: OptionCreateManyWithoutMenuItemInput
   menuItemToUpsell: MenuItemCreateOneWithoutMenuItemToUpsellInput
   category: MenuCategoryCreateOneWithoutMenuItemsInput
   deletedAt: DateTime
@@ -1312,7 +1003,7 @@ input MenuItemUpdateInput {
   author: UserUpdateOneWithoutMenuItemsInput
   orders: OrderUpdateManyWithoutMenuItemInput
   transactions: TransactionUpdateManyWithoutMenuItemInput
-  ingredients: IngredientUpdateManyWithoutMenuItemInput
+  options: OptionUpdateManyWithoutMenuItemInput
   menuItemToUpsell: MenuItemUpdateOneWithoutMenuItemToUpsellInput
   category: MenuCategoryUpdateOneWithoutMenuItemsInput
   deletedAt: DateTime
@@ -1363,10 +1054,10 @@ input MenuItemUpdateManyWithWhereNestedInput {
   data: MenuItemUpdateManyDataInput!
 }
 
-input MenuItemUpdateOneRequiredWithoutIngredientsInput {
-  create: MenuItemCreateWithoutIngredientsInput
-  update: MenuItemUpdateWithoutIngredientsDataInput
-  upsert: MenuItemUpsertWithoutIngredientsInput
+input MenuItemUpdateOneRequiredWithoutOptionsInput {
+  create: MenuItemCreateWithoutOptionsInput
+  update: MenuItemUpdateWithoutOptionsDataInput
+  upsert: MenuItemUpsertWithoutOptionsInput
   connect: MenuItemWhereUniqueInput
 }
 
@@ -1400,7 +1091,7 @@ input MenuItemUpdateWithoutAuthorDataInput {
   pictureURL: String
   orders: OrderUpdateManyWithoutMenuItemInput
   transactions: TransactionUpdateManyWithoutMenuItemInput
-  ingredients: IngredientUpdateManyWithoutMenuItemInput
+  options: OptionUpdateManyWithoutMenuItemInput
   menuItemToUpsell: MenuItemUpdateOneWithoutMenuItemToUpsellInput
   category: MenuCategoryUpdateOneWithoutMenuItemsInput
   deletedAt: DateTime
@@ -1414,21 +1105,8 @@ input MenuItemUpdateWithoutCategoryDataInput {
   author: UserUpdateOneWithoutMenuItemsInput
   orders: OrderUpdateManyWithoutMenuItemInput
   transactions: TransactionUpdateManyWithoutMenuItemInput
-  ingredients: IngredientUpdateManyWithoutMenuItemInput
+  options: OptionUpdateManyWithoutMenuItemInput
   menuItemToUpsell: MenuItemUpdateOneWithoutMenuItemToUpsellInput
-  deletedAt: DateTime
-}
-
-input MenuItemUpdateWithoutIngredientsDataInput {
-  title: String
-  description: String
-  price: Float
-  pictureURL: String
-  author: UserUpdateOneWithoutMenuItemsInput
-  orders: OrderUpdateManyWithoutMenuItemInput
-  transactions: TransactionUpdateManyWithoutMenuItemInput
-  menuItemToUpsell: MenuItemUpdateOneWithoutMenuItemToUpsellInput
-  category: MenuCategoryUpdateOneWithoutMenuItemsInput
   deletedAt: DateTime
 }
 
@@ -1440,7 +1118,20 @@ input MenuItemUpdateWithoutMenuItemToUpsellDataInput {
   author: UserUpdateOneWithoutMenuItemsInput
   orders: OrderUpdateManyWithoutMenuItemInput
   transactions: TransactionUpdateManyWithoutMenuItemInput
-  ingredients: IngredientUpdateManyWithoutMenuItemInput
+  options: OptionUpdateManyWithoutMenuItemInput
+  category: MenuCategoryUpdateOneWithoutMenuItemsInput
+  deletedAt: DateTime
+}
+
+input MenuItemUpdateWithoutOptionsDataInput {
+  title: String
+  description: String
+  price: Float
+  pictureURL: String
+  author: UserUpdateOneWithoutMenuItemsInput
+  orders: OrderUpdateManyWithoutMenuItemInput
+  transactions: TransactionUpdateManyWithoutMenuItemInput
+  menuItemToUpsell: MenuItemUpdateOneWithoutMenuItemToUpsellInput
   category: MenuCategoryUpdateOneWithoutMenuItemsInput
   deletedAt: DateTime
 }
@@ -1452,7 +1143,7 @@ input MenuItemUpdateWithoutOrdersDataInput {
   pictureURL: String
   author: UserUpdateOneWithoutMenuItemsInput
   transactions: TransactionUpdateManyWithoutMenuItemInput
-  ingredients: IngredientUpdateManyWithoutMenuItemInput
+  options: OptionUpdateManyWithoutMenuItemInput
   menuItemToUpsell: MenuItemUpdateOneWithoutMenuItemToUpsellInput
   category: MenuCategoryUpdateOneWithoutMenuItemsInput
   deletedAt: DateTime
@@ -1465,7 +1156,7 @@ input MenuItemUpdateWithoutTransactionsDataInput {
   pictureURL: String
   author: UserUpdateOneWithoutMenuItemsInput
   orders: OrderUpdateManyWithoutMenuItemInput
-  ingredients: IngredientUpdateManyWithoutMenuItemInput
+  options: OptionUpdateManyWithoutMenuItemInput
   menuItemToUpsell: MenuItemUpdateOneWithoutMenuItemToUpsellInput
   category: MenuCategoryUpdateOneWithoutMenuItemsInput
   deletedAt: DateTime
@@ -1481,14 +1172,14 @@ input MenuItemUpdateWithWhereUniqueWithoutCategoryInput {
   data: MenuItemUpdateWithoutCategoryDataInput!
 }
 
-input MenuItemUpsertWithoutIngredientsInput {
-  update: MenuItemUpdateWithoutIngredientsDataInput!
-  create: MenuItemCreateWithoutIngredientsInput!
-}
-
 input MenuItemUpsertWithoutMenuItemToUpsellInput {
   update: MenuItemUpdateWithoutMenuItemToUpsellDataInput!
   create: MenuItemCreateWithoutMenuItemToUpsellInput!
+}
+
+input MenuItemUpsertWithoutOptionsInput {
+  update: MenuItemUpdateWithoutOptionsDataInput!
+  create: MenuItemCreateWithoutOptionsInput!
 }
 
 input MenuItemUpsertWithoutOrdersInput {
@@ -1585,9 +1276,9 @@ input MenuItemWhereInput {
   transactions_every: TransactionWhereInput
   transactions_some: TransactionWhereInput
   transactions_none: TransactionWhereInput
-  ingredients_every: IngredientWhereInput
-  ingredients_some: IngredientWhereInput
-  ingredients_none: IngredientWhereInput
+  options_every: OptionWhereInput
+  options_some: OptionWhereInput
+  options_none: OptionWhereInput
   menuItemToUpsell: MenuItemWhereInput
   category: MenuCategoryWhereInput
   createdAt: DateTime
@@ -1616,12 +1307,6 @@ input MenuItemWhereUniqueInput {
 }
 
 type Mutation {
-  createIngredient(data: IngredientCreateInput!): Ingredient!
-  updateIngredient(data: IngredientUpdateInput!, where: IngredientWhereUniqueInput!): Ingredient
-  updateManyIngredients(data: IngredientUpdateManyMutationInput!, where: IngredientWhereInput): BatchPayload!
-  upsertIngredient(where: IngredientWhereUniqueInput!, create: IngredientCreateInput!, update: IngredientUpdateInput!): Ingredient!
-  deleteIngredient(where: IngredientWhereUniqueInput!): Ingredient
-  deleteManyIngredients(where: IngredientWhereInput): BatchPayload!
   createLocation(data: LocationCreateInput!): Location!
   updateLocation(data: LocationUpdateInput!, where: LocationWhereUniqueInput!): Location
   updateManyLocations(data: LocationUpdateManyMutationInput!, where: LocationWhereInput): BatchPayload!
@@ -1640,6 +1325,18 @@ type Mutation {
   upsertMenuItem(where: MenuItemWhereUniqueInput!, create: MenuItemCreateInput!, update: MenuItemUpdateInput!): MenuItem!
   deleteMenuItem(where: MenuItemWhereUniqueInput!): MenuItem
   deleteManyMenuItems(where: MenuItemWhereInput): BatchPayload!
+  createOption(data: OptionCreateInput!): Option!
+  updateOption(data: OptionUpdateInput!, where: OptionWhereUniqueInput!): Option
+  updateManyOptions(data: OptionUpdateManyMutationInput!, where: OptionWhereInput): BatchPayload!
+  upsertOption(where: OptionWhereUniqueInput!, create: OptionCreateInput!, update: OptionUpdateInput!): Option!
+  deleteOption(where: OptionWhereUniqueInput!): Option
+  deleteManyOptions(where: OptionWhereInput): BatchPayload!
+  createOptionValue(data: OptionValueCreateInput!): OptionValue!
+  updateOptionValue(data: OptionValueUpdateInput!, where: OptionValueWhereUniqueInput!): OptionValue
+  updateManyOptionValues(data: OptionValueUpdateManyMutationInput!, where: OptionValueWhereInput): BatchPayload!
+  upsertOptionValue(where: OptionValueWhereUniqueInput!, create: OptionValueCreateInput!, update: OptionValueUpdateInput!): OptionValue!
+  deleteOptionValue(where: OptionValueWhereUniqueInput!): OptionValue
+  deleteManyOptionValues(where: OptionValueWhereInput): BatchPayload!
   createOrder(data: OrderCreateInput!): Order!
   updateOrder(data: OrderUpdateInput!, where: OrderWhereUniqueInput!): Order
   updateManyOrders(data: OrderUpdateManyMutationInput!, where: OrderWhereInput): BatchPayload!
@@ -1670,10 +1367,678 @@ interface Node {
   id: ID!
 }
 
+type Option {
+  id: ID!
+  menuItem: MenuItem!
+  title: String!
+  maxSelections: Int!
+  required: Boolean!
+  priority: Int!
+  optionValues(where: OptionValueWhereInput, orderBy: OptionValueOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [OptionValue!]
+  createdAt: DateTime!
+  deletedAt: DateTime
+}
+
+type OptionConnection {
+  pageInfo: PageInfo!
+  edges: [OptionEdge]!
+  aggregate: AggregateOption!
+}
+
+input OptionCreateInput {
+  id: ID
+  menuItem: MenuItemCreateOneWithoutOptionsInput!
+  title: String!
+  maxSelections: Int!
+  required: Boolean!
+  priority: Int!
+  optionValues: OptionValueCreateManyWithoutOptionInput
+  deletedAt: DateTime
+}
+
+input OptionCreateManyInput {
+  create: [OptionCreateInput!]
+  connect: [OptionWhereUniqueInput!]
+}
+
+input OptionCreateManyWithoutMenuItemInput {
+  create: [OptionCreateWithoutMenuItemInput!]
+  connect: [OptionWhereUniqueInput!]
+}
+
+input OptionCreateOneWithoutOptionValuesInput {
+  create: OptionCreateWithoutOptionValuesInput
+  connect: OptionWhereUniqueInput
+}
+
+input OptionCreateWithoutMenuItemInput {
+  id: ID
+  title: String!
+  maxSelections: Int!
+  required: Boolean!
+  priority: Int!
+  optionValues: OptionValueCreateManyWithoutOptionInput
+  deletedAt: DateTime
+}
+
+input OptionCreateWithoutOptionValuesInput {
+  id: ID
+  menuItem: MenuItemCreateOneWithoutOptionsInput!
+  title: String!
+  maxSelections: Int!
+  required: Boolean!
+  priority: Int!
+  deletedAt: DateTime
+}
+
+type OptionEdge {
+  node: Option!
+  cursor: String!
+}
+
+enum OptionOrderByInput {
+  id_ASC
+  id_DESC
+  title_ASC
+  title_DESC
+  maxSelections_ASC
+  maxSelections_DESC
+  required_ASC
+  required_DESC
+  priority_ASC
+  priority_DESC
+  createdAt_ASC
+  createdAt_DESC
+  deletedAt_ASC
+  deletedAt_DESC
+}
+
+type OptionPreviousValues {
+  id: ID!
+  title: String!
+  maxSelections: Int!
+  required: Boolean!
+  priority: Int!
+  createdAt: DateTime!
+  deletedAt: DateTime
+}
+
+input OptionScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  title: String
+  title_not: String
+  title_in: [String!]
+  title_not_in: [String!]
+  title_lt: String
+  title_lte: String
+  title_gt: String
+  title_gte: String
+  title_contains: String
+  title_not_contains: String
+  title_starts_with: String
+  title_not_starts_with: String
+  title_ends_with: String
+  title_not_ends_with: String
+  maxSelections: Int
+  maxSelections_not: Int
+  maxSelections_in: [Int!]
+  maxSelections_not_in: [Int!]
+  maxSelections_lt: Int
+  maxSelections_lte: Int
+  maxSelections_gt: Int
+  maxSelections_gte: Int
+  required: Boolean
+  required_not: Boolean
+  priority: Int
+  priority_not: Int
+  priority_in: [Int!]
+  priority_not_in: [Int!]
+  priority_lt: Int
+  priority_lte: Int
+  priority_gt: Int
+  priority_gte: Int
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  deletedAt: DateTime
+  deletedAt_not: DateTime
+  deletedAt_in: [DateTime!]
+  deletedAt_not_in: [DateTime!]
+  deletedAt_lt: DateTime
+  deletedAt_lte: DateTime
+  deletedAt_gt: DateTime
+  deletedAt_gte: DateTime
+  AND: [OptionScalarWhereInput!]
+  OR: [OptionScalarWhereInput!]
+  NOT: [OptionScalarWhereInput!]
+}
+
+type OptionSubscriptionPayload {
+  mutation: MutationType!
+  node: Option
+  updatedFields: [String!]
+  previousValues: OptionPreviousValues
+}
+
+input OptionSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: OptionWhereInput
+  AND: [OptionSubscriptionWhereInput!]
+  OR: [OptionSubscriptionWhereInput!]
+  NOT: [OptionSubscriptionWhereInput!]
+}
+
+input OptionUpdateDataInput {
+  menuItem: MenuItemUpdateOneRequiredWithoutOptionsInput
+  title: String
+  maxSelections: Int
+  required: Boolean
+  priority: Int
+  optionValues: OptionValueUpdateManyWithoutOptionInput
+  deletedAt: DateTime
+}
+
+input OptionUpdateInput {
+  menuItem: MenuItemUpdateOneRequiredWithoutOptionsInput
+  title: String
+  maxSelections: Int
+  required: Boolean
+  priority: Int
+  optionValues: OptionValueUpdateManyWithoutOptionInput
+  deletedAt: DateTime
+}
+
+input OptionUpdateManyDataInput {
+  title: String
+  maxSelections: Int
+  required: Boolean
+  priority: Int
+  deletedAt: DateTime
+}
+
+input OptionUpdateManyInput {
+  create: [OptionCreateInput!]
+  update: [OptionUpdateWithWhereUniqueNestedInput!]
+  upsert: [OptionUpsertWithWhereUniqueNestedInput!]
+  delete: [OptionWhereUniqueInput!]
+  connect: [OptionWhereUniqueInput!]
+  set: [OptionWhereUniqueInput!]
+  disconnect: [OptionWhereUniqueInput!]
+  deleteMany: [OptionScalarWhereInput!]
+  updateMany: [OptionUpdateManyWithWhereNestedInput!]
+}
+
+input OptionUpdateManyMutationInput {
+  title: String
+  maxSelections: Int
+  required: Boolean
+  priority: Int
+  deletedAt: DateTime
+}
+
+input OptionUpdateManyWithoutMenuItemInput {
+  create: [OptionCreateWithoutMenuItemInput!]
+  delete: [OptionWhereUniqueInput!]
+  connect: [OptionWhereUniqueInput!]
+  set: [OptionWhereUniqueInput!]
+  disconnect: [OptionWhereUniqueInput!]
+  update: [OptionUpdateWithWhereUniqueWithoutMenuItemInput!]
+  upsert: [OptionUpsertWithWhereUniqueWithoutMenuItemInput!]
+  deleteMany: [OptionScalarWhereInput!]
+  updateMany: [OptionUpdateManyWithWhereNestedInput!]
+}
+
+input OptionUpdateManyWithWhereNestedInput {
+  where: OptionScalarWhereInput!
+  data: OptionUpdateManyDataInput!
+}
+
+input OptionUpdateOneRequiredWithoutOptionValuesInput {
+  create: OptionCreateWithoutOptionValuesInput
+  update: OptionUpdateWithoutOptionValuesDataInput
+  upsert: OptionUpsertWithoutOptionValuesInput
+  connect: OptionWhereUniqueInput
+}
+
+input OptionUpdateWithoutMenuItemDataInput {
+  title: String
+  maxSelections: Int
+  required: Boolean
+  priority: Int
+  optionValues: OptionValueUpdateManyWithoutOptionInput
+  deletedAt: DateTime
+}
+
+input OptionUpdateWithoutOptionValuesDataInput {
+  menuItem: MenuItemUpdateOneRequiredWithoutOptionsInput
+  title: String
+  maxSelections: Int
+  required: Boolean
+  priority: Int
+  deletedAt: DateTime
+}
+
+input OptionUpdateWithWhereUniqueNestedInput {
+  where: OptionWhereUniqueInput!
+  data: OptionUpdateDataInput!
+}
+
+input OptionUpdateWithWhereUniqueWithoutMenuItemInput {
+  where: OptionWhereUniqueInput!
+  data: OptionUpdateWithoutMenuItemDataInput!
+}
+
+input OptionUpsertWithoutOptionValuesInput {
+  update: OptionUpdateWithoutOptionValuesDataInput!
+  create: OptionCreateWithoutOptionValuesInput!
+}
+
+input OptionUpsertWithWhereUniqueNestedInput {
+  where: OptionWhereUniqueInput!
+  update: OptionUpdateDataInput!
+  create: OptionCreateInput!
+}
+
+input OptionUpsertWithWhereUniqueWithoutMenuItemInput {
+  where: OptionWhereUniqueInput!
+  update: OptionUpdateWithoutMenuItemDataInput!
+  create: OptionCreateWithoutMenuItemInput!
+}
+
+type OptionValue {
+  id: ID!
+  option: Option!
+  title: String!
+  price: Float
+  isDefault: Boolean!
+  priority: Int!
+  createdAt: DateTime!
+  deletedAt: DateTime
+}
+
+type OptionValueConnection {
+  pageInfo: PageInfo!
+  edges: [OptionValueEdge]!
+  aggregate: AggregateOptionValue!
+}
+
+input OptionValueCreateInput {
+  id: ID
+  option: OptionCreateOneWithoutOptionValuesInput!
+  title: String!
+  price: Float
+  isDefault: Boolean!
+  priority: Int!
+  deletedAt: DateTime
+}
+
+input OptionValueCreateManyWithoutOptionInput {
+  create: [OptionValueCreateWithoutOptionInput!]
+  connect: [OptionValueWhereUniqueInput!]
+}
+
+input OptionValueCreateWithoutOptionInput {
+  id: ID
+  title: String!
+  price: Float
+  isDefault: Boolean!
+  priority: Int!
+  deletedAt: DateTime
+}
+
+type OptionValueEdge {
+  node: OptionValue!
+  cursor: String!
+}
+
+enum OptionValueOrderByInput {
+  id_ASC
+  id_DESC
+  title_ASC
+  title_DESC
+  price_ASC
+  price_DESC
+  isDefault_ASC
+  isDefault_DESC
+  priority_ASC
+  priority_DESC
+  createdAt_ASC
+  createdAt_DESC
+  deletedAt_ASC
+  deletedAt_DESC
+}
+
+type OptionValuePreviousValues {
+  id: ID!
+  title: String!
+  price: Float
+  isDefault: Boolean!
+  priority: Int!
+  createdAt: DateTime!
+  deletedAt: DateTime
+}
+
+input OptionValueScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  title: String
+  title_not: String
+  title_in: [String!]
+  title_not_in: [String!]
+  title_lt: String
+  title_lte: String
+  title_gt: String
+  title_gte: String
+  title_contains: String
+  title_not_contains: String
+  title_starts_with: String
+  title_not_starts_with: String
+  title_ends_with: String
+  title_not_ends_with: String
+  price: Float
+  price_not: Float
+  price_in: [Float!]
+  price_not_in: [Float!]
+  price_lt: Float
+  price_lte: Float
+  price_gt: Float
+  price_gte: Float
+  isDefault: Boolean
+  isDefault_not: Boolean
+  priority: Int
+  priority_not: Int
+  priority_in: [Int!]
+  priority_not_in: [Int!]
+  priority_lt: Int
+  priority_lte: Int
+  priority_gt: Int
+  priority_gte: Int
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  deletedAt: DateTime
+  deletedAt_not: DateTime
+  deletedAt_in: [DateTime!]
+  deletedAt_not_in: [DateTime!]
+  deletedAt_lt: DateTime
+  deletedAt_lte: DateTime
+  deletedAt_gt: DateTime
+  deletedAt_gte: DateTime
+  AND: [OptionValueScalarWhereInput!]
+  OR: [OptionValueScalarWhereInput!]
+  NOT: [OptionValueScalarWhereInput!]
+}
+
+type OptionValueSubscriptionPayload {
+  mutation: MutationType!
+  node: OptionValue
+  updatedFields: [String!]
+  previousValues: OptionValuePreviousValues
+}
+
+input OptionValueSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: OptionValueWhereInput
+  AND: [OptionValueSubscriptionWhereInput!]
+  OR: [OptionValueSubscriptionWhereInput!]
+  NOT: [OptionValueSubscriptionWhereInput!]
+}
+
+input OptionValueUpdateInput {
+  option: OptionUpdateOneRequiredWithoutOptionValuesInput
+  title: String
+  price: Float
+  isDefault: Boolean
+  priority: Int
+  deletedAt: DateTime
+}
+
+input OptionValueUpdateManyDataInput {
+  title: String
+  price: Float
+  isDefault: Boolean
+  priority: Int
+  deletedAt: DateTime
+}
+
+input OptionValueUpdateManyMutationInput {
+  title: String
+  price: Float
+  isDefault: Boolean
+  priority: Int
+  deletedAt: DateTime
+}
+
+input OptionValueUpdateManyWithoutOptionInput {
+  create: [OptionValueCreateWithoutOptionInput!]
+  delete: [OptionValueWhereUniqueInput!]
+  connect: [OptionValueWhereUniqueInput!]
+  set: [OptionValueWhereUniqueInput!]
+  disconnect: [OptionValueWhereUniqueInput!]
+  update: [OptionValueUpdateWithWhereUniqueWithoutOptionInput!]
+  upsert: [OptionValueUpsertWithWhereUniqueWithoutOptionInput!]
+  deleteMany: [OptionValueScalarWhereInput!]
+  updateMany: [OptionValueUpdateManyWithWhereNestedInput!]
+}
+
+input OptionValueUpdateManyWithWhereNestedInput {
+  where: OptionValueScalarWhereInput!
+  data: OptionValueUpdateManyDataInput!
+}
+
+input OptionValueUpdateWithoutOptionDataInput {
+  title: String
+  price: Float
+  isDefault: Boolean
+  priority: Int
+  deletedAt: DateTime
+}
+
+input OptionValueUpdateWithWhereUniqueWithoutOptionInput {
+  where: OptionValueWhereUniqueInput!
+  data: OptionValueUpdateWithoutOptionDataInput!
+}
+
+input OptionValueUpsertWithWhereUniqueWithoutOptionInput {
+  where: OptionValueWhereUniqueInput!
+  update: OptionValueUpdateWithoutOptionDataInput!
+  create: OptionValueCreateWithoutOptionInput!
+}
+
+input OptionValueWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  option: OptionWhereInput
+  title: String
+  title_not: String
+  title_in: [String!]
+  title_not_in: [String!]
+  title_lt: String
+  title_lte: String
+  title_gt: String
+  title_gte: String
+  title_contains: String
+  title_not_contains: String
+  title_starts_with: String
+  title_not_starts_with: String
+  title_ends_with: String
+  title_not_ends_with: String
+  price: Float
+  price_not: Float
+  price_in: [Float!]
+  price_not_in: [Float!]
+  price_lt: Float
+  price_lte: Float
+  price_gt: Float
+  price_gte: Float
+  isDefault: Boolean
+  isDefault_not: Boolean
+  priority: Int
+  priority_not: Int
+  priority_in: [Int!]
+  priority_not_in: [Int!]
+  priority_lt: Int
+  priority_lte: Int
+  priority_gt: Int
+  priority_gte: Int
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  deletedAt: DateTime
+  deletedAt_not: DateTime
+  deletedAt_in: [DateTime!]
+  deletedAt_not_in: [DateTime!]
+  deletedAt_lt: DateTime
+  deletedAt_lte: DateTime
+  deletedAt_gt: DateTime
+  deletedAt_gte: DateTime
+  AND: [OptionValueWhereInput!]
+  OR: [OptionValueWhereInput!]
+  NOT: [OptionValueWhereInput!]
+}
+
+input OptionValueWhereUniqueInput {
+  id: ID
+}
+
+input OptionWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  menuItem: MenuItemWhereInput
+  title: String
+  title_not: String
+  title_in: [String!]
+  title_not_in: [String!]
+  title_lt: String
+  title_lte: String
+  title_gt: String
+  title_gte: String
+  title_contains: String
+  title_not_contains: String
+  title_starts_with: String
+  title_not_starts_with: String
+  title_ends_with: String
+  title_not_ends_with: String
+  maxSelections: Int
+  maxSelections_not: Int
+  maxSelections_in: [Int!]
+  maxSelections_not_in: [Int!]
+  maxSelections_lt: Int
+  maxSelections_lte: Int
+  maxSelections_gt: Int
+  maxSelections_gte: Int
+  required: Boolean
+  required_not: Boolean
+  priority: Int
+  priority_not: Int
+  priority_in: [Int!]
+  priority_not_in: [Int!]
+  priority_lt: Int
+  priority_lte: Int
+  priority_gt: Int
+  priority_gte: Int
+  optionValues_every: OptionValueWhereInput
+  optionValues_some: OptionValueWhereInput
+  optionValues_none: OptionValueWhereInput
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  deletedAt: DateTime
+  deletedAt_not: DateTime
+  deletedAt_in: [DateTime!]
+  deletedAt_not_in: [DateTime!]
+  deletedAt_lt: DateTime
+  deletedAt_lte: DateTime
+  deletedAt_gt: DateTime
+  deletedAt_gte: DateTime
+  AND: [OptionWhereInput!]
+  OR: [OptionWhereInput!]
+  NOT: [OptionWhereInput!]
+}
+
+input OptionWhereUniqueInput {
+  id: ID
+}
+
 type Order {
   id: ID!
   menuItem: MenuItem!
-  ingredients(where: IngredientWhereInput, orderBy: IngredientOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Ingredient!]
+  options(where: OptionWhereInput, orderBy: OptionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Option!]
   location: Location!
   status: MealStatus!
   createdAt: DateTime!
@@ -1689,7 +2054,7 @@ type OrderConnection {
 input OrderCreateInput {
   id: ID
   menuItem: MenuItemCreateOneWithoutOrdersInput!
-  ingredients: IngredientCreateManyInput
+  options: OptionCreateManyInput
   location: LocationCreateOneWithoutOrdersInput!
   status: MealStatus!
   deletedAt: DateTime
@@ -1708,14 +2073,14 @@ input OrderCreateManyWithoutMenuItemInput {
 input OrderCreateWithoutLocationInput {
   id: ID
   menuItem: MenuItemCreateOneWithoutOrdersInput!
-  ingredients: IngredientCreateManyInput
+  options: OptionCreateManyInput
   status: MealStatus!
   deletedAt: DateTime
 }
 
 input OrderCreateWithoutMenuItemInput {
   id: ID
-  ingredients: IngredientCreateManyInput
+  options: OptionCreateManyInput
   location: LocationCreateOneWithoutOrdersInput!
   status: MealStatus!
   deletedAt: DateTime
@@ -1804,7 +2169,7 @@ input OrderSubscriptionWhereInput {
 
 input OrderUpdateInput {
   menuItem: MenuItemUpdateOneRequiredWithoutOrdersInput
-  ingredients: IngredientUpdateManyInput
+  options: OptionUpdateManyInput
   location: LocationUpdateOneRequiredWithoutOrdersInput
   status: MealStatus
   deletedAt: DateTime
@@ -1851,13 +2216,13 @@ input OrderUpdateManyWithWhereNestedInput {
 
 input OrderUpdateWithoutLocationDataInput {
   menuItem: MenuItemUpdateOneRequiredWithoutOrdersInput
-  ingredients: IngredientUpdateManyInput
+  options: OptionUpdateManyInput
   status: MealStatus
   deletedAt: DateTime
 }
 
 input OrderUpdateWithoutMenuItemDataInput {
-  ingredients: IngredientUpdateManyInput
+  options: OptionUpdateManyInput
   location: LocationUpdateOneRequiredWithoutOrdersInput
   status: MealStatus
   deletedAt: DateTime
@@ -1901,9 +2266,9 @@ input OrderWhereInput {
   id_ends_with: ID
   id_not_ends_with: ID
   menuItem: MenuItemWhereInput
-  ingredients_every: IngredientWhereInput
-  ingredients_some: IngredientWhereInput
-  ingredients_none: IngredientWhereInput
+  options_every: OptionWhereInput
+  options_some: OptionWhereInput
+  options_none: OptionWhereInput
   location: LocationWhereInput
   status: MealStatus
   status_not: MealStatus
@@ -1942,9 +2307,6 @@ type PageInfo {
 }
 
 type Query {
-  ingredient(where: IngredientWhereUniqueInput!): Ingredient
-  ingredients(where: IngredientWhereInput, orderBy: IngredientOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Ingredient]!
-  ingredientsConnection(where: IngredientWhereInput, orderBy: IngredientOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): IngredientConnection!
   location(where: LocationWhereUniqueInput!): Location
   locations(where: LocationWhereInput, orderBy: LocationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Location]!
   locationsConnection(where: LocationWhereInput, orderBy: LocationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): LocationConnection!
@@ -1954,6 +2316,12 @@ type Query {
   menuItem(where: MenuItemWhereUniqueInput!): MenuItem
   menuItems(where: MenuItemWhereInput, orderBy: MenuItemOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [MenuItem]!
   menuItemsConnection(where: MenuItemWhereInput, orderBy: MenuItemOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): MenuItemConnection!
+  option(where: OptionWhereUniqueInput!): Option
+  options(where: OptionWhereInput, orderBy: OptionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Option]!
+  optionsConnection(where: OptionWhereInput, orderBy: OptionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OptionConnection!
+  optionValue(where: OptionValueWhereUniqueInput!): OptionValue
+  optionValues(where: OptionValueWhereInput, orderBy: OptionValueOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [OptionValue]!
+  optionValuesConnection(where: OptionValueWhereInput, orderBy: OptionValueOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OptionValueConnection!
   order(where: OrderWhereUniqueInput!): Order
   orders(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Order]!
   ordersConnection(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OrderConnection!
@@ -1967,10 +2335,11 @@ type Query {
 }
 
 type Subscription {
-  ingredient(where: IngredientSubscriptionWhereInput): IngredientSubscriptionPayload
   location(where: LocationSubscriptionWhereInput): LocationSubscriptionPayload
   menuCategory(where: MenuCategorySubscriptionWhereInput): MenuCategorySubscriptionPayload
   menuItem(where: MenuItemSubscriptionWhereInput): MenuItemSubscriptionPayload
+  option(where: OptionSubscriptionWhereInput): OptionSubscriptionPayload
+  optionValue(where: OptionValueSubscriptionWhereInput): OptionValueSubscriptionPayload
   order(where: OrderSubscriptionWhereInput): OrderSubscriptionPayload
   transaction(where: TransactionSubscriptionWhereInput): TransactionSubscriptionPayload
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
@@ -2215,6 +2584,7 @@ type User {
   email: String
   password: String!
   name: String!
+  pictureURL: String!
   menuItems(where: MenuItemWhereInput, orderBy: MenuItemOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [MenuItem!]
   locations(where: LocationWhereInput, orderBy: LocationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Location!]
   menuCategories(where: MenuCategoryWhereInput, orderBy: MenuCategoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [MenuCategory!]
@@ -2233,6 +2603,7 @@ input UserCreateInput {
   email: String
   password: String!
   name: String!
+  pictureURL: String!
   menuItems: MenuItemCreateManyWithoutAuthorInput
   locations: LocationCreateManyWithoutOwnerInput
   menuCategories: MenuCategoryCreateManyWithoutOwnerInput
@@ -2259,6 +2630,7 @@ input UserCreateWithoutLocationsInput {
   email: String
   password: String!
   name: String!
+  pictureURL: String!
   menuItems: MenuItemCreateManyWithoutAuthorInput
   menuCategories: MenuCategoryCreateManyWithoutOwnerInput
   deletedAt: DateTime
@@ -2269,6 +2641,7 @@ input UserCreateWithoutMenuCategoriesInput {
   email: String
   password: String!
   name: String!
+  pictureURL: String!
   menuItems: MenuItemCreateManyWithoutAuthorInput
   locations: LocationCreateManyWithoutOwnerInput
   deletedAt: DateTime
@@ -2279,6 +2652,7 @@ input UserCreateWithoutMenuItemsInput {
   email: String
   password: String!
   name: String!
+  pictureURL: String!
   locations: LocationCreateManyWithoutOwnerInput
   menuCategories: MenuCategoryCreateManyWithoutOwnerInput
   deletedAt: DateTime
@@ -2298,6 +2672,8 @@ enum UserOrderByInput {
   password_DESC
   name_ASC
   name_DESC
+  pictureURL_ASC
+  pictureURL_DESC
   createdAt_ASC
   createdAt_DESC
   deletedAt_ASC
@@ -2309,6 +2685,7 @@ type UserPreviousValues {
   email: String
   password: String!
   name: String!
+  pictureURL: String!
   createdAt: DateTime!
   deletedAt: DateTime
 }
@@ -2335,6 +2712,7 @@ input UserUpdateInput {
   email: String
   password: String
   name: String
+  pictureURL: String
   menuItems: MenuItemUpdateManyWithoutAuthorInput
   locations: LocationUpdateManyWithoutOwnerInput
   menuCategories: MenuCategoryUpdateManyWithoutOwnerInput
@@ -2345,6 +2723,7 @@ input UserUpdateManyMutationInput {
   email: String
   password: String
   name: String
+  pictureURL: String
   deletedAt: DateTime
 }
 
@@ -2375,6 +2754,7 @@ input UserUpdateWithoutLocationsDataInput {
   email: String
   password: String
   name: String
+  pictureURL: String
   menuItems: MenuItemUpdateManyWithoutAuthorInput
   menuCategories: MenuCategoryUpdateManyWithoutOwnerInput
   deletedAt: DateTime
@@ -2384,6 +2764,7 @@ input UserUpdateWithoutMenuCategoriesDataInput {
   email: String
   password: String
   name: String
+  pictureURL: String
   menuItems: MenuItemUpdateManyWithoutAuthorInput
   locations: LocationUpdateManyWithoutOwnerInput
   deletedAt: DateTime
@@ -2393,6 +2774,7 @@ input UserUpdateWithoutMenuItemsDataInput {
   email: String
   password: String
   name: String
+  pictureURL: String
   locations: LocationUpdateManyWithoutOwnerInput
   menuCategories: MenuCategoryUpdateManyWithoutOwnerInput
   deletedAt: DateTime
@@ -2470,6 +2852,20 @@ input UserWhereInput {
   name_not_starts_with: String
   name_ends_with: String
   name_not_ends_with: String
+  pictureURL: String
+  pictureURL_not: String
+  pictureURL_in: [String!]
+  pictureURL_not_in: [String!]
+  pictureURL_lt: String
+  pictureURL_lte: String
+  pictureURL_gt: String
+  pictureURL_gte: String
+  pictureURL_contains: String
+  pictureURL_not_contains: String
+  pictureURL_starts_with: String
+  pictureURL_not_starts_with: String
+  pictureURL_ends_with: String
+  pictureURL_not_ends_with: String
   menuItems_every: MenuItemWhereInput
   menuItems_some: MenuItemWhereInput
   menuItems_none: MenuItemWhereInput

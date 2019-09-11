@@ -35,15 +35,32 @@ function createMenuCategory(root, args, context) {
 	})
 }
 
-function createIngredient(root, args, context) {
+function createOption(root, args, context) {
 	getUserId(context)
-	return context.prisma.createIngredient({
-		name: args.name,
-		status: args.status,
-		price: args.price,
+	return context.prisma.createOption({
+		title: args.title,
+		maxSelections: args.maxSelections,
+		required: args.required,
+		priority: args.priority,
 		menuItem: {
 			connect: {
 				id: args.menuItemId,
+			}
+		}
+	})
+}
+
+
+function createOptionValue(root, args, context) {
+	getUserId(context)
+	return context.prisma.createOptionValue({
+		title: args.title,
+		priority: args.priority,
+		price: args.price,
+		isDefault: args.isDefault,
+		option: {
+			connect: {
+				id: args.optionId,
 			}
 		}
 	})
@@ -78,8 +95,8 @@ function createOrder(root, args, context) {
 				id: args.locationId,
 			}
 		},
-		ingredients: {
-			connect: args.ingredients.map((val) => { return {id: val} })
+		options: {
+			connect: args.options.map((val) => { return {id: val} })
 		},
 		status: "ORDERED"
 	})
@@ -147,10 +164,10 @@ function updateMenuCategory(root, args, context) {
 	})
 }
 
-function updateIngredient(root, args, context) {
+function updateOption(root, args, context) {
 	getUserId(context)
-	return context.prisma.updateIngredient({
-		where: { id: args.ingredientId },
+	return context.prisma.updateOption({
+		where: { id: args.optionId },
 		data: {
 			name: args.string,
 			status: args.status,
@@ -252,7 +269,7 @@ module.exports = {
 	updateUser,
 	updateOrder,
 	createOrder,
-	createIngredient,
+	createOption,
 	createTransaction,
 	createMenuItem,
 	updateMenuItem,
@@ -260,5 +277,6 @@ module.exports = {
 	uploadMenuItemPicture,
 	createMenuCategory,
 	updateMenuCategory,
-	updateIngredient
+	updateOption,
+	createOptionValue
 }

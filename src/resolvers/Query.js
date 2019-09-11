@@ -37,7 +37,7 @@ function ordersByLocationAndStatus(root, args, context) {
 		}
 	})
 	.$fragment(
-		`{ id status createdAt ingredients { name } }`
+		`{ id status createdAt options { title } }`
 	 );
 }
 
@@ -63,7 +63,21 @@ function menuItemsByCategory(root, args, context) {
 	})
 	.menuItems()
 	.$fragment(
-		`{ id price title ingredients { name price status } }`
+		`{ id price title options { title required priority } }`
+	 );
+}
+
+function optionsByMenuItem(root, args, context) {
+	getUserId(context)
+	return context.prisma
+	.menuItem({
+		id: args.menuItemId
+	})
+	.options({
+		orderBy: args.OptionOrderByInput
+	})
+	.$fragment(
+		`{ id title maxSelections required priority optionValues { title price isDefault priority } }`
 	 );
 }
 
@@ -74,5 +88,6 @@ module.exports = {
 	locations,
 	ordersByLocationAndStatus,
 	transactionsByDate,
-	menuItemsByCategory
+	menuItemsByCategory,
+	optionsByMenuItem
 }

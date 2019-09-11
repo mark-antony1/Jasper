@@ -5,27 +5,30 @@ type Query {
 	ordersByLocationAndStatus(locationId: ID!, status: MealStatus!): [Order]!
 	transactionsByDate(locationId: ID!, first: Int, orderBy: TransactionOrderByInput): [Transaction]!
 	menuItemsByCategory(menuCategoryId: ID!): [MenuItem]!
+	optionsByMenuItem(menuItemId: ID!, orderByOptions: OptionOrderByInput!	 ): [Option]!
 }
 
 type Mutation {
 	createMenuItem(title: String!, price: USCurrency!, pictureURL: URL!, categoryId: ID!, description: String!): MenuItem
   createTransaction(locationId: ID!, menuItemId: ID!): Transaction
-	createOrder(locationId: ID!, menuItemId: ID!, ingredients: [String]!): Order
+	createOrder(locationId: ID!, menuItemId: ID!, options: [ID!]!): Order
 	createLocation(address: String!, phoneNumber: PhoneNumber!, email: EmailAddress!): Location
-	createIngredient(menuItemId: ID!, name: String!, status: IngredientStatus!, price: USCurrency!): Ingredient
+	createOption(menuItemId: ID!, title: String!, maxSelections: Int!, required: Boolean!, priority: Int!): Option
 	createMenuCategory(name: String!): MenuCategory
+	createOptionValue(optionId: ID!, title: String!, price: USCurrency, isDefault: Boolean!, priority: Int!): OptionValue
   uploadMenuItemPicture(file: Upload!, menuItemId: ID!): MenuItem
   updateUser(password: String!, email: EmailAddress!, name: String!): User
 	updateMenuItem(menuItemId: ID!, title: String!, description: String!, url: URL!, price: USCurrency!, menuItemToUpsell: ID): MenuItem
 	updateOrder(orderId: ID!, status: MealStatus!): Order
 	updateLocation(locationId: ID!, address: String!, email: EmailAddress!, phoneNumber: PhoneNumber!): Location
 	updateMenuCategory(name: String!): MenuCategory
-	updateIngredient(name: String!, status: IngredientStatus!, price: USCurrency!): Ingredient
+	updateOption(optionId: ID!, title: String!, maxSelections: Int!, required: Boolean!, priority: Int!): Option
 	deleteUser: User
 	deleteOrder(orderId: ID!): Order
+	deleteOptionValue(optionValueId: ID!): OptionValue
 	deleteLocation(locationId: ID!): Location
 	deleteMenuItem(menuItemId: ID!): MenuItem
-	signup(email: String!, password: String!, name: String!): AuthPayload
+	signup(email: String!, password: String!, name: String!, pictureURL: URL): AuthPayload
   login(email: String!, password: String!): AuthPayload
 }
 
@@ -33,6 +36,7 @@ type User {
   id: ID!
   email: EmailAddress! 
 	password: String!
+	pictureURL: URL!
 	name: String!
   menuItems: [MenuItem]!
 	locations: [Location]!
@@ -47,7 +51,7 @@ type MenuItem {
   price: USCurrency!
 	pictureURL: URL!
   author: User!
-	ingredients: [Ingredient]!
+	options: [Option]!
 	category: MenuCategory!
 	menuItemToUpsell: MenuItem
 	createdAt: DateTime!
@@ -66,7 +70,7 @@ type Location {
 type Order {
 	id: ID!
 	menuItem: MenuItem!
-	ingredients: [Ingredient]!
+	options: [Option]!
 	location: Location!
 	status: MealStatus!
 	createdAt: DateTime!
@@ -86,13 +90,25 @@ type MenuCategory {
 	createdAt: DateTime!
 }
 
-type Ingredient {
+type Option {
   id: ID!
   menuItem: MenuItem!
-	name: String!
-  status: IngredientStatus!
-  price: USCurrency
+	title: String!
+  maxSelections: Int!
+	required: Boolean!
+	priority: Int!
+	optionValues: [OptionValue!]!
 	createdAt: DateTime!
+}
+
+type OptionValue {
+  id: ID!
+  option: Option!
+  title: String!
+  price: USCurrency
+  isDefault: Boolean!
+  priority: Int!
+  createdAt: DateTime!
 }
 
 type AuthPayload {
@@ -107,15 +123,20 @@ enum MealStatus {
 	CANCELLED
 }
 
-enum IngredientStatus {
-  DEFAULT_IN_ITEM
-  FREE_ADD_ONN
-  PAYED_ADD_ONN
-}
-
 enum TransactionOrderByInput {
   createdAt_ASC
   createdAt_DESC
+}
+
+
+enum OptionOrderByInput {
+  priority_ASC
+  priority_DESC
+}
+
+enum OptionValueOrderByInput {
+  priority_ASC
+  priority_DESC
 }
 
 scalar DateTime

@@ -29,21 +29,21 @@ var models = [
     embedded: false
   },
   {
-    name: "Ingredient",
+    name: "Option",
+    embedded: false
+  },
+  {
+    name: "OptionValue",
     embedded: false
   },
   {
     name: "MealStatus",
-    embedded: false
-  },
-  {
-    name: "IngredientStatus",
     embedded: false
   }
 ];
 exports.Prisma = prisma_lib_1.makePrismaClientClass({
   typeDefs,
   models,
-  endpoint: `https://us1.prisma.sh/jeffrey-emerich-christian-202db1/j-world/dev`
+  endpoint: `http://localhost:4466`
 });
 exports.prisma = new exports.Prisma();

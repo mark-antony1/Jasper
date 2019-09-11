@@ -3,6 +3,7 @@ type User {
   email: String @unique
   password: String!
   name: String!
+  pictureURL: String!
   menuItems: [MenuItem]! @relation(onDelete: CASCADE)
   locations: [Location]! @relation(onDelete: CASCADE)
   menuCategories: [MenuCategory]! @relation(onDelete: CASCADE)
@@ -19,7 +20,7 @@ type MenuItem {
   author: User @relation(link: INLINE onDelete: SET_NULL)
   orders: [Order]! @relation(onDelete: CASCADE)
   transactions: [Transaction]! @relation(onDelete: CASCADE)
-  ingredients: [Ingredient!] @relation(onDelete: CASCADE)
+  options: [Option!] @relation(onDelete: CASCADE)
   menuItemToUpsell: MenuItem @relation(name: "MenuItemToUpsell")
   category: MenuCategory @relation(link: INLINE onDelete: SET_NULL)
   createdAt: DateTime! @createdAt
@@ -41,7 +42,7 @@ type Location {
 type Order {
 	id: ID! @id
 	menuItem: MenuItem! @relation(link: INLINE onDelete: SET_NULL)
-  ingredients: [Ingredient]!
+  options: [Option]!
 	location: Location! @relation(link: INLINE onDelete: SET_NULL)
 	status: MealStatus!
 	createdAt: DateTime! @createdAt
@@ -66,13 +67,26 @@ type MenuCategory {
 }
 
 
-type Ingredient {
+type Option {
   id: ID! @id
   menuItem: MenuItem! @relation(link: INLINE onDelete: SET_NULL)
-	name: String!
-  status: IngredientStatus!
-  price: Float
+	title: String!
+  maxSelections: Int!
+  required: Boolean!
+  priority: Int!
+  optionValues: [OptionValue!]! @relation(onDelete: CASCADE)
 	createdAt: DateTime! @createdAt
+  deletedAt: DateTime
+}
+
+type OptionValue {
+  id: ID! @id
+  option: Option! @relation(link: INLINE onDelete: SET_NULL)
+  title: String!
+  price: Float
+  isDefault: Boolean!
+  priority: Int!
+  createdAt: DateTime! @createdAt
   deletedAt: DateTime
 }
 
@@ -81,10 +95,4 @@ enum MealStatus {
   PREPARING
   DONE
 	CANCELLED
-}
-
-enum IngredientStatus {
-  DEFAULT_IN_ITEM
-  FREE_ADD_ONN
-  PAYED_ADD_ONN
 }
