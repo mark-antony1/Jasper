@@ -17,12 +17,13 @@ type MenuItem {
   description: String!
   price: Float!
   pictureURL: String!
+  calories: Int!
   author: User @relation(link: INLINE onDelete: SET_NULL)
   orders: [Order]! @relation(onDelete: CASCADE)
   transactions: [Transaction]! @relation(onDelete: CASCADE)
   options: [Option!] @relation(onDelete: CASCADE)
   menuItemToUpsell: MenuItem @relation(name: "MenuItemToUpsell")
-  category: MenuCategory @relation(link: INLINE onDelete: SET_NULL)
+  categories: [MenuCategory]! @relation(link: TABLE)
   createdAt: DateTime! @createdAt
   deletedAt: DateTime
 }
@@ -69,7 +70,7 @@ type MenuCategory {
 
 type Option {
   id: ID! @id
-  menuItem: MenuItem! @relation(link: INLINE onDelete: SET_NULL)
+  menuItems: [MenuItem]! @relation(link: TABLE onDelete: SET_NULL)
 	title: String!
   maxSelections: Int!
   required: Boolean!

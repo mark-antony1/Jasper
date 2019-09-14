@@ -22,3 +22,5 @@ prisma.yml
 # used by deploy-node-app
 tmp/
 secrets/
+
+api/generated
