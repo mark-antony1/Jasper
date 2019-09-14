@@ -10,15 +10,16 @@ function createMenuItem(root, args, context) {
 		title: args.title,
 		pictureURL: args.pictureURL,
 		description: args.description,
+		calories: args.calories,
 		author: {
 			connect: {
 				id: userId,
 			}
 		},
-		category: {
-			connect: {
+		categories: {
+			connect: [{
 				id: args.categoryId
-			}
+			}]
 		}
 	})
 }
@@ -42,10 +43,10 @@ function createOption(root, args, context) {
 		maxSelections: args.maxSelections,
 		required: args.required,
 		priority: args.priority,
-		menuItem: {
-			connect: {
+		menuItems: {
+			connect: [{
 				id: args.menuItemId,
-			}
+			}]
 		}
 	})
 }

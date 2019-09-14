@@ -9,7 +9,7 @@ type Query {
 }
 
 type Mutation {
-	createMenuItem(title: String!, price: USCurrency!, pictureURL: URL!, categoryId: ID!, description: String!): MenuItem
+	createMenuItem(title: String!, price: USCurrency!, pictureURL: URL!, categoryId: ID!, description: String!, calories: Int!): MenuItem
   createTransaction(locationId: ID!, menuItemId: ID!): Transaction
 	createOrder(locationId: ID!, menuItemId: ID!, options: [ID!]!): Order
 	createLocation(address: String!, phoneNumber: PhoneNumber!, email: EmailAddress!): Location
@@ -50,6 +50,7 @@ type MenuItem {
 	description: String!
   price: USCurrency!
 	pictureURL: URL!
+	Calories: Int!
   author: User!
 	options: [Option]!
 	category: MenuCategory!
