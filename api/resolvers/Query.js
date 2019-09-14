@@ -4,16 +4,29 @@ const { getUserId } = require('../utils')
 function menuItem(root, args, context) {
 	getUserId(context)
 	return context.prisma
-	.menuItem({ id: args.menuItemId })
+	.menuItem({ 
+		where: {
+			author: {
+				id: userId
+			}
+		},
+		id: args.menuItemId
+	})
 }
 
 function menuItems(root, args, context) {
 	const userId = getUserId(context)
 	return context.prisma
-		.user({
-			id: userId,
+		.menuItems({
+			where: {
+				author: {
+					id: userId
+				}
+			}
 		})
-		.menuItems()
+		.$fragment(
+			`{ id title price description price pictureURL calories options { title required priority optionValues { title price priority } } }`
+		 );
 }
 
 function locations(root, args, context) {

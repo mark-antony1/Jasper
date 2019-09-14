@@ -50,7 +50,7 @@ type MenuItem {
 	description: String!
   price: USCurrency!
 	pictureURL: URL!
-	Calories: Int!
+	calories: Int!
   author: User!
 	options: [Option]!
 	category: MenuCategory!
