@@ -39,9 +39,9 @@ function menuItems(root, args, context) {
 			`{ 
 				id title price description price pictureURL calories 
 				options { 
-					title required priority 
+					id title required priority 
 					optionValues { 
-						title price priority 
+						id title price priority 
 					} 
 				} 
 				categories {
