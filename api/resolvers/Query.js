@@ -14,6 +14,14 @@ function menuItem(root, args, context) {
 	})
 }
 
+function user(root, args, context) {
+	const userId = getUserId(context)
+	return context.prisma
+	.user({
+		id: userId,
+	})
+}
+
 function menuItems(root, args, context) {
 	const userId = getUserId(context)
 	return context.prisma
@@ -102,5 +110,6 @@ module.exports = {
 	ordersByLocationAndStatus,
 	transactionsByDate,
 	menuItemsByCategory,
-	optionsByMenuItem
+	optionsByMenuItem,
+	user
 }

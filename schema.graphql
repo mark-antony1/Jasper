@@ -1,5 +1,6 @@
 type Query {
-  menuItem(menuItemId: ID!): MenuItem
+	user: User!
+  menuItem(menuItemId: ID!): MenuItem!
   menuItems: [MenuItem!]!
 	locations: [Location!]!
 	ordersByLocationAndStatus(locationId: ID!, status: MealStatus!): [Order]!
