@@ -41,7 +41,7 @@ type User {
 	name: String!
   menuItems: [MenuItem]!
 	locations: [Location]!
-	MenuCategories: [MenuCategory]! 
+	menuCategories: [MenuCategory]! 
 	createdAt: DateTime!
 }
 

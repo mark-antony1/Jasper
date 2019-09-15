@@ -20,6 +20,9 @@ function user(root, args, context) {
 	.user({
 		id: userId,
 	})
+	.$fragment(
+		`{ id email pictureURL name menuCategories { id name } locations { id address phoneNumber email } }`
+	)
 }
 
 function menuItems(root, args, context) {
