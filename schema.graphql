@@ -10,16 +10,16 @@ type Query {
 }
 
 type Mutation {
-	createMenuItem(title: String!, price: USCurrency!, pictureURL: URL!, categoryId: ID!, description: String!, calories: Int!): MenuItem
+	createMenuItem(title: String!, price: Int!, pictureURL: URL!, categoryId: ID!, description: String!, calories: Int!): MenuItem
   createTransaction(locationId: ID!, menuItemId: ID!): Transaction
 	createOrder(locationId: ID!, menuItemId: ID!, options: [ID!]!): Order
 	createLocation(address: String!, phoneNumber: PhoneNumber!, email: EmailAddress!): Location
 	createOption(menuItemId: ID!, title: String!, maxSelections: Int!, required: Boolean!, priority: Int!): Option
 	createMenuCategory(name: String!): MenuCategory
-	createOptionValue(optionId: ID!, title: String!, price: USCurrency, isDefault: Boolean!, priority: Int!): OptionValue
+	createOptionValue(optionId: ID!, title: String!, price: Int, isDefault: Boolean!, priority: Int!): OptionValue
   uploadMenuItemPicture(file: Upload!, menuItemId: ID!): MenuItem
   updateUser(password: String!, email: EmailAddress!, name: String!): User
-	updateMenuItem(menuItemId: ID!, title: String!, description: String!, url: URL!, price: USCurrency!, menuItemToUpsell: ID): MenuItem
+	updateMenuItem(menuItemId: ID!, title: String!, description: String!, url: URL!, price: Int!, menuItemToUpsell: ID): MenuItem
 	updateOrder(orderId: ID!, status: MealStatus!): Order
 	updateLocation(locationId: ID!, address: String!, email: EmailAddress!, phoneNumber: PhoneNumber!): Location
 	updateMenuCategory(name: String!): MenuCategory
@@ -49,7 +49,7 @@ type MenuItem {
   id: ID!
   title: String!
 	description: String!
-  price: USCurrency!
+  price: Int!
 	pictureURL: URL!
 	calories: Int!
   author: User!
@@ -107,7 +107,7 @@ type OptionValue {
   id: ID!
   option: Option!
   title: String!
-  price: USCurrency
+  price: Int
   isDefault: Boolean!
   priority: Int!
   createdAt: DateTime!
@@ -148,7 +148,5 @@ scalar EmailAddress
 scalar PhoneNumber
 
 scalar URL
-
-scalar USCurrency
 
 scalar Upload

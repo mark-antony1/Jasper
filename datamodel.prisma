@@ -15,7 +15,7 @@ type MenuItem {
   id: ID! @id
   title: String!
   description: String!
-  price: Float!
+  price: Int!
   pictureURL: String!
   calories: Int!
   author: User @relation(link: INLINE onDelete: SET_NULL)
@@ -84,7 +84,7 @@ type OptionValue {
   id: ID! @id
   option: Option! @relation(link: INLINE onDelete: SET_NULL)
   title: String!
-  price: Float
+  price: Int!
   isDefault: Boolean!
   priority: Int!
   createdAt: DateTime! @createdAt

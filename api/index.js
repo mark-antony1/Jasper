@@ -2,14 +2,13 @@ const Query = require('./resolvers/Query')
 const Mutation = require('./resolvers/Mutation')
 const { prisma } = require('./generated/prisma-client')
 const { GraphQLServer } = require('graphql-yoga')
-const { DateTimeResolver, EmailAddressResolver, URLResolver, PhoneNumberResolver, USCurrencyResolver} = require('graphql-scalars');
+const { DateTimeResolver, EmailAddressResolver, URLResolver, PhoneNumberResolver} = require('graphql-scalars');
 
 const resolvers = {
 	DateTime: DateTimeResolver,
   EmailAddress: EmailAddressResolver,
 	URL: URLResolver,
 	PhoneNumber: PhoneNumberResolver,
-	USCurrency: USCurrencyResolver,
   Query,
   Mutation,
   User: {
