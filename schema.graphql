@@ -54,7 +54,7 @@ type MenuItem {
 	calories: Int!
   author: User!
 	options: [Option]!
-	category: MenuCategory!
+	categories: [MenuCategory]!
 	menuItemToUpsell: MenuItem
 	createdAt: DateTime!
 }

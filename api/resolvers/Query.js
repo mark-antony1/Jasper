@@ -36,7 +36,19 @@ function menuItems(root, args, context) {
 			}
 		})
 		.$fragment(
-			`{ id title price description price pictureURL calories options { title required priority optionValues { title price priority } } }`
+			`{ 
+				id title price description price pictureURL calories 
+				options { 
+					title required priority 
+					optionValues { 
+						title price priority 
+					} 
+				} 
+				categories {
+					id
+					name
+				}
+			}`
 		 );
 }
 
