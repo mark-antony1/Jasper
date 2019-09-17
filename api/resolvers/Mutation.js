@@ -217,6 +217,11 @@ function deleteMenuItem(root, args, context) {
 	})
 }
 
+function purchase(root, args, context) {
+	getUserId(context)
+	return new Error('Internal server error, function not implemented');
+}
+
 async function uploadMenuItemPicture(root, args, ctx, info) {
 	return await processUpload(await args, ctx)
 }
@@ -279,5 +284,6 @@ module.exports = {
 	createMenuCategory,
 	updateMenuCategory,
 	updateOption,
-	createOptionValue
+	createOptionValue,
+	purchase
 }
