@@ -4,6 +4,9 @@ type User {
   password: String!
   name: String!
   pictureURL: String!
+  paymentProcessor: String
+	paymentProcessorMerchantId: ID
+  accesstoken: ID
   menuItems: [MenuItem]! @relation(onDelete: CASCADE)
   locations: [Location]! @relation(onDelete: CASCADE)
   menuCategories: [MenuCategory]! @relation(onDelete: CASCADE)
