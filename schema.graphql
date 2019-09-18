@@ -37,14 +37,14 @@ type Mutation {
 type User {
   id: ID!
   email: EmailAddress! 
-	paymentProcessor: String!
 	paymentProcessorMerchantId: ID!
-	accessToken: ID
+	paymentProcessorAccessToken: ID
 	password: String!
 	pictureURL: URL!
 	name: String!
   menuItems: [MenuItem]!
 	locations: [Location]!
+	tabletDevices: [TabletDevice]!
 	menuCategories: [MenuCategory]! 
 	createdAt: DateTime!
 }
@@ -122,11 +122,28 @@ type AuthPayload {
   user: User
 }
 
+type TabletDevice {
+  id: ID!
+  headerId: String!
+	paymentProcessingDevice: PaymentProcessingDevice!
+}
+
+type PaymentProcessingDevice {
+	id: ID!
+	deviceId: String!
+	paymentProcessor: PaymentProcessor!
+}
+
 enum MealStatus {
   ORDERED
   INPREPERATION
   DONE
 	CANCELLED
+}
+
+enum PaymentProcessor {
+	CLOVER
+	SQUARE
 }
 
 enum TransactionOrderByInput {

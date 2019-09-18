@@ -217,9 +217,30 @@ function deleteMenuItem(root, args, context) {
 	})
 }
 
-function purchase(root, args, context) {
-	getUserId(context)
-	return new Error('Internal server error, function not implemented');
+function makePayment() {
+	return new Promise(resolve => {
+    setTimeout(() => {
+      resolve('$$ Payment Complete');
+    }, 2000);
+  });
+}
+
+async function purchase(root, args, context) {
+	const userId = getUserId(context)
+	const tabletDeviceHeaderId = context.request.get('UniqueHeader')
+
+	const device = await context.prisma.user({
+		id: userId,
+	})
+	.tabletDevices({
+		where: {
+			headerId: tabletDeviceHeaderId
+		}
+	})
+	.paymentProcessingDevice()
+
+	const msg = await makePayment()
+	return msg
 }
 
 async function uploadMenuItemPicture(root, args, ctx, info) {

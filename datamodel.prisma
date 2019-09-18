@@ -4,9 +4,9 @@ type User {
   password: String!
   name: String!
   pictureURL: String!
-  paymentProcessor: String
 	paymentProcessorMerchantId: ID
-  accesstoken: String
+  paymentProcessorAccessToken: String
+  tabletDevices: [TabletDevice]! @relation(onDelete: CASCADE)
   menuItems: [MenuItem]! @relation(onDelete: CASCADE)
   locations: [Location]! @relation(onDelete: CASCADE)
   menuCategories: [MenuCategory]! @relation(onDelete: CASCADE)
@@ -94,9 +94,26 @@ type OptionValue {
   deletedAt: DateTime
 }
 
+type TabletDevice {
+  id: ID! @id
+  headerId: String!
+	paymentProcessingDevice: PaymentProcessingDevice! @relation(link: INLINE)
+}
+
+type PaymentProcessingDevice {
+	id: ID! @id
+  deviceId: String!
+	paymentProcessor: PaymentProcessor!
+}
+
 enum MealStatus {
   ORDERED
   PREPARING
   DONE
 	CANCELLED
+}
+
+enum PaymentProcessor {
+	CLOVER
+	SQUARE
 }
