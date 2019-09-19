@@ -1,6 +1,16 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const { getUserId, processUpload } = require('../utils')
+const clover = require ("remote-pay-cloud");
+const { 
+	getUserId, 
+	processUpload, 
+	createCloverWebsocketConfiguration, 
+	createCloverDeviceConnectionConfiguration,
+	setCloverConnector,
+	buildCloverConnectionListener,
+	setCloverConnectorListener
+} = require('../utils')
+
 require('dotenv').config()
 
 function createMenuItem(root, args, context) {
@@ -217,19 +227,50 @@ function deleteMenuItem(root, args, context) {
 	})
 }
 
-function makePayment() {
-	return new Promise(resolve => {
-    setTimeout(() => {
-      resolve('$$ Payment Complete');
-    }, 2000);
-  });
+var defaultCloverConnectorListener = Object.assign({}, clover.remotepay.ICloverConnectorListener.prototype, {
+
+	onDeviceReady: function (merchantInfo) {
+			updateStatus("Pairing successfully completed, your Clover device is ready to process requests.");
+			console.log({message: "Device Ready to process requests!", merchantInfo: merchantInfo});
+	},
+
+	onDeviceDisconnected: function () {
+			console.log({message: "Disconnected"});
+	},
+
+	onDeviceConnected: function () {
+			console.log({message: "Connected, but not available to process requests"});
+	}
+
+});
+
+function configureConnection(devices, user) {
+	const cloverWebsocketConfiguration = createCloverWebsocketConfiguration(user, devices)
+	const cloverDeviceConnectionConfiguration = createCloverDeviceConnectionConfiguration(cloverWebsocketConfiguration)
+	let builderConfiguration = {};
+	builderConfiguration[clover.CloverConnectorFactoryBuilder.FACTORY_VERSION] = clover.CloverConnectorFactoryBuilder.VERSION_12;
+	let cloverConnectorFactory = clover.CloverConnectorFactoryBuilder.createICloverConnectorFactory(builderConfiguration);
+	let cloverConnector = cloverConnectorFactory.createICloverConnector(cloverDeviceConnectionConfiguration);
+	setCloverConnector(cloverConnector)
+	let exampleConnectorListener = buildCloverConnectionListener(cloverWebsocketConfiguration);
+	cloverConnector.addCloverConnectorListener(defaultCloverConnectorListener)
+	// setCloverConnectorListener(exampleConnectorListener)
+	cloverConnector.initializeConnection();
+
+	// cloverConnector.showWelcomeScreen();
+
+	return '$$ Payment Complete ' + devices[0].paymentProcessingDevice.deviceId;
 }
 
 async function purchase(root, args, context) {
 	const userId = getUserId(context)
 	const tabletDeviceHeaderId = context.request.get('UniqueHeader')
 
-	const device = await context.prisma.user({
+	const user = await context.prisma.user({
+		id: userId,
+	})
+
+	const devices = await context.prisma.user({
 		id: userId,
 	})
 	.tabletDevices({
@@ -239,7 +280,7 @@ async function purchase(root, args, context) {
 	})
 	.paymentProcessingDevice()
 
-	const msg = await makePayment()
+	const msg = await configureConnection(devices, user)
 	return msg
 }
 

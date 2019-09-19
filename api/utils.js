@@ -1,6 +1,11 @@
 const uuid = require('uuid/v1')
 const aws = require('aws-sdk')
 const jwt = require('jsonwebtoken')
+const clover = require("remote-pay-cloud")
+const XMLHttpRequest = require("xmlhttprequest-ssl").XMLHttpRequest;
+const WebSocket = require('ws');
+const DefaultConnectionListener = require("./DefaultConnectionListener");
+
 require('dotenv').config()
 
 function getUserId(context) {
@@ -49,7 +54,121 @@ async function processUpload ( {file, menuItemId}, context )  {
 
 }
 
+function createWebSocket(config) {
+    return {
+        get: function (endpoint) {
+            let webSocketOverrides = {
+                createWebSocket: function (endpoint) {
+                    // To support self-signed certificates you must pass rejectUnauthorized = false.
+                    // https://github.com/websockets/ws/blob/master/examples/ssl.js
+                    let sslOptions = {
+                        rejectUnauthorized: false
+                    };
+                    // Use the ws library by default.
+                    return new WebSocket(endpoint, sslOptions);
+                }
+            }
+        }
+    }
+}
+
+function createCloverDeviceConnectionConfiguration (connectionConfiguration) {
+  let configBuilder =  new clover.WebSocketCloudCloverDeviceConfigurationBuilder(
+    connectionConfiguration.remoteApplicationId,
+    connectionConfiguration.deviceId,
+    connectionConfiguration.merchantId,
+    connectionConfiguration.accessToken
+  );
+  configBuilder.setCloverServer(connectionConfiguration.cloverServer);
+  configBuilder.setFriendlyId(connectionConfiguration.friendlyId);
+  configBuilder.setHttpSupport(connectionConfiguration.httpSupport);
+  configBuilder.setWebSocketFactoryFunction(connectionConfiguration.webSocketFactoryFunction);
+  console.log('config', configBuilder, connectionConfiguration)
+  return configBuilder.build();
+}
+
+function createCloverWebsocketConfiguration(user, devices){
+  console.log("createWebSocket.get", createWebSocket().get)
+  return Object.assign({}, {
+    "accessToken": user.paymentProcessorAccessToken, // accessToken
+    "cloverServer": "https://sandbox.dev.clover.com/",
+    "httpSupport": new clover.HttpSupport(XMLHttpRequest),
+    "merchantId": user.paymentProcessorMerchantId,
+    "deviceId": devices[0].paymentProcessingDevice.deviceId,
+    "friendlyId": 'demo clover',
+    "remoteApplicationId": process.env.RAID,
+    "webSocketFactoryFunction": createWebSocket().get,
+  });
+}
+
+let gCloverConnector = null 
+let gCloverConnectorListener =  null
+
+function setCloverConnector (cloverConnectorIn) {
+  gCloverConnector = cloverConnectorIn;
+};
+
+function setCloverConnectorListener (cloverConnectorListenerIn) {
+    cloverConnectorListener = cloverConnectorListenerIn;
+};
+
+var buildCloverConnectionListener = function (answers) {
+  let defaultConnectorListener = DefaultConnectionListener.create(gCloverConnector);
+  return Object.assign(defaultConnectorListener, {
+      onDeviceReady: function (merchantInfo) {
+          cloverConnector.resetDevice();
+          executeAction(answers);
+      }
+  });
+};
+
+var executeAction = function (answers) {
+  // Connected and available to process requests
+  const executor = executors[`${answers.action}Executor`];
+  if (executor) {
+      executor.create(cloverConnector, cloverConnectorListener).run();
+  } else {
+      const otherActions = {
+          "ShowWelcomeScreen": () => {
+              cloverConnector.showWelcomeScreen();
+              showMenu();
+          },
+          "ShowThankYouScreen": () => {
+              cloverConnector.showThankYouScreen();
+              showMenu();
+          },
+          "DisplayMessage": () => {
+              inquirer.prompt(Prompts.message).then((answers) => {
+                  cloverConnector.showMessage(answers.message);
+                  showMenu();
+              });
+          },
+          "ResetDevice": () => {
+              cloverConnector.resetDevice();
+              showMenu();
+          },
+          "Print": () => {
+              inquirer.prompt(Prompts.print).then((answers) => {
+                  const printRequest = new clover.remotepay.PrintRequest();
+                  printRequest.setText([answers.message]);
+                  cloverConnector.print(printRequest);
+                  showMenu();
+              });
+          },
+          "Exit": () => disposeAndExit(cloverConnector)
+
+      };
+      otherActions[answers.action]();
+  }
+};
+
 module.exports = {
 	getUserId,
-	processUpload
+  processUpload,
+  createWebSocket,
+  createCloverWebsocketConfiguration,
+  createCloverDeviceConnectionConfiguration,
+  setCloverConnector,
+  buildCloverConnectionListener,
+  setCloverConnectorListener
 }
