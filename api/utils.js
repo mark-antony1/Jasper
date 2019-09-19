@@ -68,6 +68,7 @@ function createWebSocket(config) {
                     return new WebSocket(endpoint, sslOptions);
                 }
             }
+            return Object.assign(new clover.CloverWebSocketInterface(endpoint), webSocketOverrides);
         }
     }
 }
@@ -83,12 +84,10 @@ function createCloverDeviceConnectionConfiguration (connectionConfiguration) {
   configBuilder.setFriendlyId(connectionConfiguration.friendlyId);
   configBuilder.setHttpSupport(connectionConfiguration.httpSupport);
   configBuilder.setWebSocketFactoryFunction(connectionConfiguration.webSocketFactoryFunction);
-  console.log('config', configBuilder, connectionConfiguration)
   return configBuilder.build();
 }
 
 function createCloverWebsocketConfiguration(user, devices){
-  console.log("createWebSocket.get", createWebSocket().get)
   return Object.assign({}, {
     "accessToken": user.paymentProcessorAccessToken, // accessToken
     "cloverServer": "https://sandbox.dev.clover.com/",

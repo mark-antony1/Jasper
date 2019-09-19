@@ -254,11 +254,11 @@ function configureConnection(devices, user) {
 	setCloverConnector(cloverConnector)
 	let exampleConnectorListener = buildCloverConnectionListener(cloverWebsocketConfiguration);
 	cloverConnector.addCloverConnectorListener(defaultCloverConnectorListener)
-	// setCloverConnectorListener(exampleConnectorListener)
+	setCloverConnectorListener(exampleConnectorListener)
 	cloverConnector.initializeConnection();
 
-	// cloverConnector.showWelcomeScreen();
-
+	cloverConnector.showWelcomeScreen();
+	cloverConnector.showMessage("Welcome to Clover Connector!");
 	return '$$ Payment Complete ' + devices[0].paymentProcessingDevice.deviceId;
 }
 
