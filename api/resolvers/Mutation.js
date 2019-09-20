@@ -8,7 +8,8 @@ const {
 	createCloverDeviceConnectionConfiguration,
 	setCloverConnector,
 	buildCloverConnectionListener,
-	setCloverConnectorListener
+	setCloverConnectorListener,
+	getCloverConnector
 } = require('../utils')
 
 require('dotenv').config()
@@ -244,7 +245,7 @@ var defaultCloverConnectorListener = Object.assign({}, clover.remotepay.ICloverC
 
 });
 
-function configureConnection(devices, user) {
+async function configureConnection(devices, user) {
 	const cloverWebsocketConfiguration = createCloverWebsocketConfiguration(user, devices)
 	const cloverDeviceConnectionConfiguration = createCloverDeviceConnectionConfiguration(cloverWebsocketConfiguration)
 	let builderConfiguration = {};
@@ -257,12 +258,28 @@ function configureConnection(devices, user) {
 	setCloverConnectorListener(exampleConnectorListener)
 	cloverConnector.initializeConnection();
 
-	cloverConnector.showWelcomeScreen();
-	cloverConnector.showMessage("Welcome to Clover Connector!");
+	// cloverConnector.showWelcomeScreen();
+	// cloverConnector.showMessage("Welcome to Clover Connector!");
 	return '$$ Payment Complete ' + devices[0].paymentProcessingDevice.deviceId;
 }
 
+function sendMessage(root, args, context) {
+	let connector = getCloverConnector()
+	connector.showWelcomeScreen();
+	return
+}
+
+
+function makePayment() {
+	return new Promise(resolve => {
+    setTimeout(() => {
+      resolve('$$ Payment Complete');
+    }, 2000);
+	});
+}
+	
 async function purchase(root, args, context) {
+	console.log("begin purchase")
 	const userId = getUserId(context)
 	const tabletDeviceHeaderId = context.request.get('UniqueHeader')
 
@@ -279,8 +296,8 @@ async function purchase(root, args, context) {
 		}
 	})
 	.paymentProcessingDevice()
-
-	const msg = await configureConnection(devices, user)
+	configureConnection(devices, user)
+	const msg = await makePayment()
 	return msg
 }
 
@@ -347,5 +364,6 @@ module.exports = {
 	updateMenuCategory,
 	updateOption,
 	createOptionValue,
-	purchase
+	purchase,
+	sendMessage
 }

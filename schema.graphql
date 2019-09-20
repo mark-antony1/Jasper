@@ -32,6 +32,7 @@ type Mutation {
 	signup(email: String!, password: String!, name: String!, pictureURL: URL): AuthPayload
   login(email: String!, password: String!): AuthPayload
 	purchase(deviceId: ID!, amountInCents: Int!): String
+	sendMessage: String
 }
 
 type User {

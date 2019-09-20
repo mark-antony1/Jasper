@@ -111,6 +111,11 @@ function setCloverConnectorListener (cloverConnectorListenerIn) {
     cloverConnectorListener = cloverConnectorListenerIn;
 };
 
+function getCloverConnector () {
+  return gCloverConnector
+};
+
+
 var buildCloverConnectionListener = function (answers) {
   let defaultConnectorListener = DefaultConnectionListener.create(gCloverConnector);
   return Object.assign(defaultConnectorListener, {
@@ -169,5 +174,6 @@ module.exports = {
   createCloverDeviceConnectionConfiguration,
   setCloverConnector,
   buildCloverConnectionListener,
-  setCloverConnectorListener
+  setCloverConnectorListener,
+  getCloverConnector
 }
