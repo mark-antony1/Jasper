@@ -87,7 +87,7 @@ function createCloverDeviceConnectionConfiguration (connectionConfiguration) {
   return configBuilder.build();
 }
 
-function createCloverWebsocketConfiguration(user, devices){
+function createCloverWebsocketConfiguration(user, devices, tabletId){
   return Object.assign({}, {
     "accessToken": user.paymentProcessorAccessToken, // accessToken
     "cloverServer": "https://sandbox.dev.clover.com/",
@@ -97,22 +97,23 @@ function createCloverWebsocketConfiguration(user, devices){
     "friendlyId": 'demo clover',
     "remoteApplicationId": process.env.RAID,
     "webSocketFactoryFunction": createWebSocket().get,
+    "tabletId": tabletId
   });
 }
 
-let gCloverConnector = null 
-let gCloverConnectorListener =  null
+let gCloverConnectorMap = {} 
+let gCloverConnectorListenerMap =  {}
 
-function setCloverConnector (cloverConnectorIn) {
-  gCloverConnector = cloverConnectorIn;
+function setCloverConnector (cloverConnectorIn, tabletId) {
+  gCloverConnectorMap[tabletId] = cloverConnectorIn;
 };
 
-function setCloverConnectorListener (cloverConnectorListenerIn) {
-    cloverConnectorListener = cloverConnectorListenerIn;
+function setCloverConnectorListener (cloverConnectorListenerIn, tabletId) {
+  gCloverConnectorListenerMap[tabletId] = cloverConnectorListenerIn;
 };
 
-function getCloverConnector () {
-  return gCloverConnector
+function getCloverConnector (tabletId) {
+  return gCloverConnectorMap[tabletId]
 };
 
 

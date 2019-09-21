@@ -31,8 +31,8 @@ type Mutation {
 	deleteMenuItem(menuItemId: ID!): MenuItem
 	signup(email: String!, password: String!, name: String!, pictureURL: URL): AuthPayload
   login(email: String!, password: String!): AuthPayload
-	purchase(deviceId: ID!, amountInCents: Int!): String
-	sendMessage: String
+	purchase(deviceId: ID!, amountInCents: Int!): paymentObject
+	sendMessage: paymentObject
 }
 
 type User {
@@ -122,6 +122,10 @@ type OptionValue {
 type AuthPayload {
   token: String
   user: User
+}
+
+type paymentObject {
+  code: String
 }
 
 type TabletDevice {

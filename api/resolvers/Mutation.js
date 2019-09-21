@@ -245,22 +245,20 @@ var defaultCloverConnectorListener = Object.assign({}, clover.remotepay.ICloverC
 
 });
 
-async function configureConnection(devices, user) {
-	const cloverWebsocketConfiguration = createCloverWebsocketConfiguration(user, devices)
-	const cloverDeviceConnectionConfiguration = createCloverDeviceConnectionConfiguration(cloverWebsocketConfiguration)
-	let builderConfiguration = {};
-	builderConfiguration[clover.CloverConnectorFactoryBuilder.FACTORY_VERSION] = clover.CloverConnectorFactoryBuilder.VERSION_12;
-	let cloverConnectorFactory = clover.CloverConnectorFactoryBuilder.createICloverConnectorFactory(builderConfiguration);
-	let cloverConnector = cloverConnectorFactory.createICloverConnector(cloverDeviceConnectionConfiguration);
-	setCloverConnector(cloverConnector)
-	let exampleConnectorListener = buildCloverConnectionListener(cloverWebsocketConfiguration);
-	cloverConnector.addCloverConnectorListener(defaultCloverConnectorListener)
-	setCloverConnectorListener(exampleConnectorListener)
-	cloverConnector.initializeConnection();
-
-	// cloverConnector.showWelcomeScreen();
-	// cloverConnector.showMessage("Welcome to Clover Connector!");
-	return '$$ Payment Complete ' + devices[0].paymentProcessingDevice.deviceId;
+async function configureConnection(paymentProcessingDevices, user, tabletId) {
+	if (getCloverConnector(tabletId) === undefined){
+		const cloverWebsocketConfiguration = createCloverWebsocketConfiguration(user, paymentProcessingDevices, tabletId)
+		const cloverDeviceConnectionConfiguration = createCloverDeviceConnectionConfiguration(cloverWebsocketConfiguration)
+		let builderConfiguration = {};
+		builderConfiguration[clover.CloverConnectorFactoryBuilder.FACTORY_VERSION] = clover.CloverConnectorFactoryBuilder.VERSION_12;
+		let cloverConnectorFactory = clover.CloverConnectorFactoryBuilder.createICloverConnectorFactory(builderConfiguration);
+		let cloverConnector = cloverConnectorFactory.createICloverConnector(cloverDeviceConnectionConfiguration);
+		setCloverConnector(cloverConnector, tabletId)
+		// let exampleConnectorListener = buildCloverConnectionListener(cloverWebsocketConfiguration);
+		cloverConnector.addCloverConnectorListener(defaultCloverConnectorListener)
+		// setCloverConnectorListener(exampleConnectorListener, tabletId)
+		cloverConnector.initializeConnection();
+	}
 }
 
 function sendMessage(root, args, context) {
@@ -270,7 +268,8 @@ function sendMessage(root, args, context) {
 }
 
 
-function makePayment() {
+function makePayment(tabletId) {
+	const cloverConnector = getCloverConnector(tabletId)
 	return new Promise(resolve => {
     setTimeout(() => {
       resolve('$$ Payment Complete');
@@ -281,24 +280,28 @@ function makePayment() {
 async function purchase(root, args, context) {
 	console.log("begin purchase")
 	const userId = getUserId(context)
-	const tabletDeviceHeaderId = context.request.get('UniqueHeader')
+	const tabletHeaderId = context.request.get('UniqueHeader')
 
 	const user = await context.prisma.user({
 		id: userId,
 	})
 
-	const devices = await context.prisma.user({
+	const processingDevices = await context.prisma.user({
 		id: userId,
 	})
 	.tabletDevices({
 		where: {
-			headerId: tabletDeviceHeaderId
+			headerId: tabletHeaderId
 		}
 	})
 	.paymentProcessingDevice()
-	configureConnection(devices, user)
-	const msg = await makePayment()
-	return msg
+	console.log('processingDevices', processingDevices)
+
+	configureConnection(processingDevices, user, tabletHeaderId)
+	const msg = await makePayment(tabletHeaderId)
+	return {
+		code: '$$ Payment Complete ' + msg
+	};
 }
 
 async function uploadMenuItemPicture(root, args, ctx, info) {
