@@ -114,6 +114,7 @@ type OptionValue {
   title: String!
   price: Int
   isDefault: Boolean!
+	pictureURL: URL
   priority: Int!
   createdAt: DateTime!
 }

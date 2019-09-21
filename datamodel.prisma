@@ -86,6 +86,7 @@ type Option {
 type OptionValue {
   id: ID! @id
   option: Option! @relation(link: INLINE onDelete: SET_NULL)
+  pictureURL: String
   title: String!
   price: Int!
   isDefault: Boolean!
