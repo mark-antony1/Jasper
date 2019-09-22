@@ -167,6 +167,35 @@ var executeAction = function (answers) {
   }
 };
 
+function getLocationsByUserId(context){
+  const userId = getUserId(context)
+	return context.prisma
+	.locations({
+		where: {
+			owner: {
+				id: userId
+			}
+		}
+	})
+}
+
+async function syncInventory(res, context) {
+  return Promise.all(res.elements.map(async function(element){
+    const menuItemExists = await context.prisma.$exists.menuItem({
+      paymentProcessorId: element.id
+    });
+
+    if (menuItemExists) {
+      return context.prisma.updateMenuItem({
+        where: {paymentProcessorId: element.id},
+        data: {
+          title: element.name
+        }
+      })
+    }
+  }))
+}
+
 module.exports = {
 	getUserId,
   processUpload,
@@ -176,5 +205,7 @@ module.exports = {
   setCloverConnector,
   buildCloverConnectionListener,
   setCloverConnectorListener,
-  getCloverConnector
+  getCloverConnector,
+  getLocationsByUserId,
+  syncInventory
 }

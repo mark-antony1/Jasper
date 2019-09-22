@@ -2,6 +2,8 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const clover = require ("remote-pay-cloud");
 const sdk = require ("remote-pay-cloud-api");
+const request = require("request-promise")
+
 
 const { 
 	getUserId, 
@@ -11,7 +13,9 @@ const {
 	setCloverConnector,
 	buildCloverConnectionListener,
 	setCloverConnectorListener,
-	getCloverConnector
+	getCloverConnector,
+	getLocationsByUserId,
+	syncInventory
 } = require('../utils')
 
 require('dotenv').config()
@@ -321,7 +325,6 @@ async function purchase(root, args, context) {
 		}
 	})
 	.paymentProcessingDevice()
-	console.log('processingDevices', processingDevices)
 
 	configureConnection(processingDevices, user, tabletHeaderId)
 
@@ -330,6 +333,21 @@ async function purchase(root, args, context) {
 		code: '$$ Payment Complete ' + msg
 	};
 }
+
+async function syncLocation(root, args, context){
+	const locations = await getLocationsByUserId(context)
+	let { paymentProcessorMerchantId , paymentProcessorAccessToken} =  locations[0]
+
+	var options = {
+		method: 'GET',
+		url: process.env.CLOVER_API_BASE_URL + paymentProcessorMerchantId + '/items',
+		qs: {access_token: paymentProcessorAccessToken}
+	};
+	
+	const res = await request(options);
+	await syncInventory(JSON.parse(res), context)
+}
+
 
 async function uploadMenuItemPicture(root, args, ctx, info) {
 	return await processUpload(await args, ctx)
@@ -395,5 +413,6 @@ module.exports = {
 	updateOption,
 	createOptionValue,
 	purchase,
-	sendMessage
+	sendMessage,
+	syncLocation
 }

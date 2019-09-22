@@ -24,6 +24,7 @@
     "prisma-client-lib": "^1.34.7",
     "remote-pay-cloud": "^3.1.0",
     "remote-pay-cloud-api": "^3.1.0",
+    "request-promise": "^4.2.4",
     "uuid": "^3.3.3",
     "ws": "^7.1.2",
     "xmlhttprequest-ssl": "^1.5.5"

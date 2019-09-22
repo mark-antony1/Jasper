@@ -6,7 +6,7 @@ type Query {
 	ordersByLocationAndStatus(locationId: ID!, status: MealStatus!): [Order]!
 	transactionsByDate(locationId: ID!, first: Int, orderBy: TransactionOrderByInput): [Transaction]!
 	menuItemsByCategory(menuCategoryId: ID!): [MenuItem]!
-	optionsByMenuItem(menuItemId: ID!, orderByOptions: OptionOrderByInput!	 ): [Option]!
+	optionsByMenuItem(menuItemId: ID!, orderByOptions: OptionOrderByInput!): [Option]!
 }
 
 type Mutation {
@@ -31,8 +31,9 @@ type Mutation {
 	deleteMenuItem(menuItemId: ID!): MenuItem
 	signup(email: String!, password: String!, name: String!, pictureURL: URL): AuthPayload
   login(email: String!, password: String!): AuthPayload
-	purchase(deviceId: ID!, amountInCents: Int!): paymentObject
-	sendMessage: paymentObject
+	purchase(deviceId: ID!, amountInCents: Int!): responseObject
+	sendMessage: responseObject
+	syncLocation: responseObject
 }
 
 type User {
@@ -129,7 +130,7 @@ type AuthPayload {
   user: User
 }
 
-type paymentObject {
+type responseObject {
   code: String
 }
 

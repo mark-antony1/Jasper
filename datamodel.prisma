@@ -15,7 +15,7 @@ type MenuItem {
   price: Int!
   pictureURL: String!
   calories: Int!
-  paymentProcessorId: String
+  paymentProcessorId: String @unique
   location: Location @relation(link: INLINE onDelete: SET_NULL)
   menuItemToUpsell: MenuItem @relation(name: "MenuItemToUpsell")
   orders: [Order]! @relation(onDelete: CASCADE)
