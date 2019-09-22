@@ -97,7 +97,7 @@ type Transaction {
 
 type MenuCategory {
 	id: ID!
-	owner: User!
+	owner: Location!
 	name: String!
 	paymentProcessorId: String
 	menuItems: [MenuItem]!

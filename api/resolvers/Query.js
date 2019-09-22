@@ -84,6 +84,25 @@ async function location(root, args, context) {
 		id: userId,
 	})
 	.locations()
+	.$fragment(`
+		{id address phoneNumber email name 
+		pictureURL paymentProcessorMerchantId
+		paymentProcessorAccessToken
+		taxRate
+		tabletDevices{
+			headerId
+			paymentProcessingDevice {
+				deviceId
+				paymentProcessor
+			}
+		}
+		menuCategories{
+			name
+			paymentProcessorId
+		}
+	}
+	
+	`)
 	if (locations.length > 0) {
 		return locations[0]
 	} else {
