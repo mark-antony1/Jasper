@@ -92,11 +92,13 @@ async function location(root, args, context) {
 		tabletDevices{
 			headerId
 			paymentProcessingDevice {
+				id
 				deviceId
 				paymentProcessor
 			}
 		}
 		menuCategories{
+			id
 			name
 			paymentProcessorId
 		}
