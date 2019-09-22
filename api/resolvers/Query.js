@@ -88,7 +88,6 @@ async function location(root, args, context) {
 		{id address phoneNumber email name 
 		pictureURL paymentProcessorMerchantId
 		paymentProcessorAccessToken
-		taxRate
 		tabletDevices{
 			headerId
 			paymentProcessingDevice {
@@ -101,6 +100,13 @@ async function location(root, args, context) {
 			id
 			name
 			paymentProcessorId
+		}
+		taxes{
+			id
+			paymentProcessorId
+			taxType
+			taxAmount
+			name
 		}
 	}
 	

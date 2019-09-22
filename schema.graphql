@@ -73,7 +73,7 @@ type Location {
 	tabletDevices: [TabletDevice]!
 	menuItems: [MenuItem]!
 	menuCategories: [MenuCategory]!
-	taxRate: Int
+	taxes: [Tax]!
 	createdAt: DateTime!
 }
 
@@ -124,6 +124,29 @@ type OptionValue {
   createdAt: DateTime!
 }
 
+type Tax {
+	id: ID!
+  paymentProcessorId: String
+  taxType: TaxType!
+  taxAmount: Int!
+  createdAt: DateTime!
+	name: String!
+}
+
+type TabletDevice {
+  id: ID!
+  headerId: String!
+	paymentProcessingDevice: PaymentProcessingDevice!
+	createdAt: DateTime!
+}
+
+type PaymentProcessingDevice {
+	id: ID!
+	deviceId: String!
+	paymentProcessor: PaymentProcessor!
+	createdAt: DateTime!
+}
+
 type AuthPayload {
   token: String
   user: User
@@ -133,16 +156,9 @@ type responseObject {
   code: String
 }
 
-type TabletDevice {
-  id: ID!
-  headerId: String!
-	paymentProcessingDevice: PaymentProcessingDevice!
-}
-
-type PaymentProcessingDevice {
-	id: ID!
-	deviceId: String!
-	paymentProcessor: PaymentProcessor!
+enum TaxType {
+  PERCENT
+  LUMP
 }
 
 enum MealStatus {

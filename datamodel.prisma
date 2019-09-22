@@ -39,7 +39,7 @@ type Location {
   tabletDevices: [TabletDevice]! @relation(onDelete: CASCADE)
   menuItems: [MenuItem]! @relation(onDelete: CASCADE)
   menuCategories: [MenuCategory]! @relation(onDelete: CASCADE)
-  taxRate: Int
+  taxes: [Tax]! @relation(onDelete: CASCADE)
   transactions: [Transaction]! @relation(onDelete: CASCADE)
   orders: [Order]! @relation(onDelete: CASCADE)
   createdAt: DateTime! @createdAt
@@ -101,16 +101,31 @@ type OptionValue {
   deletedAt: DateTime
 }
 
+type Tax {
+  id: ID! @id
+  paymentProcessorId: String
+  taxType: TaxType!
+  taxAmount: Int!
+  name: String!
+  location: Location! @relation(link: INLINE onDelete: SET_NULL)
+  createdAt: DateTime! @createdAt
+  deletedAt: DateTime
+}
+
 type TabletDevice {
   id: ID! @id
   headerId: String!
 	paymentProcessingDevice: PaymentProcessingDevice! @relation(link: INLINE)
+  createdAt: DateTime! @createdAt
+  deletedAt: DateTime
 }
 
 type PaymentProcessingDevice {
 	id: ID! @id
   deviceId: String!
 	paymentProcessor: PaymentProcessor!
+  createdAt: DateTime! @createdAt
+  deletedAt: DateTime
 }
 
 enum MealStatus {
@@ -118,6 +133,11 @@ enum MealStatus {
   PREPARING
   DONE
 	CANCELLED
+}
+
+enum TaxType {
+  PERCENT
+  FLAT
 }
 
 enum PaymentProcessor {

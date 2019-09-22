@@ -1,14 +1,12 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
-const request = require("request-promise")
-
-
 const { 
 	getUserId, 
 	processUpload, 
 	getLocationsByUserId,
-	syncInventory
+	syncInventory,
+	syncTaxes
 } = require('../utils')
 
 require('dotenv').config()
@@ -229,16 +227,25 @@ function deleteMenuItem(root, args, context) {
 
 async function syncLocation(root, args, context){
 	const locations = await getLocationsByUserId(context)
-	let { paymentProcessorMerchantId , paymentProcessorAccessToken} =  locations[0]
+	let { paymentProcessorMerchantId , paymentProcessorAccessToken, id} =  locations[0]
 
-	var options = {
+	const inventoryOptions = {
 		method: 'GET',
 		url: process.env.CLOVER_API_BASE_URL + paymentProcessorMerchantId + '/items',
 		qs: {access_token: paymentProcessorAccessToken}
 	};
 	
-	const res = await request(options);
-	await syncInventory(JSON.parse(res), context)
+	const taxOptions =  {
+		method: 'GET',
+		url: process.env.CLOVER_API_BASE_URL + paymentProcessorMerchantId +  '/tax_rates',
+		qs: {access_token: paymentProcessorAccessToken},
+		headers: {accept: 'application/json'}
+	};
+
+	return Promise.all([
+		syncInventory(inventoryOptions, context, id),
+		syncTaxes(taxOptions, context, id)
+	])
 }
 
 

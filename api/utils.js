@@ -1,6 +1,7 @@
 const uuid = require('uuid/v1')
 const aws = require('aws-sdk')
 const jwt = require('jsonwebtoken')
+const request = require("request-promise")
 
 require('dotenv').config()
 
@@ -62,8 +63,10 @@ function getLocationsByUserId(context){
 	})
 }
 
-async function syncInventory(res, context) {
-  return Promise.all(res.elements.map(async function(element){
+async function syncInventory(inventoryOptions, context, locationId) {
+  let inventoryRes = await request(inventoryOptions);
+  inventoryRes = JSON.parse(inventoryRes)
+  return Promise.all(inventoryRes.elements.map(async function(element){
     const menuItemExists = await context.prisma.$exists.menuItem({
       paymentProcessorId: element.id
     });
@@ -79,9 +82,56 @@ async function syncInventory(res, context) {
   }))
 }
 
+function getTaxData(element) {
+  if(element.taxAmount === undefined){
+    return {
+      paymentProcessorId: element.id,
+      name: element.name,
+      taxAmount: element.rate,
+      taxType: "PERCENT"
+    }
+  } else {
+    return {
+      paymentProcessorId: element.id,
+      name: element.name,
+      taxAmount: element.taxAmount,
+      taxType: "FLAT"
+    }
+  }
+}
+
+
+async function syncTaxes(taxOptions, context, locationId) {
+  let taxRes = await request(taxOptions);
+  taxRes = JSON.parse(taxRes)
+  return Promise.all(taxRes.elements.map(async function(element){
+    const taxExists = await context.prisma.$exists.tax({
+      paymentProcessorId: element.id
+    });
+
+    const taxData = getTaxData(element)
+    if (taxExists) {
+      return context.prisma.updateTax({
+        where: {paymentProcessorId: element.id},
+        data: taxData
+      })
+    } else {
+      return context.prisma.createTax({
+        ...taxData,
+        location: {
+          connect: {
+            id: locationId
+          }
+        }
+      })
+    }
+  }))
+}
+
 module.exports = {
 	getUserId,
   processUpload,
   getLocationsByUserId,
-  syncInventory
+  syncInventory,
+  syncTaxes
 }
