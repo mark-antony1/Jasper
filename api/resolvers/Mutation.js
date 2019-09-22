@@ -1,19 +1,12 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const clover = require ("remote-pay-cloud");
-const sdk = require ("remote-pay-cloud-api");
+
 const request = require("request-promise")
 
 
 const { 
 	getUserId, 
 	processUpload, 
-	createCloverWebsocketConfiguration, 
-	createCloverDeviceConnectionConfiguration,
-	setCloverConnector,
-	buildCloverConnectionListener,
-	setCloverConnectorListener,
-	getCloverConnector,
 	getLocationsByUserId,
 	syncInventory
 } = require('../utils')
@@ -234,106 +227,6 @@ function deleteMenuItem(root, args, context) {
 	})
 }
 
-var defaultCloverConnectorListener = Object.assign({}, clover.remotepay.ICloverConnectorListener.prototype, {
-
-	onDeviceReady: function (merchantInfo) {
-			// updateStatus("Pairing successfully completed, your Clover device is ready to process requests.");
-			console.log({message: "Device Ready to process requests!", merchantInfo: merchantInfo});
-	},
-
-	onDeviceDisconnected: function () {
-			console.log({message: "Disconnected"});
-	},
-
-	onDeviceConnected: function () {
-			console.log({message: "Connected, but not available to process requests"});
-	}
-
-});
-
-var saleListener = Object.assign({}, defaultCloverConnectorListener, {
-	onSaleResponse: function (response) {
-		 console.log('response', response)
-	},
-
-	onConfirmPaymentRequest: function (request) {
-		console.log('onConfirmPaymentRequest', request)
-		let connector = getCloverConnector()
-		connector.acceptPayment(request.payment)
-		return true
-	},
-
-	onVerifySignatureRequest: function (request) {
-		console.log('response', request)
-		return true
-	}
-});
-
-async function configureConnection(paymentProcessingDevices, user, tabletId) {
-	if (getCloverConnector(tabletId) === undefined){
-		const cloverWebsocketConfiguration = createCloverWebsocketConfiguration(user, paymentProcessingDevices, tabletId)
-		const cloverDeviceConnectionConfiguration = createCloverDeviceConnectionConfiguration(cloverWebsocketConfiguration)
-		let builderConfiguration = {};
-		builderConfiguration[clover.CloverConnectorFactoryBuilder.FACTORY_VERSION] = clover.CloverConnectorFactoryBuilder.VERSION_12;
-		let cloverConnectorFactory = clover.CloverConnectorFactoryBuilder.createICloverConnectorFactory(builderConfiguration);
-		let cloverConnector = cloverConnectorFactory.createICloverConnector(cloverDeviceConnectionConfiguration);
-		setCloverConnector(cloverConnector, tabletId)
-		let exampleConnectorListener = buildCloverConnectionListener(cloverWebsocketConfiguration);
-		cloverConnector.addCloverConnectorListener(saleListener)
-		setCloverConnectorListener(exampleConnectorListener, tabletId)
-		cloverConnector.initializeConnection();
-	}
-}
-
-function sendMessage(root, args, context) {
-	let connector = getCloverConnector()
-	connector.showMessage("Welcome to Clover Connector!");
-
-	saleRequest = new sdk.remotepay.SaleRequest();
-	saleRequest.setExternalId(clover.CloverID.getNewId());
-	saleRequest.setAmount(2139);
-	console.log({message: "Sending sale", request: saleRequest});
-	connector.sale(saleRequest);
-	return
-}
-
-
-async function makePayment(tabletId) {
-	const connector = getCloverConnector(tabletId)
-	saleRequest = new sdk.remotepay.SaleRequest();
-	saleRequest.setExternalId(clover.CloverID.getNewId());
-	saleRequest.setAmount(2139);
-	console.log({message: "Sending sale", request: saleRequest});
-	return await connector.sale(saleRequest);
-}
-	
-async function purchase(root, args, context) {
-	console.log("begin purchase")
-	const userId = getUserId(context)
-	const tabletHeaderId = context.request.get('UniqueHeader')
-
-	const user = await context.prisma.user({
-		id: userId,
-	})
-
-	const processingDevices = await context.prisma.user({
-		id: userId,
-	})
-	.tabletDevices({
-		where: {
-			headerId: tabletHeaderId
-		}
-	})
-	.paymentProcessingDevice()
-
-	configureConnection(processingDevices, user, tabletHeaderId)
-
-	const msg = await makePayment(tabletHeaderId)
-	return {
-		code: '$$ Payment Complete ' + msg
-	};
-}
-
 async function syncLocation(root, args, context){
 	const locations = await getLocationsByUserId(context)
 	let { paymentProcessorMerchantId , paymentProcessorAccessToken} =  locations[0]
@@ -412,7 +305,5 @@ module.exports = {
 	updateMenuCategory,
 	updateOption,
 	createOptionValue,
-	purchase,
-	sendMessage,
 	syncLocation
 }
