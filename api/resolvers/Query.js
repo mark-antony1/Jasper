@@ -77,6 +77,20 @@ function locations(root, args, context) {
 	.locations()
 }
 
+async function location(root, args, context) {
+	const userId = getUserId(context)
+	const locations = await context.prisma
+	.user({
+		id: userId,
+	})
+	.locations()
+	if (locations.length > 0) {
+		return locations[0]
+	} else {
+		throw Error("No locations exist for that user id")
+	}
+}
+
 function ordersByLocationAndStatus(root, args, context) {
 	getUserId(context)
 	return context.prisma
@@ -142,5 +156,6 @@ module.exports = {
 	transactionsByDate,
 	menuItemsByCategory,
 	optionsByMenuItem,
-	user
+	user,
+	location
 }
