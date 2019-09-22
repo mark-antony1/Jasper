@@ -54,6 +54,7 @@ async function menuItems(root, args, context) {
 		.$fragment(
 			`{ 
 				id title price description price pictureURL calories 
+				paymentProcessorId
 				options { 
 					id title required priority maxSelections
 					optionValues { 
@@ -85,9 +86,11 @@ async function location(root, args, context) {
 	})
 	.locations()
 	.$fragment(`
-		{id address phoneNumber email name 
-		pictureURL paymentProcessorMerchantId
-		paymentProcessorAccessToken
+		{
+			id address phoneNumber 
+			email name pictureURL 
+			paymentProcessorMerchantId
+			paymentProcessorAccessToken 
 		tabletDevices{
 			headerId
 			paymentProcessingDevice {
