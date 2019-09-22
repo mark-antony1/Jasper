@@ -118,7 +118,7 @@ function getCloverConnector (tabletId) {
 
 
 var buildCloverConnectionListener = function (answers) {
-  let defaultConnectorListener = DefaultConnectionListener.create(gCloverConnector);
+  let defaultConnectorListener = DefaultConnectionListener.create(gCloverConnectorMap[answers.tabletId]);
   return Object.assign(defaultConnectorListener, {
       onDeviceReady: function (merchantInfo) {
           cloverConnector.resetDevice();

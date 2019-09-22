@@ -11,24 +11,6 @@ const resolvers = {
 	PhoneNumber: PhoneNumberResolver,
   Query,
   Mutation,
-  User: {
-    menuItems(root, args, context) {
-      return context.prisma
-        .user({
-          id: root.id,
-        })
-        .menuItems()
-    },
-  },
-  MenuItem: {
-    author(root, args, context) {
-      return context.prisma
-        .menuItem({
-          id: root.id,
-        })
-        .author()
-    },
-  },
 }
 
 const server = new GraphQLServer({

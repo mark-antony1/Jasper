@@ -1,6 +1,8 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const clover = require ("remote-pay-cloud");
+const sdk = require ("remote-pay-cloud-api");
+
 const { 
 	getUserId, 
 	processUpload, 
@@ -231,7 +233,7 @@ function deleteMenuItem(root, args, context) {
 var defaultCloverConnectorListener = Object.assign({}, clover.remotepay.ICloverConnectorListener.prototype, {
 
 	onDeviceReady: function (merchantInfo) {
-			updateStatus("Pairing successfully completed, your Clover device is ready to process requests.");
+			// updateStatus("Pairing successfully completed, your Clover device is ready to process requests.");
 			console.log({message: "Device Ready to process requests!", merchantInfo: merchantInfo});
 	},
 
@@ -245,6 +247,24 @@ var defaultCloverConnectorListener = Object.assign({}, clover.remotepay.ICloverC
 
 });
 
+var saleListener = Object.assign({}, defaultCloverConnectorListener, {
+	onSaleResponse: function (response) {
+		 console.log('response', response)
+	},
+
+	onConfirmPaymentRequest: function (request) {
+		console.log('onConfirmPaymentRequest', request)
+		let connector = getCloverConnector()
+		connector.acceptPayment(request.payment)
+		return true
+	},
+
+	onVerifySignatureRequest: function (request) {
+		console.log('response', request)
+		return true
+	}
+});
+
 async function configureConnection(paymentProcessingDevices, user, tabletId) {
 	if (getCloverConnector(tabletId) === undefined){
 		const cloverWebsocketConfiguration = createCloverWebsocketConfiguration(user, paymentProcessingDevices, tabletId)
@@ -254,27 +274,33 @@ async function configureConnection(paymentProcessingDevices, user, tabletId) {
 		let cloverConnectorFactory = clover.CloverConnectorFactoryBuilder.createICloverConnectorFactory(builderConfiguration);
 		let cloverConnector = cloverConnectorFactory.createICloverConnector(cloverDeviceConnectionConfiguration);
 		setCloverConnector(cloverConnector, tabletId)
-		// let exampleConnectorListener = buildCloverConnectionListener(cloverWebsocketConfiguration);
-		cloverConnector.addCloverConnectorListener(defaultCloverConnectorListener)
-		// setCloverConnectorListener(exampleConnectorListener, tabletId)
+		let exampleConnectorListener = buildCloverConnectionListener(cloverWebsocketConfiguration);
+		cloverConnector.addCloverConnectorListener(saleListener)
+		setCloverConnectorListener(exampleConnectorListener, tabletId)
 		cloverConnector.initializeConnection();
 	}
 }
 
 function sendMessage(root, args, context) {
 	let connector = getCloverConnector()
-	connector.showWelcomeScreen();
+	connector.showMessage("Welcome to Clover Connector!");
+
+	saleRequest = new sdk.remotepay.SaleRequest();
+	saleRequest.setExternalId(clover.CloverID.getNewId());
+	saleRequest.setAmount(2139);
+	console.log({message: "Sending sale", request: saleRequest});
+	connector.sale(saleRequest);
 	return
 }
 
 
-function makePayment(tabletId) {
-	const cloverConnector = getCloverConnector(tabletId)
-	return new Promise(resolve => {
-    setTimeout(() => {
-      resolve('$$ Payment Complete');
-    }, 2000);
-	});
+async function makePayment(tabletId) {
+	const connector = getCloverConnector(tabletId)
+	saleRequest = new sdk.remotepay.SaleRequest();
+	saleRequest.setExternalId(clover.CloverID.getNewId());
+	saleRequest.setAmount(2139);
+	console.log({message: "Sending sale", request: saleRequest});
+	return await connector.sale(saleRequest);
 }
 	
 async function purchase(root, args, context) {
@@ -298,6 +324,7 @@ async function purchase(root, args, context) {
 	console.log('processingDevices', processingDevices)
 
 	configureConnection(processingDevices, user, tabletHeaderId)
+
 	const msg = await makePayment(tabletHeaderId)
 	return {
 		code: '$$ Payment Complete ' + msg

@@ -38,15 +38,9 @@ type Mutation {
 type User {
   id: ID!
   email: EmailAddress! 
-	paymentProcessorMerchantId: ID!
-	paymentProcessorAccessToken: ID
 	password: String!
-	pictureURL: URL!
 	name: String!
-  menuItems: [MenuItem]!
 	locations: [Location]!
-	tabletDevices: [TabletDevice]!
-	menuCategories: [MenuCategory]! 
 	createdAt: DateTime!
 }
 
@@ -57,7 +51,8 @@ type MenuItem {
   price: Int!
 	pictureURL: URL!
 	calories: Int!
-  author: User!
+  author: Location!
+	paymentProcessorId: String!
 	options: [Option]!
 	categories: [MenuCategory]!
 	menuItemToUpsell: MenuItem
@@ -71,6 +66,14 @@ type Location {
 	phoneNumber: PhoneNumber
 	email: EmailAddress
 	owner: User!
+	name: String!
+	pictureURL: String!
+  paymentProcessorMerchantId: ID
+  paymentProcessorAccessToken: String
+	tabletDevices: [TabletDevice]!
+	menuItems: [MenuItem]!
+	menuCategories: [MenuCategory]!
+	taxRate: Int
 	createdAt: DateTime!
 }
 
@@ -94,6 +97,8 @@ type MenuCategory {
 	id: ID!
 	owner: User!
 	name: String!
+	paymentProcessorId: String
+	menuItems: [MenuItem]!
 	createdAt: DateTime!
 }
 

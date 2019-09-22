@@ -1,16 +1,25 @@
 const { getUserId } = require('../utils')
 
 
-function menuItem(root, args, context) {
+async function menuItem(root, args, context) {
 	getUserId(context)
+
+	const locations = await context.prisma
+	.locations({
+		where: {
+			owner: {
+				id: userId
+			}
+		}
+	})
+
 	return context.prisma
 	.menuItem({ 
 		where: {
-			author: {
-				id: userId
+			location: {
+				id: locations[0].id
 			}
 		},
-		id: args.menuItemId
 	})
 }
 
@@ -25,16 +34,22 @@ function user(root, args, context) {
 	)
 }
 
-function menuItems(root, args, context) {
+async function menuItems(root, args, context) {
 	const userId = getUserId(context)
-	return context.prisma
-		.menuItems({
-			where: {
-				author: {
-					id: userId
-				}
+	const locations = await context.prisma
+	.locations({
+		where: {
+			owner: {
+				id: userId
 			}
+		}
+	})
+
+	return context.prisma
+		.location({
+			id: locations[0].id
 		})
+		.menuItems()
 		.$fragment(
 			`{ 
 				id title price description price pictureURL calories 

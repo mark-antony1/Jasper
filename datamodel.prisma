@@ -3,13 +3,7 @@ type User {
   email: String @unique
   password: String!
   name: String!
-  pictureURL: String!
-	paymentProcessorMerchantId: ID
-  paymentProcessorAccessToken: String
-  tabletDevices: [TabletDevice]! @relation(onDelete: CASCADE)
-  menuItems: [MenuItem]! @relation(onDelete: CASCADE)
   locations: [Location]! @relation(onDelete: CASCADE)
-  menuCategories: [MenuCategory]! @relation(onDelete: CASCADE)
 	createdAt: DateTime! @createdAt
   deletedAt: DateTime
 }
@@ -21,11 +15,12 @@ type MenuItem {
   price: Int!
   pictureURL: String!
   calories: Int!
-  author: User @relation(link: INLINE onDelete: SET_NULL)
-  orders: [Order]! @relation(onDelete: CASCADE)
-  transactions: [Transaction]! @relation(onDelete: CASCADE)
-  options: [Option!] @relation(onDelete: CASCADE)
+  paymentProcessorId: String
+  location: Location @relation(link: INLINE onDelete: SET_NULL)
   menuItemToUpsell: MenuItem @relation(name: "MenuItemToUpsell")
+  orders: [Order]! @relation(onDelete: CASCADE)
+  options: [Option!] @relation(onDelete: CASCADE)
+  transactions: [Transaction]! @relation(onDelete: CASCADE)
   categories: [MenuCategory]! @relation(link: TABLE)
   createdAt: DateTime! @createdAt
   deletedAt: DateTime
@@ -35,8 +30,16 @@ type Location {
 	id: ID! @id
 	address: String!
 	phoneNumber: String!
-	email: String!
+	email: String
+  name: String!
 	owner: User! @relation(link: INLINE onDelete: SET_NULL)
+  pictureURL: String!
+  paymentProcessorMerchantId: ID
+  paymentProcessorAccessToken: String
+  tabletDevices: [TabletDevice]! @relation(onDelete: CASCADE)
+  menuItems: [MenuItem]! @relation(onDelete: CASCADE)
+  menuCategories: [MenuCategory]! @relation(onDelete: CASCADE)
+  taxRate: Int
   transactions: [Transaction]! @relation(onDelete: CASCADE)
   orders: [Order]! @relation(onDelete: CASCADE)
   createdAt: DateTime! @createdAt
@@ -63,9 +66,10 @@ type Transaction {
 
 type MenuCategory {
 	id: ID! @id
-	owner: User! @relation(link: INLINE onDelete: SET_NULL)
+	owner: Location! @relation(link: INLINE onDelete: SET_NULL)
   menuItems: [MenuItem]! @relation(onDelete: CASCADE)
 	name: String!
+  paymentProcessorId: String
 	createdAt: DateTime! @createdAt
   deletedAt: DateTime
 }
@@ -78,6 +82,7 @@ type Option {
   maxSelections: Int!
   required: Boolean!
   priority: Int!
+  paymentProcessorId: String
   optionValues: [OptionValue!]! @relation(onDelete: CASCADE)
 	createdAt: DateTime! @createdAt
   deletedAt: DateTime
@@ -91,6 +96,7 @@ type OptionValue {
   price: Int!
   isDefault: Boolean!
   priority: Int!
+  paymentProcessorId: String
   createdAt: DateTime! @createdAt
   deletedAt: DateTime
 }
