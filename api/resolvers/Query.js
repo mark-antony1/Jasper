@@ -24,13 +24,14 @@ async function menuItem(root, args, context) {
 }
 
 function user(root, args, context) {
+	console.log('llllllx')
 	const userId = getUserId(context)
 	return context.prisma
 	.user({
 		id: userId,
 	})
 	.$fragment(
-		`{ id email pictureURL name menuCategories { id name } locations { id address phoneNumber email } }`
+		`{ id email name locations { id address phoneNumber pictureURL } }`
 	)
 }
 
