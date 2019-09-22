@@ -69,7 +69,7 @@ type MenuCategory {
 	owner: Location! @relation(link: INLINE onDelete: SET_NULL)
   menuItems: [MenuItem]! @relation(onDelete: CASCADE)
 	name: String!
-  paymentProcessorId: String
+  paymentProcessorId: String @unique
 	createdAt: DateTime! @createdAt
   deletedAt: DateTime
 }
@@ -82,7 +82,7 @@ type Option {
   maxSelections: Int!
   required: Boolean!
   priority: Int!
-  paymentProcessorId: String
+  paymentProcessorId: String @unique
   optionValues: [OptionValue!]! @relation(onDelete: CASCADE)
 	createdAt: DateTime! @createdAt
   deletedAt: DateTime
@@ -96,14 +96,14 @@ type OptionValue {
   price: Int!
   isDefault: Boolean!
   priority: Int!
-  paymentProcessorId: String
+  paymentProcessorId: String @unique
   createdAt: DateTime! @createdAt
   deletedAt: DateTime
 }
 
 type Tax {
   id: ID! @id
-  paymentProcessorId: String
+  paymentProcessorId: String @unique
   taxType: TaxType!
   taxAmount: Int!
   name: String!
