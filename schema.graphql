@@ -158,7 +158,7 @@ type responseObject {
 
 enum TaxType {
   PERCENT
-  LUMP
+  FLAT
 }
 
 enum MealStatus {
