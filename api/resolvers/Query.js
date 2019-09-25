@@ -24,7 +24,6 @@ async function menuItem(root, args, context) {
 }
 
 function user(root, args, context) {
-	console.log('llllllx')
 	const userId = getUserId(context)
 	return context.prisma
 	.user({

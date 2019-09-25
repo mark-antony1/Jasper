@@ -1,12 +1,16 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const request = require("request-promise")
 
 const { 
 	getUserId, 
 	processUpload, 
 	getLocationsByUserId,
 	syncInventory,
-	syncTaxes
+	syncTaxes,
+	getOldLineItems,
+	voidManualLineItems,
+	addLineItems
 } = require('../utils')
 
 require('dotenv').config()
@@ -91,26 +95,6 @@ function createTransaction(root, args, context) {
 	})
 }
 
-function createOrder(root, args, context) {
-	getUserId(context)
-	return context.prisma.createOrder({
-		menuItem: {
-			connect: {
-				id: args.menuItemId,
-			}
-		},
-		location: {
-			connect: {
-				id: args.locationId,
-			}
-		},
-		options: {
-			connect: args.options.map((val) => { return {id: val} })
-		},
-		status: "ORDERED"
-	})
-}
-
 function createLocation(root, args, context) {
 	const userId = getUserId(context)
 	return context.prisma.createLocation({
@@ -134,14 +118,6 @@ function updateUser(root, args, context) {
 			email: args.email,
 			name: args.name
 		}
-	})
-}
-
-function updateOrder(root, args, context) {
-	getUserId(context)
-	return context.prisma.updateOrder({
-		where: { id: args.orderId },
-		data: { status: args.status }
 	})
 }
 
@@ -248,6 +224,18 @@ async function syncLocation(root, args, context){
 	])
 }
 
+async function updateOrder(root, args, context){
+	const locations = await getLocationsByUserId(context)
+	let { paymentProcessorMerchantId , paymentProcessorAccessToken, id} =  locations[0]
+	
+	const oldLineItems = await getOldLineItems(args.orderId, paymentProcessorAccessToken, paymentProcessorMerchantId)
+
+	return Promise.all([
+		voidManualLineItems(oldLineItems, args.orderId, paymentProcessorAccessToken, paymentProcessorMerchantId),
+		addLineItems(args.lineItems, args.orderId, paymentProcessorAccessToken, paymentProcessorMerchantId)
+	])
+}
+
 
 async function uploadMenuItemPicture(root, args, ctx, info) {
 	return await processUpload(await args, ctx)
@@ -301,7 +289,6 @@ module.exports = {
 	updateLocation,
 	updateUser,
 	updateOrder,
-	createOrder,
 	createOption,
 	createTransaction,
 	createMenuItem,

@@ -13,7 +13,6 @@ type Query {
 type Mutation {
 	createMenuItem(title: String!, price: Int!, pictureURL: URL!, categoryId: ID!, description: String!, calories: Int!): MenuItem
   createTransaction(locationId: ID!, menuItemId: ID!): Transaction
-	createOrder(locationId: ID!, menuItemId: ID!, options: [ID!]!): Order
 	createLocation(address: String!, phoneNumber: PhoneNumber!, email: EmailAddress!): Location
 	createOption(menuItemId: ID!, title: String!, maxSelections: Int!, required: Boolean!, priority: Int!): Option
 	createMenuCategory(name: String!): MenuCategory
@@ -21,7 +20,6 @@ type Mutation {
   uploadMenuItemPicture(file: Upload!, menuItemId: ID!): MenuItem
   updateUser(password: String!, email: EmailAddress!, name: String!): User
 	updateMenuItem(menuItemId: ID!, title: String!, description: String!, url: URL!, price: Int!, menuItemToUpsell: ID): MenuItem
-	updateOrder(orderId: ID!, status: MealStatus!): Order
 	updateLocation(locationId: ID!, address: String!, email: EmailAddress!, phoneNumber: PhoneNumber!): Location
 	updateMenuCategory(name: String!): MenuCategory
 	updateOption(optionId: ID!, title: String!, maxSelections: Int!, required: Boolean!, priority: Int!): Option
@@ -33,6 +31,7 @@ type Mutation {
 	signup(email: String!, password: String!, name: String!, pictureURL: URL): AuthPayload
   login(email: String!, password: String!): AuthPayload
 	syncLocation: responseObject
+	updateOrder(orderId: ID!, lineItems: [LineItemInput]!): responseObject
 }
 
 type User {
@@ -150,6 +149,11 @@ type PaymentProcessingDevice {
 type AuthPayload {
   token: String
   user: User
+}
+
+input LineItemInput {
+	name: String!
+	price: Int!
 }
 
 type responseObject {

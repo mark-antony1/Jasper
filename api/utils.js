@@ -128,10 +128,61 @@ async function syncTaxes(taxOptions, context, locationId) {
   }))
 }
 
+function getOldLineItems(orderId, accessToken, merchantId) {
+  const getOrderLineItems = {
+		method: 'GET',
+		url: process.env.CLOVER_API_BASE_URL + merchantId + '/orders/' + orderId + '/line_items',
+		qs: {access_token: accessToken},
+  };
+  
+  return request(getOrderLineItems);
+}
+
+function voidManualLineItems(oldLineItems, orderId, accessToken, merchantId) {
+  const deleteOptions = {
+		method: 'DELETE',
+		url: process.env.CLOVER_API_BASE_URL + merchantId + '/orders/' + orderId + '/line_items/',
+		qs: {access_token: accessToken},
+  };
+
+  const parsedLineItems = JSON.parse(oldLineItems)
+  return Promise.all(parsedLineItems.elements.map(element => {
+    let curDeleteOptions = Object.assign({}, deleteOptions)
+    curDeleteOptions.url += element.id
+    const nonItemizedTransaction = element.name === undefined || element.name === "Manual Transaction"
+    if (nonItemizedTransaction) {
+      return request(curDeleteOptions)
+    } 
+  }))
+}
+
+function addLineItems(lineItems, orderId, accessToken, merchantId){
+  const createLineItemOptions = {
+		method: 'POST',
+		url: process.env.CLOVER_API_BASE_URL + merchantId + '/orders/' + orderId + '/line_items',
+		qs: {access_token: accessToken},
+  };
+
+  return Promise.all(lineItems.map(lineItem => {
+    let curCreateLineItemOptions = Object.assign({}, createLineItemOptions)
+    let body = {}
+    body.name = lineItem.name
+    body.price = lineItem.price
+    body = JSON.stringify(body)
+    curCreateLineItemOptions.body = body
+
+    return request(curCreateLineItemOptions)
+  }))
+}
+
+
 module.exports = {
 	getUserId,
   processUpload,
   getLocationsByUserId,
   syncInventory,
-  syncTaxes
+  syncTaxes,
+  getOldLineItems,
+  voidManualLineItems,
+  addLineItems
 }
