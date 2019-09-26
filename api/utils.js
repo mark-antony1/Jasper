@@ -156,7 +156,8 @@ function voidManualLineItems(oldLineItems, orderId, accessToken, merchantId) {
   }))
 }
 
-function addLineItems(lineItems, orderId, accessToken, merchantId){
+function addLineItems(args, accessToken, merchantId){
+  const { orderId, lineItems } = args
   const createLineItemOptions = {
 		method: 'POST',
 		url: process.env.CLOVER_API_BASE_URL + merchantId + '/orders/' + orderId + '/line_items',
@@ -168,6 +169,7 @@ function addLineItems(lineItems, orderId, accessToken, merchantId){
     let body = {}
     body.name = lineItem.name
     body.price = lineItem.price
+    body.item = {id: lineItem.itemId}
     body = JSON.stringify(body)
     curCreateLineItemOptions.body = body
 

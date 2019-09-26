@@ -154,6 +154,7 @@ type AuthPayload {
 input LineItemInput {
 	name: String!
 	price: Int!
+	itemId: String!
 }
 
 type responseObject {

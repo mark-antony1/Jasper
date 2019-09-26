@@ -226,13 +226,13 @@ async function syncLocation(root, args, context){
 
 async function updateOrder(root, args, context){
 	const locations = await getLocationsByUserId(context)
-	let { paymentProcessorMerchantId , paymentProcessorAccessToken, id} =  locations[0]
+	let { paymentProcessorMerchantId , paymentProcessorAccessToken} =  locations[0]
 	
 	const oldLineItems = await getOldLineItems(args.orderId, paymentProcessorAccessToken, paymentProcessorMerchantId)
 
 	return Promise.all([
 		voidManualLineItems(oldLineItems, args.orderId, paymentProcessorAccessToken, paymentProcessorMerchantId),
-		addLineItems(args.lineItems, args.orderId, paymentProcessorAccessToken, paymentProcessorMerchantId)
+		addLineItems(args, paymentProcessorAccessToken, paymentProcessorMerchantId)
 	])
 }
 
