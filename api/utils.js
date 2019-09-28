@@ -234,7 +234,7 @@ function voidManualLineItems(oldLineItems, orderId, accessToken, merchantId) {
   }))
 }
 
-function addLineItems(args, accessToken, merchantId){
+async function addLineItems(args, accessToken, merchantId){
   const { orderId, lineItems } = args
   const createLineItemOptions = {
 		method: 'POST',
@@ -242,7 +242,7 @@ function addLineItems(args, accessToken, merchantId){
 		qs: {access_token: accessToken},
   };
 
-  return Promise.all(lineItems.map(lineItem => {
+  await Promise.all(lineItems.map(async function(lineItem, index) {
     let curCreateLineItemOptions = Object.assign({}, createLineItemOptions)
     let body = {}
     body.name = lineItem.name
@@ -251,10 +251,33 @@ function addLineItems(args, accessToken, merchantId){
     body = JSON.stringify(body)
     curCreateLineItemOptions.body = body
 
-    return request(curCreateLineItemOptions)
+    const lineItemResponse  = await request(curCreateLineItemOptions)
+    lineItems[index].paymentProcessorId = JSON.parse(lineItemResponse).id
   }))
+
+  return await applyModifications(lineItems, orderId, merchantId, accessToken)
 }
 
+
+function applyModifications(lineItems, orderId, merchantId, accessToken) {
+  const modificationOptions = {
+		method: 'POST',
+		url: process.env.CLOVER_API_BASE_URL + merchantId + '/orders/' + orderId + '/line_items/',
+		qs: {access_token: accessToken},
+  };
+
+  return Promise.all(lineItems.map(lineItem => {
+    return Promise.all(lineItem.modifications.map(modification => {
+      let curModificationOptions = Object.assign({}, modificationOptions)
+      let body = JSON.stringify({modifier: {id: modification.modificationId}})
+
+      curModificationOptions.body = body
+      curModificationOptions.url += lineItem.paymentProcessorId + '/modifications'
+
+      return request(curModificationOptions)
+    }))
+  }))
+}
 
 module.exports = {
 	getUserId,
