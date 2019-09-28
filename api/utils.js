@@ -63,19 +63,50 @@ function getLocationsByUserId(context){
 	})
 }
 
-async function syncInventory(inventoryOptions, context, locationId) {
+async function syncInventory(inventoryOptions, modifierGroupOptions, context, locationId) {
   let inventoryRes = await request(inventoryOptions);
   inventoryRes = JSON.parse(inventoryRes)
+
+  let modifiersGroupRes = await request(modifierGroupOptions)
+  modifiersGroupRes = JSON.parse(modifiersGroupRes)
+
+  const processorToModelMap = await syncModifierGroupsAndModifiers(modifiersGroupRes, context)
+
   return Promise.all(inventoryRes.elements.map(async function(element){
     const menuItemExists = await context.prisma.$exists.menuItem({
       paymentProcessorId: element.id
     });
 
+    const hydratedItem = hydrateInventoryItem(element, modifiersGroupRes)
     if (menuItemExists) {
       return context.prisma.updateMenuItem({
         where: {paymentProcessorId: element.id},
         data: {
-          title: element.name
+          title: element.name,
+          options: {
+            connect: element.modifierGroups.elements.map(group => {
+              return { id: processorToModelMap[group.id] } 
+            })
+          }
+        },
+      })
+    } else {
+      return context.prisma.createMenuItem({
+        title: element.name,
+        paymentProcessorId: element.id,
+        price: element.price,
+        description: '',
+        calories: 0,
+        pictureURL: '',
+        options: {
+          connect: element.modifierGroups.elements.map(group => {
+            return { id: processorToModelMap[group.id] } 
+          })
+        },
+        location: {
+          connect: {
+            id: locationId
+          }
         }
       })
     }
@@ -100,6 +131,53 @@ function getTaxData(element) {
   }
 }
 
+
+async function syncModifierGroupsAndModifiers(modifierGroups, context) {
+  var modifierGroupMap = {}
+
+  await Promise.all(modifierGroups.elements.map(async function(modifierGroup){
+    const modelModifierGroup = await context.prisma.option({
+      paymentProcessorId: modifierGroup.id
+    });
+
+    if(modelModifierGroup){
+      modifierGroupMap[modifierGroup.id] = modelModifierGroup.id
+    } else {
+      const option = await createModifiersAndModifierGroups(modifierGroup, context)
+      modifierGroupMap[option.paymentProcessorId] = option.id
+    }
+  }))
+
+  return modifierGroupMap
+}
+
+async function createModifiersAndModifierGroups(modifierGroup, context) {
+  const createdOption = await context.prisma.createOption({
+    title: modifierGroup.name,
+    paymentProcessorId: modifierGroup.id,
+    required: false, 
+    maxSelections: 1,
+    priority: 1
+  })
+
+  Promise.all(modifierGroup.modifiers.elements.map(modifier => {
+    return context.prisma.createOptionValue({
+      title: modifier.name,
+      paymentProcessorId: modifier.id,
+      price: modifier.price, 
+      priority: 1,
+      isDefault: false,
+      option: {
+        connect: {
+          id: createdOption.id
+        }
+      }
+    })
+  }))
+
+  return createdOption
+
+}
 
 async function syncTaxes(taxOptions, context, locationId) {
   let taxRes = await request(taxOptions);

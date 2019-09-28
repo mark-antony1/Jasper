@@ -208,7 +208,7 @@ async function syncLocation(root, args, context){
 	const inventoryOptions = {
 		method: 'GET',
 		url: process.env.CLOVER_API_BASE_URL + paymentProcessorMerchantId + '/items',
-		qs: {access_token: paymentProcessorAccessToken}
+		qs: {access_token: paymentProcessorAccessToken, expand: 'modifierGroups'}
 	};
 	
 	const taxOptions =  {
@@ -218,8 +218,14 @@ async function syncLocation(root, args, context){
 		headers: {accept: 'application/json'}
 	};
 
+	const modifierGroupOptions = {
+    method: 'GET',
+    url: process.env.CLOVER_API_BASE_URL + paymentProcessorMerchantId + '/modifier_groups',
+    qs: {expand: 'modifiers', access_token: paymentProcessorAccessToken},
+  };
+
 	return Promise.all([
-		syncInventory(inventoryOptions, context, id),
+		syncInventory(inventoryOptions, modifierGroupOptions, context, id),
 		syncTaxes(taxOptions, context, id)
 	])
 }
