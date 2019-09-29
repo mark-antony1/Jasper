@@ -159,8 +159,6 @@ input LineItemInput {
 }
 
 input ModificationInput {
-	name: String!
-	price: Int!
 	modificationId: String!
 }
 
