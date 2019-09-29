@@ -57,7 +57,7 @@ async function menuItems(root, args, context) {
 				options { 
 					id title required priority maxSelections
 					optionValues { 
-						id title price priority isDefault pictureURL
+						id title price priority isDefault pictureURL paymentProcessorId
 					} 
 				} 
 				categories {
