@@ -120,6 +120,7 @@ type OptionValue {
   isDefault: Boolean!
 	pictureURL: URL
   priority: Int!
+	paymentProcessorId: String
   createdAt: DateTime!
 }
 
