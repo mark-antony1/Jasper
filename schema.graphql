@@ -16,6 +16,7 @@ type Mutation {
 	createLocation(address: String!, phoneNumber: PhoneNumber!, email: EmailAddress!): Location
 	createOption(menuItemId: ID!, title: String!, maxSelections: Int!, required: Boolean!, priority: Int!): Option
 	createMenuCategory(name: String!): MenuCategory
+	createKitchenPrinter(type: KitchenPrinterType!, ipAddress: String!): KitchenPrinter
 	createOptionValue(optionId: ID!, title: String!, price: Int, isDefault: Boolean!, priority: Int!): OptionValue
   uploadMenuItemPicture(file: Upload!, menuItemId: ID!): MenuItem
   updateUser(password: String!, email: EmailAddress!, name: String!): User
@@ -137,6 +138,7 @@ type TabletDevice {
   id: ID!
   headerId: String!
 	paymentProcessingDevice: PaymentProcessingDevice!
+	kitchenPrinter: KitchenPrinter
 	createdAt: DateTime!
 }
 
@@ -150,6 +152,13 @@ type PaymentProcessingDevice {
 type AuthPayload {
   token: String
   user: User
+}
+
+type KitchenPrinter {
+	id: ID!
+  type: KitchenPrinterType!
+	ipAddress: String!
+  createdAt: DateTime!
 }
 
 input LineItemInput {
@@ -189,6 +198,10 @@ enum TransactionOrderByInput {
   createdAt_DESC
 }
 
+enum KitchenPrinterType {
+  EPSON
+  STAR
+}
 
 enum OptionOrderByInput {
   priority_ASC

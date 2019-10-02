@@ -48,6 +48,14 @@ function createMenuCategory(root, args, context) {
 	})
 }
 
+function createKitchenPrinter(root, args, context) {
+	const userId = getUserId(context)
+	return context.prisma.createKitchenPrinter({
+		type: args.type,
+		ipAddress: args.ipAddress
+	})
+}
+
 function createOption(root, args, context) {
 	getUserId(context)
 	return context.prisma.createOption({
@@ -305,5 +313,6 @@ module.exports = {
 	updateMenuCategory,
 	updateOption,
 	createOptionValue,
-	syncLocation
+	syncLocation,
+	createKitchenPrinter
 }

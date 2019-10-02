@@ -91,11 +91,17 @@ async function location(root, args, context) {
 			paymentProcessorMerchantId
 			paymentProcessorAccessToken 
 		tabletDevices{
+			id
 			headerId
 			paymentProcessingDevice {
 				id
 				deviceId
 				paymentProcessor
+			}
+			kitchenPrinter {
+				id
+				type
+				ipAddress
 			}
 		}
 		menuCategories{
