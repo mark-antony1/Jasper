@@ -30,7 +30,7 @@ function user(root, args, context) {
 		id: userId,
 	})
 	.$fragment(
-		`{ id email name locations { id address phoneNumber pictureURL } }`
+		`{ id email name locations { id address phoneNumber pictureURL paymentProcessorMerchantId } }`
 	)
 }
 

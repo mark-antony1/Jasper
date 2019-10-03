@@ -288,7 +288,7 @@ async function login(parent, args, context, info) {
   // 1
 	const user = await context.prisma.user({ email: args.email })
 	.$fragment(`
-		{ id email name 
+		{ id email name password
 			locations { 
 				id address phoneNumber pictureURL paymentProcessorMerchantId
 			} 
@@ -302,7 +302,7 @@ async function login(parent, args, context, info) {
   const valid = await bcrypt.compare(args.password, user.password)
   if (!valid) {
     throw new Error('Invalid password')
-  }
+	}
 
   const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET)
 
