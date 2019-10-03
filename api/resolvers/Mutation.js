@@ -10,7 +10,8 @@ const {
 	syncTaxes,
 	getOldLineItems,
 	voidManualLineItems,
-	addLineItems
+	addLineItems,
+	getAccessToken
 } = require('../utils')
 
 require('dotenv').config()
@@ -250,6 +251,18 @@ async function updateOrder(root, args, context){
 	])
 }
 
+async function addAccessTokenToLocation(root, args, context){
+	const { code, locationId, merchantId } = args
+	
+	const token = getAccessToken(code)
+	return context.prisma.updateLocation({
+		where: { id: locationId },
+		data: {
+			paymentProcessorMerchantId: merchantId,
+			paymentProcessorAccessToken: token
+		}
+	})
+}
 
 async function uploadMenuItemPicture(root, args, ctx, info) {
 	return await processUpload(await args, ctx)
@@ -273,7 +286,14 @@ async function signup(parent, args, context, info) {
 
 async function login(parent, args, context, info) {
   // 1
-  const user = await context.prisma.user({ email: args.email })
+	const user = await context.prisma.user({ email: args.email })
+	.$fragment(`
+		{ id email name 
+			locations { 
+				id address phoneNumber pictureURL paymentProcessorMerchantId
+			} 
+		}
+	`)
   if (!user) {
     throw new Error('No such user found')
   }
@@ -314,5 +334,6 @@ module.exports = {
 	updateOption,
 	createOptionValue,
 	syncLocation,
-	createKitchenPrinter
+	createKitchenPrinter,
+	addAccessTokenToLocation
 }

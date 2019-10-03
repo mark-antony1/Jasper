@@ -258,6 +258,15 @@ async function addLineItems(args, accessToken, merchantId){
   return await applyModifications(lineItems, orderId, merchantId, accessToken)
 }
 
+async function getAccessToken(code, clientId, clientSecret) {
+  const getAccessTokenOptions = {
+		method: 'GET',
+		url: process.env.CLOVER_API_BASE_URL + 'oauth/token?client_id=' + clientId + '&client_secret= '+ clientSecret + '&code=' + code,
+  };
+  return await request(getAccessTokenOptions)
+
+}
+
 
 function applyModifications(lineItems, orderId, merchantId, accessToken) {
   const modificationOptions = {
@@ -287,5 +296,6 @@ module.exports = {
   syncTaxes,
   getOldLineItems,
   voidManualLineItems,
-  addLineItems
+  addLineItems,
+  getAccessToken
 }
