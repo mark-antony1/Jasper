@@ -258,7 +258,7 @@ async function addLineItems(args, accessToken, merchantId){
   return await applyModifications(lineItems, orderId, merchantId, accessToken)
 }
 
-async function getAccessToken(code, clientId, clientSecret) {
+async function getAccessToken(code) {
   const getAccessTokenOptions = {
 		method: 'GET',
     url: process.env.CLOVER_BASE_URL + 'oauth/token?client_id=' + process.env.CLOVER_CLIENT_ID + 
