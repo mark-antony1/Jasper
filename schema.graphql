@@ -33,7 +33,7 @@ type Mutation {
   login(email: String!, password: String!): AuthPayload
 	syncLocation: responseObject
 	updateOrder(orderId: ID!, lineItems: [LineItemInput]!): responseObject
-	addAccessTokenToLocation(code: String!, locationId: String!, merchantId: String!): Location
+	addAccessTokenToLocation(code: String!, merchantId: String!): Location
 }
 
 type User {

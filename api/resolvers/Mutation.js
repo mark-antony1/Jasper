@@ -252,8 +252,16 @@ async function updateOrder(root, args, context){
 }
 
 async function addAccessTokenToLocation(root, args, context){
-	const { code, locationId, merchantId } = args
+	const { code, merchantId } = args
 	
+	const userId = getUserId(context)
+	const locations = await context.prisma
+	.user({
+		id: userId,
+	})
+	.locations()
+	const locationId = locations[0].id
+
 	const token = getAccessToken(code)
 	return context.prisma.updateLocation({
 		where: { id: locationId },
@@ -267,6 +275,7 @@ async function addAccessTokenToLocation(root, args, context){
 async function uploadMenuItemPicture(root, args, ctx, info) {
 	return await processUpload(await args, ctx)
 }
+
 
 async function signup(parent, args, context, info) {
   // 1
