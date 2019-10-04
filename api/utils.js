@@ -261,10 +261,11 @@ async function addLineItems(args, accessToken, merchantId){
 async function getAccessToken(code, clientId, clientSecret) {
   const getAccessTokenOptions = {
 		method: 'GET',
-		url: process.env.CLOVER_API_BASE_URL + 'oauth/token?client_id=' + clientId + '&client_secret= '+ clientSecret + '&code=' + code,
+    url: process.env.CLOVER_BASE_URL + 'oauth/token?client_id=' + process.env.CLOVER_CLIENT_ID + 
+      '&client_secret='+ process.env.CLOVER_CLIENT_SECRET + '&code=' + code,
   };
-  return await request(getAccessTokenOptions)
-
+  const response = await request(getAccessTokenOptions)
+  return JSON.parse(response).access_token
 }
 
 

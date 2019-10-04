@@ -262,7 +262,8 @@ async function addAccessTokenToLocation(root, args, context){
 	.locations()
 	const locationId = locations[0].id
 
-	const token = getAccessToken(code)
+	const token = await getAccessToken(code)
+
 	return context.prisma.updateLocation({
 		where: { id: locationId },
 		data: {
