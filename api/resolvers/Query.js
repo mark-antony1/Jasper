@@ -124,6 +124,24 @@ async function location(root, args, context) {
 	}
 }
 
+function tabletDevice(root, args, context) {
+	const userId = getUserId(context)
+	return context.prisma
+	.tabletDevice({
+		id: args.tabletDeviceId,
+	})
+	.$fragment(`{
+		id
+		headerId
+		cloverPaymentDeviceId
+		kitchenPrinter {
+			id
+			type
+			ipAddress
+		}
+	}`)
+}
+
 function ordersByLocationAndStatus(root, args, context) {
 	getUserId(context)
 	return context.prisma
@@ -190,5 +208,6 @@ module.exports = {
 	menuItemsByCategory,
 	optionsByMenuItem,
 	user,
-	location
+	location,
+	tabletDevice
 }

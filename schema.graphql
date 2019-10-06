@@ -4,6 +4,7 @@ type Query {
   menuItems: [MenuItem!]!
 	locations: [Location!]!
 	location: Location!
+	tabletDevice(tabletDeviceId: ID!): TabletDevice!
 	ordersByLocationAndStatus(locationId: ID!, status: MealStatus!): [Order]!
 	transactionsByDate(locationId: ID!, first: Int, orderBy: TransactionOrderByInput): [Transaction]!
 	menuItemsByCategory(menuCategoryId: ID!): [MenuItem]!
