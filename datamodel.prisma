@@ -133,9 +133,9 @@ type KitchenPrinter {
 
 type CloverMetaData {
 	id: ID! @id
-  paymentProcessorMerchantId: ID!
-  paymentProcessorAccessToken: String!
-  locationa: [Location]! @relation(link: TABLE onDelete: SET_NULL)
+  merchantId: ID!
+  accessToken: String!
+  locations: [Location]! @relation(link: TABLE onDelete: SET_NULL)
   createdAt: DateTime! @createdAt
   deletedAt: DateTime
 }

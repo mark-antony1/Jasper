@@ -301,7 +301,11 @@ async function login(parent, args, context, info) {
 	.$fragment(`
 		{ id email name password
 			locations { 
-				id address phoneNumber pictureURL paymentProcessorMerchantId
+				id address phoneNumber pictureURL 
+				cloverMetaData {
+					merchantId: ID!
+					accessToken: String!
+				}
 			} 
 		}
 	`)

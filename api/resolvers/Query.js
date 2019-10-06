@@ -30,7 +30,7 @@ function user(root, args, context) {
 		id: userId,
 	})
 	.$fragment(
-		`{ id email name locations { id address phoneNumber pictureURL paymentProcessorMerchantId } }`
+		`{ id email name locations { id address phoneNumber pictureURL } }`
 	)
 }
 
@@ -90,8 +90,8 @@ async function location(root, args, context) {
 			id address phoneNumber 
 			email name pictureURL 
 			cloverMetaData{
-				paymentProcessorMerchantId
-				paymentProcessorAccessToken 
+				merchantId
+				accessToken 
 			}
 			tabletDevices{
 				id
