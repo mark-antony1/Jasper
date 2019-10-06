@@ -16,6 +16,7 @@ type MenuItem {
   pictureURL: String!
   calories: Int!
   paymentProcessorId: String @unique
+  preferences: [Preference!]! @scalarList(strategy: RELATION)
   location: Location @relation(link: INLINE onDelete: SET_NULL)
   menuItemToUpsell: MenuItem @relation(name: "MenuItemToUpsell")
   orders: [Order]! @relation(onDelete: CASCADE)
@@ -160,4 +161,10 @@ enum TaxType {
 enum PaymentProcessor {
 	CLOVER
 	SQUARE
+}
+
+enum Preference {
+	VEGAN
+	VEGETARIAN
+  PEANUTFREE
 }

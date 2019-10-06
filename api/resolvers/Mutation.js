@@ -1,18 +1,19 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const request = require("request-promise")
-
 const { 
-	getUserId, 
-	processUpload, 
-	getLocationsByUserId,
 	syncInventory,
 	syncTaxes,
 	getOldLineItems,
 	voidManualLineItems,
 	addLineItems,
 	getAccessToken
-} = require('../utils')
+} = require('../utils/cloverUtils')
+const { 
+	getUserId, 
+	processUpload, 
+	getLocationsByUserId
+} = require('../utils/utils')
 
 require('dotenv').config()
 

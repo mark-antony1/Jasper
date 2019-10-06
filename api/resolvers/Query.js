@@ -1,4 +1,4 @@
-const { getUserId } = require('../utils')
+const { getUserId } = require('../utils/utils')
 
 
 async function menuItem(root, args, context) {
@@ -64,6 +64,7 @@ async function menuItems(root, args, context) {
 					id
 					name
 				}
+				preferences
 			}`
 		 );
 }
@@ -90,34 +91,33 @@ async function location(root, args, context) {
 			email name pictureURL 
 			paymentProcessorMerchantId
 			paymentProcessorAccessToken 
-		tabletDevices{
-			id
-			headerId
-			paymentProcessingDevice {
+			tabletDevices{
 				id
-				deviceId
-				paymentProcessor
+				headerId
+				paymentProcessingDevice {
+					id
+					deviceId
+					paymentProcessor
+				}
+				kitchenPrinter {
+					id
+					type
+					ipAddress
+				}
 			}
-			kitchenPrinter {
+			menuCategories{
 				id
-				type
-				ipAddress
+				name
+				paymentProcessorId
+			}
+			taxes{
+				id
+				paymentProcessorId
+				taxType
+				taxAmount
+				name
 			}
 		}
-		menuCategories{
-			id
-			name
-			paymentProcessorId
-		}
-		taxes{
-			id
-			paymentProcessorId
-			taxType
-			taxAmount
-			name
-		}
-	}
-	
 	`)
 	if (locations.length > 0) {
 		return locations[0]

@@ -55,6 +55,7 @@ type MenuItem {
   author: Location!
 	paymentProcessorId: String!
 	options: [Option]!
+	preferences: [Preference!]
 	categories: [MenuCategory]!
 	menuItemToUpsell: MenuItem
 	createdAt: DateTime!
@@ -212,6 +213,12 @@ enum OptionOrderByInput {
 enum OptionValueOrderByInput {
   priority_ASC
   priority_DESC
+}
+
+enum Preference {
+	VEGAN
+	VEGETARIAN
+  PEANUTFREE
 }
 
 scalar DateTime
