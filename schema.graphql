@@ -70,8 +70,7 @@ type Location {
 	owner: User!
 	name: String!
 	pictureURL: String!
-  paymentProcessorMerchantId: ID
-  paymentProcessorAccessToken: String
+	cloverMetaData: CloverMetaData
 	tabletDevices: [TabletDevice]!
 	menuItems: [MenuItem]!
 	menuCategories: [MenuCategory]!
@@ -139,15 +138,8 @@ type Tax {
 type TabletDevice {
   id: ID!
   headerId: String!
-	paymentProcessingDevice: PaymentProcessingDevice!
+	cloverPaymentDeviceId: String
 	kitchenPrinter: KitchenPrinter
-	createdAt: DateTime!
-}
-
-type PaymentProcessingDevice {
-	id: ID!
-	deviceId: String!
-	paymentProcessor: PaymentProcessor!
 	createdAt: DateTime!
 }
 
@@ -160,6 +152,14 @@ type KitchenPrinter {
 	id: ID!
   type: KitchenPrinterType!
 	ipAddress: String!
+  createdAt: DateTime!
+}
+
+type CloverMetaData {
+	id: ID!
+  paymentProcessorMerchantId: ID!
+  paymentProcessorAccessToken: String!
+  locationa: [Location]!
   createdAt: DateTime!
 }
 

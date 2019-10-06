@@ -89,16 +89,14 @@ async function location(root, args, context) {
 		{
 			id address phoneNumber 
 			email name pictureURL 
-			paymentProcessorMerchantId
-			paymentProcessorAccessToken 
+			cloverMetaData{
+				paymentProcessorMerchantId
+				paymentProcessorAccessToken 
+			}
 			tabletDevices{
 				id
 				headerId
-				paymentProcessingDevice {
-					id
-					deviceId
-					paymentProcessor
-				}
+				cloverPaymentDeviceId
 				kitchenPrinter {
 					id
 					type

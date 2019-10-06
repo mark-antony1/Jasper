@@ -35,8 +35,7 @@ type Location {
   name: String!
 	owner: User! @relation(link: INLINE onDelete: SET_NULL)
   pictureURL: String!
-  paymentProcessorMerchantId: ID
-  paymentProcessorAccessToken: String
+  cloverMetaData: CloverMetaData @relation(onDelete: CASCADE)
   tabletDevices: [TabletDevice]! @relation(onDelete: CASCADE)
   menuItems: [MenuItem]! @relation(onDelete: CASCADE)
   menuCategories: [MenuCategory]! @relation(onDelete: CASCADE)
@@ -116,18 +115,9 @@ type Tax {
 type TabletDevice {
   id: ID! @id
   headerId: String!
-	paymentProcessingDevice: PaymentProcessingDevice!
+  cloverPaymentDeviceId: String
   kitchenPrinter: KitchenPrinter 
   location: Location @relation(link: INLINE onDelete: SET_NULL)
-  createdAt: DateTime! @createdAt
-  deletedAt: DateTime
-}
-
-type PaymentProcessingDevice {
-	id: ID! @id
-  deviceId: String!
-	paymentProcessor: PaymentProcessor!
-  tabletDevices: [TabletDevice]! @relation(link: TABLE)
   createdAt: DateTime! @createdAt
   deletedAt: DateTime
 }
@@ -137,6 +127,15 @@ type KitchenPrinter {
   type: KitchenPrinterType!
   tabletDevices: [TabletDevice]! @relation(link: TABLE)
 	ipAddress: String!
+  createdAt: DateTime! @createdAt
+  deletedAt: DateTime
+}
+
+type CloverMetaData {
+	id: ID! @id
+  paymentProcessorMerchantId: ID!
+  paymentProcessorAccessToken: String!
+  locationa: [Location]! @relation(link: TABLE onDelete: SET_NULL)
   createdAt: DateTime! @createdAt
   deletedAt: DateTime
 }
