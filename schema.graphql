@@ -158,9 +158,9 @@ type KitchenPrinter {
 
 type CloverMetaData {
 	id: ID!
-  paymentProcessorMerchantId: ID!
-  paymentProcessorAccessToken: String!
-  locationa: [Location]!
+  merchantId: ID!
+  accessToken: String!
+  locations: [Location]!
   createdAt: DateTime!
 }
 

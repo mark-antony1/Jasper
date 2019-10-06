@@ -268,8 +268,8 @@ async function addAccessTokenToLocation(root, args, context){
 	return context.prisma.updateLocation({
 		where: { id: locationId },
 		data: {
-			paymentProcessorMerchantId: merchantId,
-			paymentProcessorAccessToken: token
+			merchantId: merchantId,
+			accessToken: token
 		}
 	})
 }
@@ -296,6 +296,7 @@ async function signup(parent, args, context, info) {
 }
 
 async function login(parent, args, context, info) {
+	console.log('here')
   // 1
 	const user = await context.prisma.user({ email: args.email })
 	.$fragment(`
@@ -303,8 +304,8 @@ async function login(parent, args, context, info) {
 			locations { 
 				id address phoneNumber pictureURL 
 				cloverMetaData {
-					merchantId: ID!
-					accessToken: String!
+					merchantId
+					accessToken
 				}
 			} 
 		}
