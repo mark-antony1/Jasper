@@ -48,7 +48,6 @@ type Location {
 
 type Order {
 	id: ID! @id
-	menuItems: [MenuItem]! @relation(onDelete: CASCADE)
 	location: Location! @relation(link: INLINE onDelete: SET_NULL)
 	createdAt: DateTime! @createdAt
   deletedAt: DateTime

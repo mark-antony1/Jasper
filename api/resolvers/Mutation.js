@@ -257,12 +257,10 @@ async function updateOrder(root, args, context){
 async function createOrder(root, args, context){
 	const locations = await getLocationsByUserId(context);
 	const location = locations[0];
-	const { menuItems } = args;
 	return context.prisma.createOrder({
-		menuItems,
 		location: {
 			connect: {
-				id: location.locationId,
+				id: location.id,
 			}
 		}
 	});
