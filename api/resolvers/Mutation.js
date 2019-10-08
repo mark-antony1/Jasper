@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const request = require("request-promise")
-const { 
+const {
 	syncInventory,
 	syncTaxes,
 	getOldLineItems,
@@ -9,9 +9,9 @@ const {
 	addLineItems,
 	getAccessToken
 } = require('../utils/cloverUtils')
-const { 
-	getUserId, 
-	processUpload, 
+const {
+	getUserId,
+	processUpload,
 	getLocationsByUserId
 } = require('../utils/utils')
 
@@ -123,7 +123,7 @@ function updateUser(root, args, context) {
 	const userId = getUserId(context)
 	return context.prisma.updateUser({
 		where: { id: userId },
-		data: { 
+		data: {
 			password: args.password,
 			email: args.email,
 			name: args.name
@@ -135,7 +135,7 @@ function updateMenuItem(root, args, context) {
 	getUserId(context)
 	return context.prisma.updateMenuItem({
 		where: { id: args.menuItemId },
-		data: { 
+		data: {
 			description: args.description,
 			title: args.title,
 			pictureURL: args.url,
@@ -175,7 +175,7 @@ function updateLocation(root, args, context) {
 	getUserId(context)
 	return context.prisma.updateLocation({
 		where: { id: args.locationId },
-		data: { 
+		data: {
 			address: args.address,
 			email: args.email,
 			phoneNumber: args.phoneNumber
@@ -220,7 +220,7 @@ async function syncLocation(root, args, context){
 		url: process.env.CLOVER_API_BASE_URL + paymentProcessorMerchantId + '/items',
 		qs: {access_token: paymentProcessorAccessToken, expand: 'modifierGroups'}
 	};
-	
+
 	const taxOptions =  {
 		method: 'GET',
 		url: process.env.CLOVER_API_BASE_URL + paymentProcessorMerchantId +  '/tax_rates',
@@ -240,10 +240,11 @@ async function syncLocation(root, args, context){
 	])
 }
 
+// updating Clover Order
 async function updateOrder(root, args, context){
-	const locations = await getLocationsByUserId(context)
-	let { paymentProcessorMerchantId , paymentProcessorAccessToken} =  locations[0]
-	
+	const locations = await getLocationsByUserId(context);
+	let { paymentProcessorMerchantId , paymentProcessorAccessToken} =  locations[0];
+
 	const oldLineItems = await getOldLineItems(args.orderId, paymentProcessorAccessToken, paymentProcessorMerchantId)
 
 	return Promise.all([
@@ -252,9 +253,24 @@ async function updateOrder(root, args, context){
 	])
 }
 
+// create Order
+async function createOrder(root, args, context){
+	const locations = await getLocationsByUserId(context);
+	const location = locations[0];
+	const { menuItems } = args;
+	return context.prisma.createOrder({
+		menuItems,
+		location: {
+			connect: {
+				id: location.locationId,
+			}
+		}
+	});
+}
+
 async function addAccessTokenToLocation(root, args, context){
 	const { code, merchantId } = args
-	
+
 	const userId = getUserId(context)
 	const locations = await context.prisma
 	.user({
@@ -301,13 +317,13 @@ async function login(parent, args, context, info) {
 	const user = await context.prisma.user({ email: args.email })
 	.$fragment(`
 		{ id email name password
-			locations { 
-				id address phoneNumber pictureURL 
+			locations {
+				id address phoneNumber pictureURL
 				cloverMetaData {
 					merchantId
 					accessToken
 				}
-			} 
+			}
 		}
 	`)
   if (!user) {
@@ -335,6 +351,7 @@ module.exports = {
 	deleteMenuItem,
 	deleteLocation,
 	deleteOrder,
+	createOrder,
 	deleteUser,
 	updateLocation,
 	updateUser,

@@ -35,11 +35,12 @@ type Mutation {
 	syncLocation: responseObject
 	updateOrder(orderId: ID!, lineItems: [LineItemInput]!): responseObject
 	addAccessTokenToLocation(code: String!, merchantId: String!): Location
+	createOrder(menuItems: [MenuItem]!): Order
 }
 
 type User {
   id: ID!
-  email: EmailAddress! 
+  email: EmailAddress!
 	password: String!
 	name: String!
 	locations: [Location]!
@@ -82,9 +83,7 @@ type Location {
 type Order {
 	id: ID!
 	menuItem: MenuItem!
-	options: [Option]!
 	location: Location!
-	status: MealStatus!
 	createdAt: DateTime!
 }
 
