@@ -48,10 +48,7 @@ type Location {
 
 type Order {
 	id: ID! @id
-	menuItem: MenuItem! @relation(link: INLINE onDelete: SET_NULL)
-  options: [Option]!
 	location: Location! @relation(link: INLINE onDelete: SET_NULL)
-	status: MealStatus!
 	createdAt: DateTime! @createdAt
   deletedAt: DateTime
 }
@@ -116,7 +113,7 @@ type TabletDevice {
   id: ID! @id
   headerId: String!
   cloverPaymentDeviceId: String
-  kitchenPrinter: KitchenPrinter 
+  kitchenPrinter: KitchenPrinter
   location: Location @relation(link: INLINE onDelete: SET_NULL)
   createdAt: DateTime! @createdAt
   deletedAt: DateTime

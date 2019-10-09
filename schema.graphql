@@ -36,11 +36,12 @@ type Mutation {
 	updateOrder(orderId: ID!, lineItems: [LineItemInput]!): responseObject
 	addAccessTokenToLocation(code: String!, merchantId: String!): Location
 	updateMenuItemPreferences(menuItemId: ID!, preferences: [Preference!]!): MenuItem
+	createOrder: Order
 }
 
 type User {
   id: ID!
-  email: EmailAddress! 
+  email: EmailAddress!
 	password: String!
 	name: String!
 	locations: [Location]!
@@ -83,9 +84,7 @@ type Location {
 type Order {
 	id: ID!
 	menuItem: MenuItem!
-	options: [Option]!
 	location: Location!
-	status: MealStatus!
 	createdAt: DateTime!
 }
 
