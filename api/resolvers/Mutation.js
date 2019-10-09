@@ -252,6 +252,16 @@ async function updateOrder(root, args, context){
 	])
 }
 
+function updateMenuItemPreferences(root, args, context) {
+	const userId = getUserId(context)
+	return context.prisma.updateMenuItem({
+		where: { id: args.menuItemId },
+		data: {
+			preferences: { set: args.preferences}
+		}
+	})
+}
+
 async function addAccessTokenToLocation(root, args, context){
 	const { code, merchantId } = args
 	
@@ -296,7 +306,6 @@ async function signup(parent, args, context, info) {
 }
 
 async function login(parent, args, context, info) {
-	console.log('here')
   // 1
 	const user = await context.prisma.user({ email: args.email })
 	.$fragment(`
@@ -351,5 +360,6 @@ module.exports = {
 	createOptionValue,
 	syncLocation,
 	createKitchenPrinter,
-	addAccessTokenToLocation
+	addAccessTokenToLocation,
+	updateMenuItemPreferences
 }
