@@ -376,11 +376,6 @@ module.exports = {
 	createOptionValue,
 	syncLocation,
 	createKitchenPrinter,
-<<<<<<< HEAD
 	addAccessTokenToLocation,
 	updateMenuItemPreferences
 }
-=======
-	addAccessTokenToLocation
-}
->>>>>>> a4a2a03426e30a0c4f673a27c42d105c79ce3f16
