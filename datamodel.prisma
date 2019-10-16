@@ -19,7 +19,7 @@ type MenuItem {
   preferences: [Preference!]! @scalarList(strategy: RELATION)
   location: Location @relation(link: INLINE onDelete: SET_NULL)
   menuItemToUpsell: MenuItem @relation(name: "MenuItemToUpsell")
-  orders: [Order]! @relation(onDelete: CASCADE)
+  orderedItems: [OrderedItem]! @relation(onDelete: CASCADE)
   options: [Option!] @relation(onDelete: CASCADE)
   transactions: [Transaction]! @relation(onDelete: CASCADE)
   categories: [MenuCategory]! @relation(link: TABLE)
@@ -49,8 +49,17 @@ type Location {
 type Order {
 	id: ID! @id
 	location: Location! @relation(link: INLINE onDelete: SET_NULL)
+  status: OrderStatus!
+  orderedItems: [OrderedItem!]!
 	createdAt: DateTime! @createdAt
   deletedAt: DateTime
+}
+
+type OrderedItem {
+  id: ID! @id
+  menuItem: MenuItem @relation(link: INLINE onDelete: SET_NULL)
+  optionValues: [OptionValue!]! @relation(link: TABLE)
+  quantity: Int!
 }
 
 type Transaction {
@@ -137,7 +146,7 @@ type CloverMetaData {
   deletedAt: DateTime
 }
 
-enum MealStatus {
+enum OrderStatus {
   ORDERED
   PREPARING
   DONE

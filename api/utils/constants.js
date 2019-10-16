@@ -1,0 +1,16 @@
+const ORDER_STATUS = {
+  ORDERED: "ORDERED",
+  INPREPERATION: "INPREPERATION",
+  DONE: "DONE",
+	CANCELLED: "CANCELLED"
+}
+
+const HTTP_VERBS = {
+	GET: "GET",
+	POST: "POST"
+}
+
+module.exports = {
+	ORDER_STATUS,
+	HTTP_VERBS
+}

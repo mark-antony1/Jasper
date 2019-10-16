@@ -1,6 +1,5 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const request = require("request-promise")
 const {
 	syncInventory,
 	syncTaxes,
@@ -14,6 +13,8 @@ const {
 	processUpload,
 	getLocationsByUserId
 } = require('../utils/utils')
+const { LOGIN, ORDER } = require('../utils/fragments')
+const { ORDER_STATUS, HTTP_VERBS } = require('../utils/constants')
 
 require('dotenv').config()
 
@@ -216,20 +217,20 @@ async function syncLocation(root, args, context){
 	let { paymentProcessorMerchantId , paymentProcessorAccessToken, id} =  locations[0]
 
 	const inventoryOptions = {
-		method: 'GET',
+		method: HTTP_VERBS.GET,
 		url: process.env.CLOVER_API_BASE_URL + paymentProcessorMerchantId + '/items',
 		qs: {access_token: paymentProcessorAccessToken, expand: 'modifierGroups'}
 	};
 
 	const taxOptions =  {
-		method: 'GET',
+		method: HTTP_VERBS.GET,
 		url: process.env.CLOVER_API_BASE_URL + paymentProcessorMerchantId +  '/tax_rates',
 		qs: {access_token: paymentProcessorAccessToken},
 		headers: {accept: 'application/json'}
 	};
 
 	const modifierGroupOptions = {
-    method: 'GET',
+    method: HTTP_VERBS.GET,
     url: process.env.CLOVER_API_BASE_URL + paymentProcessorMerchantId + '/modifier_groups',
     qs: {expand: 'modifiers', access_token: paymentProcessorAccessToken},
   };
@@ -268,13 +269,39 @@ function updateMenuItemPreferences(root, args, context) {
 async function createOrder(root, args, context){
 	const locations = await getLocationsByUserId(context);
 	const location = locations[0];
+
+	const orderedItems = await Promise.all(args.items.map(item => {
+		return context.prisma.createOrderedItem({
+			menuItem: {
+				connect: {
+					id: item.menuItemId,
+				}
+			},
+			optionValues: {
+				connect: item.optionValueIds.map(id => {
+					return {
+						id
+					}
+				})
+			},
+			quantity: item.quantity
+		})
+	}))
+
 	return context.prisma.createOrder({
 		location: {
 			connect: {
 				id: location.id,
 			}
-		}
-	});
+		},
+		orderedItems: {
+			connect: orderedItems.map(item => {
+				return { id: item.id }
+			})
+		},
+		status: ORDER_STATUS.ORDERED,
+	})
+	.$fragment(ORDER);
 }
 
 async function addAccessTokenToLocation(root, args, context){
@@ -322,18 +349,8 @@ async function signup(parent, args, context, info) {
 
 async function login(parent, args, context, info) {
   // 1
-	const user = await context.prisma.user({ email: args.email })
-	.$fragment(`
-		{ id email name password
-			locations {
-				id address phoneNumber pictureURL
-				cloverMetaData {
-					merchantId
-					accessToken
-				}
-			}
-		}
-	`)
+	const user = await context.prisma.user({ email: args.email }).$fragment(LOGIN)
+
   if (!user) {
     throw new Error('No such user found')
   }

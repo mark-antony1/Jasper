@@ -1,4 +1,5 @@
 const { getUserId } = require('../utils/utils')
+const { USER, MENU_ITEMS, LOCATION, TABLET_DEVICE } = require('../utils/fragments')
 
 
 async function menuItem(root, args, context) {
@@ -29,9 +30,7 @@ function user(root, args, context) {
 	.user({
 		id: userId,
 	})
-	.$fragment(
-		`{ id email name locations { id address phoneNumber pictureURL } }`
-	)
+	.$fragment(USER)
 }
 
 async function menuItems(root, args, context) {
@@ -50,23 +49,7 @@ async function menuItems(root, args, context) {
 			id: locations[0].id
 		})
 		.menuItems()
-		.$fragment(
-			`{ 
-				id title price description price pictureURL calories 
-				paymentProcessorId
-				options { 
-					id title required priority maxSelections
-					optionValues { 
-						id title price priority isDefault pictureURL paymentProcessorId
-					} 
-				} 
-				categories {
-					id
-					name
-				}
-				preferences
-			}`
-		 );
+		.$fragment(MENU_ITEMS);
 }
 
 function locations(root, args, context) {
@@ -85,38 +68,8 @@ async function location(root, args, context) {
 		id: userId,
 	})
 	.locations()
-	.$fragment(`
-		{
-			id address phoneNumber 
-			email name pictureURL 
-			cloverMetaData{
-				merchantId
-				accessToken 
-			}
-			tabletDevices{
-				id
-				headerId
-				cloverPaymentDeviceId
-				kitchenPrinter {
-					id
-					type
-					ipAddress
-				}
-			}
-			menuCategories{
-				id
-				name
-				paymentProcessorId
-			}
-			taxes{
-				id
-				paymentProcessorId
-				taxType
-				taxAmount
-				name
-			}
-		}
-	`)
+	.$fragment(LOCATION)
+
 	if (locations.length > 0) {
 		return locations[0]
 	} else {
@@ -130,16 +83,7 @@ function tabletDevice(root, args, context) {
 	.tabletDevice({
 		id: args.tabletDeviceId,
 	})
-	.$fragment(`{
-		id
-		headerId
-		cloverPaymentDeviceId
-		kitchenPrinter {
-			id
-			type
-			ipAddress
-		}
-	}`)
+	.$fragment(TABLET_DEVICE)
 }
 
 function ordersByLocationAndStatus(root, args, context) {

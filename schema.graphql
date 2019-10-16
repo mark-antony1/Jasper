@@ -5,7 +5,7 @@ type Query {
 	locations: [Location!]!
 	location: Location!
 	tabletDevice(tabletDeviceId: ID!): TabletDevice!
-	ordersByLocationAndStatus(locationId: ID!, status: MealStatus!): [Order]!
+	ordersByLocationAndStatus(locationId: ID!, status: OrderStatus!): [Order]!
 	transactionsByDate(locationId: ID!, first: Int, orderBy: TransactionOrderByInput): [Transaction]!
 	menuItemsByCategory(menuCategoryId: ID!): [MenuItem]!
 	optionsByMenuItem(menuItemId: ID!, orderByOptions: OptionOrderByInput!): [Option]!
@@ -36,7 +36,7 @@ type Mutation {
 	updateOrder(orderId: ID!, lineItems: [LineItemInput]!): responseObject
 	addAccessTokenToLocation(code: String!, merchantId: String!): Location
 	updateMenuItemPreferences(menuItemId: ID!, preferences: [Preference!]!): MenuItem
-	createOrder: Order
+	createOrder(items: [OrderItemInput!]!): Order
 }
 
 type User {
@@ -83,9 +83,17 @@ type Location {
 
 type Order {
 	id: ID!
-	menuItem: MenuItem!
 	location: Location!
+	status: OrderStatus!
+  orderedItems: [OrderedItem!]!
 	createdAt: DateTime!
+}
+
+type OrderedItem {
+  id: ID!
+  menuItem: MenuItem
+  optionValues: [OptionValue!]!
+  quantity: Int!
 }
 
 type Transaction {
@@ -171,6 +179,12 @@ input LineItemInput {
 	modifications: [ModificationInput]!
 }
 
+input OrderItemInput {
+	menuItemId: ID!
+	optionValueIds: [ID!]!
+	quantity: Int
+}
+
 input ModificationInput {
 	modificationId: String!
 }
@@ -184,7 +198,7 @@ enum TaxType {
   FLAT
 }
 
-enum MealStatus {
+enum OrderStatus {
   ORDERED
   INPREPERATION
   DONE
