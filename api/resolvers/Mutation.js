@@ -214,25 +214,26 @@ function deleteMenuItem(root, args, context) {
 
 async function syncLocation(root, args, context){
 	const locations = await getLocationsByUserId(context)
-	let { paymentProcessorMerchantId , paymentProcessorAccessToken, id} =  locations[0]
+	let { cloverMetaData , id} =  locations[0]
+	const { merchantId, accessToken } = cloverMetaData
 
 	const inventoryOptions = {
 		method: HTTP_VERBS.GET,
-		url: process.env.CLOVER_API_BASE_URL + paymentProcessorMerchantId + '/items',
-		qs: {access_token: paymentProcessorAccessToken, expand: 'modifierGroups'}
+		url: process.env.CLOVER_API_BASE_URL + merchantId + '/items',
+		qs: {access_token: accessToken, expand: 'modifierGroups'}
 	};
 
 	const taxOptions =  {
 		method: HTTP_VERBS.GET,
-		url: process.env.CLOVER_API_BASE_URL + paymentProcessorMerchantId +  '/tax_rates',
-		qs: {access_token: paymentProcessorAccessToken},
+		url: process.env.CLOVER_API_BASE_URL + merchantId +  '/tax_rates',
+		qs: {access_token: accessToken},
 		headers: {accept: 'application/json'}
 	};
 
 	const modifierGroupOptions = {
     method: HTTP_VERBS.GET,
-    url: process.env.CLOVER_API_BASE_URL + paymentProcessorMerchantId + '/modifier_groups',
-    qs: {expand: 'modifiers', access_token: paymentProcessorAccessToken},
+    url: process.env.CLOVER_API_BASE_URL + merchantId + '/modifier_groups',
+    qs: {expand: 'modifiers', access_token: accessToken},
   };
 
 	return Promise.all([
@@ -244,13 +245,15 @@ async function syncLocation(root, args, context){
 // updating Clover Order
 async function updateOrder(root, args, context){
 	const locations = await getLocationsByUserId(context);
-	let { paymentProcessorMerchantId , paymentProcessorAccessToken} =  locations[0];
+	let { cloverMetaData } =  locations[0];
+	let { merchantId, accessToken } = cloverMetaData
 
-	const oldLineItems = await getOldLineItems(args.orderId, paymentProcessorAccessToken, paymentProcessorMerchantId)
+	console.log('here')
+	const oldLineItems = await getOldLineItems(args.orderId, accessToken, merchantId)
 
 	return Promise.all([
-		voidManualLineItems(oldLineItems, args.orderId, paymentProcessorAccessToken, paymentProcessorMerchantId),
-		addLineItems(args, paymentProcessorAccessToken, paymentProcessorMerchantId)
+		voidManualLineItems(oldLineItems, args.orderId, accessToken, merchantId),
+		addLineItems(args, accessToken, merchantId)
 	])
 }
 
@@ -316,12 +319,16 @@ async function addAccessTokenToLocation(root, args, context){
 	const locationId = locations[0].id
 
 	const token = await getAccessToken(code)
-
+	console.log('token', token)
 	return context.prisma.updateLocation({
 		where: { id: locationId },
 		data: {
-			merchantId: merchantId,
-			accessToken: token
+			cloverMetaData: {
+				update: {
+					accessToken: token,
+					merchantId: merchantId,
+				}
+			}
 		}
 	})
 }

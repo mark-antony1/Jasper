@@ -1,6 +1,7 @@
 const uuid = require('uuid/v1')
 const aws = require('aws-sdk')
 const jwt = require('jsonwebtoken')
+const { LOCATION } = require("../utils/fragments")
 
 require('dotenv').config()
 
@@ -59,7 +60,8 @@ function getLocationsByUserId(context){
 				id: userId
 			}
 		}
-	})
+  })
+  .$fragment(LOCATION)
 }
 
 
