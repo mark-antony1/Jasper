@@ -5,10 +5,11 @@ type Query {
 	locations: [Location!]!
 	location: Location!
 	tabletDevice(tabletDeviceId: ID!): TabletDevice!
-	ordersByLocationAndStatus(locationId: ID!, status: OrderStatus!): [Order]!
+	ordersByLocationAndStatus(locationId: ID!, status: OrderStatus!): [OrderLog]!
 	transactionsByDate(locationId: ID!, first: Int, orderBy: TransactionOrderByInput): [Transaction]!
 	menuItemsByCategory(menuCategoryId: ID!): [MenuItem]!
 	optionsByMenuItem(menuItemId: ID!, orderByOptions: OptionOrderByInput!): [Option]!
+	orderLogsFromToday: [OrderLog!]!
 }
 
 type Mutation {
@@ -26,7 +27,7 @@ type Mutation {
 	updateMenuCategory(name: String!): MenuCategory
 	updateOption(optionId: ID!, title: String!, maxSelections: Int!, required: Boolean!, priority: Int!): Option
 	deleteUser: User
-	deleteOrder(orderId: ID!): Order
+	deleteOrder(orderId: ID!): OrderLog
 	deleteOptionValue(optionValueId: ID!): OptionValue
 	deleteLocation(locationId: ID!): Location
 	deleteMenuItem(menuItemId: ID!): MenuItem
@@ -36,7 +37,7 @@ type Mutation {
 	updateOrder(orderId: ID!, lineItems: [LineItemInput]!): responseObject
 	addAccessTokenToLocation(code: String!, merchantId: String!): Location
 	updateMenuItemPreferences(menuItemId: ID!, preferences: [Preference!]!): MenuItem
-	createOrder(items: [OrderItemInput!]!): Order
+	createOrderLog(items: [OrderItemInput!]!): OrderLog
 }
 
 type User {
@@ -81,7 +82,7 @@ type Location {
 	createdAt: DateTime!
 }
 
-type Order {
+type OrderLog {
 	id: ID!
 	location: Location!
 	status: OrderStatus!
@@ -182,7 +183,7 @@ input LineItemInput {
 input OrderItemInput {
 	menuItemId: ID!
 	optionValueIds: [ID!]!
-	quantity: Int
+	quantity: Int!
 }
 
 input ModificationInput {

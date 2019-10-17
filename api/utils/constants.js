@@ -10,7 +10,15 @@ const HTTP_VERBS = {
 	POST: "POST"
 }
 
+const TIME_ZONE_DIFF = {
+	EST: 4,
+	CST: 5,
+	MST: 6,
+	PST: 7
+}
+
 module.exports = {
 	ORDER_STATUS,
-	HTTP_VERBS
+	HTTP_VERBS,
+	TIME_ZONE_DIFF
 }

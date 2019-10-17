@@ -248,7 +248,6 @@ async function updateOrder(root, args, context){
 	let { cloverMetaData } =  locations[0];
 	let { merchantId, accessToken } = cloverMetaData
 
-	console.log('here')
 	const oldLineItems = await getOldLineItems(args.orderId, accessToken, merchantId)
 
 	return Promise.all([
@@ -269,7 +268,7 @@ function updateMenuItemPreferences(root, args, context) {
 }
 	
 // create Order
-async function createOrder(root, args, context){
+async function createOrderLog(root, args, context){
 	const locations = await getLocationsByUserId(context);
 	const location = locations[0];
 
@@ -291,7 +290,7 @@ async function createOrder(root, args, context){
 		})
 	}))
 
-	return context.prisma.createOrder({
+	return context.prisma.createOrderLog({
 		location: {
 			connect: {
 				id: location.id,
@@ -319,7 +318,6 @@ async function addAccessTokenToLocation(root, args, context){
 	const locationId = locations[0].id
 
 	const token = await getAccessToken(code)
-	console.log('token', token)
 	return context.prisma.updateLocation({
 		where: { id: locationId },
 		data: {
@@ -383,7 +381,7 @@ module.exports = {
 	deleteMenuItem,
 	deleteLocation,
 	deleteOrder,
-	createOrder,
+	createOrderLog,
 	deleteUser,
 	updateLocation,
 	updateUser,

@@ -1,7 +1,8 @@
 const uuid = require('uuid/v1')
 const aws = require('aws-sdk')
 const jwt = require('jsonwebtoken')
-const { LOCATION } = require("../utils/fragments")
+const { LOCATION } = require("./fragments")
+const { TIME_ZONE_DIFF } = require("./constants")
 
 require('dotenv').config()
 
@@ -64,9 +65,17 @@ function getLocationsByUserId(context){
   .$fragment(LOCATION)
 }
 
+function getCurrentTimeForStore(location) {
+  const timezone = location.timeZone
+  const timeZoneDiff =  TIME_ZONE_DIFF[timezone]
+  var currentTime = new Date(new Date().toISOString())
+  currentTime.setHours(currentTime.getHours() - timeZoneDiff);
+  return (currentTime.getDate() + "").slice(0,10)
+}
 
 module.exports = {
 	getUserId,
   processUpload,
   getLocationsByUserId,
+  getCurrentTimeForStore
 }
