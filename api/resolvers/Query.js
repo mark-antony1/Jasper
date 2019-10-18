@@ -1,6 +1,6 @@
 const { getUserId } = require('../utils/utils')
 const { USER, MENU_ITEMS, LOCATION, TABLET_DEVICE } = require('../utils/fragments')
-const { getCurrentTimeForStore } = require('../utils/utils')
+const { getStartOfCurrentDay } = require('../utils/utils')
 
 async function menuItem(root, args, context) {
 	const userId = getUserId(context)
@@ -152,12 +152,12 @@ async function orderLogsFromToday(root, args, context) {
 
 	if (locations.length > 0) {
 		let location = locations[0]
-		const currentTime = getCurrentTimeForStore(location)
+		const startOfCurrentDay = getStartOfCurrentDay(location)
 		return context.prisma.location({
 			id: location.id
 		})
 		.orderLogs({
-			where : { createdAt_gte: currentTime }
+			where : { createdAt_gte: startOfCurrentDay }
 		})
 	} else {
 		throw Error("No locations exist for that user id")

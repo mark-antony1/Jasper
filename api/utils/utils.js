@@ -65,17 +65,17 @@ function getLocationsByUserId(context){
   .$fragment(LOCATION)
 }
 
-function getCurrentTimeForStore(location) {
+function getStartOfCurrentDay(location) {
   const timezone = location.timeZone
   const timeZoneDiff =  TIME_ZONE_DIFF[timezone]
   var currentTime = new Date(new Date().toISOString())
   currentTime.setHours(currentTime.getHours() - timeZoneDiff);
-  return (currentTime.getDate() + "").slice(0,10)
+  return currentTime.toISOString().slice(0,10)
 }
 
 module.exports = {
 	getUserId,
   processUpload,
   getLocationsByUserId,
-  getCurrentTimeForStore
+  getStartOfCurrentDay
 }
