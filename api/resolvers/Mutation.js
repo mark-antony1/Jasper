@@ -18,17 +18,17 @@ const { ORDER_STATUS, HTTP_VERBS } = require('../utils/constants')
 
 require('dotenv').config()
 
-function createMenuItem(root, args, context) {
-	const userId = getUserId(context)
+async function createMenuItem(root, args, context) {
+	const locations = await getLocationsByUserId(context)
 	return context.prisma.createMenuItem({
 		price: args.price,
 		title: args.title,
 		pictureURL: args.pictureURL,
 		description: args.description,
 		calories: args.calories,
-		author: {
+		location: {
 			connect: {
-				id: userId,
+				id: locations[0].id,
 			}
 		},
 		categories: {
@@ -39,13 +39,13 @@ function createMenuItem(root, args, context) {
 	})
 }
 
-function createMenuCategory(root, args, context) {
-	const userId = getUserId(context)
+async function createMenuCategory(root, args, context) {
+	const locations = await getLocationsByUserId(context)
 	return context.prisma.createMenuCategory({
 		name: args.name,
 		owner: {
 			connect: {
-				id: userId
+				id: locations[0].id
 			}
 		}
 	})
@@ -67,9 +67,7 @@ function createOption(root, args, context) {
 		required: args.required,
 		priority: args.priority,
 		menuItems: {
-			connect: [{
-				id: args.menuItemId,
-			}]
+			connect: args.menuItems
 		}
 	})
 }
@@ -90,28 +88,14 @@ function createOptionValue(root, args, context) {
 	})
 }
 
-function createTransaction(root, args, context) {
-	getUserId(context)
-	return context.prisma.createTransaction({
-		menuItem: {
-			connect: {
-				id: args.menuItemId,
-			}
-		},
-		location: {
-			connect: {
-				id: args.locationId,
-			}
-		}
-	})
-}
-
 function createLocation(root, args, context) {
 	const userId = getUserId(context)
 	return context.prisma.createLocation({
 		address: args.address,
 		phoneNumber: args.phoneNumber,
 		email: args.email,
+		timeZone: args.timeZone,
+		name: args.name,
 		owner: {
 			connect: {
 				id: userId,
@@ -387,7 +371,6 @@ module.exports = {
 	updateUser,
 	updateOrder,
 	createOption,
-	createTransaction,
 	createMenuItem,
 	updateMenuItem,
 	createLocation,

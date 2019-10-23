@@ -6,17 +6,15 @@ type Query {
 	location: Location!
 	tabletDevice(tabletDeviceId: ID!): TabletDevice!
 	ordersByLocationAndStatus(locationId: ID!, status: OrderStatus!): [OrderLog]!
-	transactionsByDate(locationId: ID!, first: Int, orderBy: TransactionOrderByInput): [Transaction]!
 	menuItemsByCategory(menuCategoryId: ID!): [MenuItem]!
 	optionsByMenuItem(menuItemId: ID!, orderByOptions: OptionOrderByInput!): [Option]!
 	orderLogsFromToday: [OrderLog!]!
 }
 
 type Mutation {
-	createMenuItem(title: String!, price: Int!, pictureURL: URL!, categoryId: ID!, description: String!, calories: Int!): MenuItem
-  createTransaction(locationId: ID!, menuItemId: ID!): Transaction
-	createLocation(address: String!, phoneNumber: PhoneNumber!, email: EmailAddress!): Location
-	createOption(menuItemId: ID!, title: String!, maxSelections: Int!, required: Boolean!, priority: Int!): Option
+	createMenuItem(title: String!, price: Int!, pictureURL: URL!, categoryId: ID!, description: String!, calories: String!): MenuItem
+	createLocation(address: String!, phoneNumber: PhoneNumber!, email: EmailAddress!, name: String!, timeZone: TIME_ZONE!): Location
+	createOption(menuItems: [MenuItemIdInput]!, title: String!, maxSelections: Int!, required: Boolean!, priority: Int!): Option
 	createMenuCategory(name: String!): MenuCategory
 	createKitchenPrinter(type: KitchenPrinterType!, ipAddress: String!): KitchenPrinter
 	createOptionValue(optionId: ID!, title: String!, price: Int, isDefault: Boolean!, priority: Int!): OptionValue
@@ -55,13 +53,13 @@ type MenuItem {
 	description: String!
   price: Int!
 	pictureURL: URL!
-	calories: Int!
-  author: Location!
-	paymentProcessorId: String!
-	options: [Option]!
-	preferences: [Preference!]
-	categories: [MenuCategory]!
+	calories: String
+  location: Location!
+	paymentProcessorId: String
 	menuItemToUpsell: MenuItem
+	options: [Option]!
+	preferences: [Preference!]!
+	categories: [MenuCategory]!
 	createdAt: DateTime!
 }
 
@@ -71,14 +69,16 @@ type Location {
 	address: String!
 	phoneNumber: PhoneNumber
 	email: EmailAddress
-	owner: User!
 	name: String!
-	pictureURL: String!
+	pictureURL: String
+	timeZone: TIME_ZONE!
+	owner: User!
 	cloverMetaData: CloverMetaData
-	tabletDevices: [TabletDevice]!
-	menuItems: [MenuItem]!
-	menuCategories: [MenuCategory]!
-	taxes: [Tax]!
+	tabletDevices: [TabletDevice!]!
+	menuItems: [MenuItem!]!
+	menuCategories: [MenuCategory!]!
+	orderLogs: [OrderLog!]!
+	taxes: [Tax!]!
 	createdAt: DateTime!
 }
 
@@ -97,52 +97,44 @@ type OrderedItem {
   quantity: Int!
 }
 
-type Transaction {
-	id: ID!
-	location: Location!
-	menuItem: MenuItem!
-	createdAt: DateTime!
-}
-
 type MenuCategory {
 	id: ID!
-	owner: Location!
 	name: String!
 	paymentProcessorId: String
+	owner: Location!
 	menuItems: [MenuItem]!
 	createdAt: DateTime!
 }
 
 type Option {
   id: ID!
-  menuItem: MenuItem!
 	title: String!
   maxSelections: Int!
 	required: Boolean!
 	priority: Int!
+	paymentProcessorId: String
 	optionValues: [OptionValue!]!
 	createdAt: DateTime!
 }
 
 type OptionValue {
   id: ID!
-  option: Option!
   title: String!
   price: Int
   isDefault: Boolean!
+	priority: Int!
 	pictureURL: URL
-  priority: Int!
 	paymentProcessorId: String
   createdAt: DateTime!
 }
 
 type Tax {
 	id: ID!
+	taxAmount: Int!
+	name: String!
   paymentProcessorId: String
   taxType: TaxType!
-  taxAmount: Int!
   createdAt: DateTime!
-	name: String!
 }
 
 type TabletDevice {
@@ -160,8 +152,8 @@ type AuthPayload {
 
 type KitchenPrinter {
 	id: ID!
-  type: KitchenPrinterType!
 	ipAddress: String!
+  type: KitchenPrinterType!
   createdAt: DateTime!
 }
 
@@ -169,7 +161,7 @@ type CloverMetaData {
 	id: ID!
   merchantId: ID!
   accessToken: String!
-  locations: [Location]!
+  locations: [Location!]!
   createdAt: DateTime!
 }
 
@@ -178,6 +170,10 @@ input LineItemInput {
 	price: Int!
 	itemId: String!
 	modifications: [ModificationInput]!
+}
+
+input MenuItemIdInput {
+ id: ID!
 }
 
 input OrderItemInput {
@@ -236,6 +232,13 @@ enum Preference {
 	VEGETARIAN
   PEANUTFREE
 	DAIRYFREE
+}
+
+enum TIME_ZONE {
+  EST
+  PST
+  CST
+  MST
 }
 
 scalar DateTime

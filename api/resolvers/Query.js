@@ -102,20 +102,6 @@ function ordersByLocationAndStatus(root, args, context) {
 	 );
 }
 
-function transactionsByDate(root, args, context) {
-	getUserId(context)
-	return context.prisma
-	.location({
-		id: args.locationId,
-	})
-	.transactions({
-		orderBy: args.orderBy
-	})
-	.$fragment(
-		`{ id createdAt menuItem { title price } }`
-	 );
-}
-
 function menuItemsByCategory(root, args, context) {
 	getUserId(context)
 	return context.prisma
@@ -170,7 +156,6 @@ module.exports = {
   menuItems,
 	locations,
 	ordersByLocationAndStatus,
-	transactionsByDate,
 	menuItemsByCategory,
 	optionsByMenuItem,
 	user,
