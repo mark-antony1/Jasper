@@ -29,6 +29,21 @@ const MENU_ITEMS = `
 		id
 		name
 	}
+	menuItemToUpsell {
+		id title price description price pictureURL calories
+		paymentProcessorId
+		options { 
+			id title required priority maxSelections
+			optionValues { 
+				id title price priority isDefault pictureURL paymentProcessorId
+			} 
+		} 
+		categories {
+			id
+			name
+		}
+		preferences
+	}
 	preferences
 }`
 
