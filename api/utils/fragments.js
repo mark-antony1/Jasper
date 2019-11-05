@@ -64,6 +64,11 @@ const LOCATION = `
 			type
 			ipAddress
 		}
+		receiptPrinter {
+			id
+			type
+			ipAddress
+		}
 	}
 	menuCategories{
 		id

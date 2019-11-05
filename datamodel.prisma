@@ -112,7 +112,8 @@ type TabletDevice {
   id: ID! @id
   headerId: String!
   cloverPaymentDeviceId: String
-  kitchenPrinter: KitchenPrinter
+  kitchenPrinter: KitchenPrinter @relation(name:"PrinterInKitchen" link: INLINE)
+  receiptPrinter: KitchenPrinter @relation(name:"PrinterForCustomer" link: INLINE)
   location: Location @relation(link: INLINE onDelete: SET_NULL)
   createdAt: DateTime! @createdAt
   deletedAt: DateTime

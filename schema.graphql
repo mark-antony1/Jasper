@@ -142,6 +142,7 @@ type TabletDevice {
   headerId: String!
 	cloverPaymentDeviceId: String
 	kitchenPrinter: KitchenPrinter
+	receiptPrinter: KitchenPrinter
 	createdAt: DateTime!
 }
 
