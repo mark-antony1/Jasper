@@ -270,7 +270,8 @@ async function createOrderLog(root, args, context){
 					}
 				})
 			},
-			quantity: item.quantity
+			quantity: item.quantity,
+			isUpsoldItem: item.isUpsoldItem
 		})
 	}))
 

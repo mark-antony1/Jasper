@@ -94,6 +94,7 @@ type OrderedItem {
   id: ID!
   menuItem: MenuItem
   optionValues: [OptionValue!]!
+	isUpsoldItem: Boolean
   quantity: Int!
 }
 
@@ -180,6 +181,7 @@ input MenuItemIdInput {
 input OrderItemInput {
 	menuItemId: ID!
 	optionValueIds: [ID!]!
+	isUpsoldItem: Boolean!
 	quantity: Int!
 }
 

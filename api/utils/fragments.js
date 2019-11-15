@@ -110,6 +110,7 @@ const ORDER = `{
 			title price
 		}
 		quantity
+		isUpsoldItem
 	}
 }`
 

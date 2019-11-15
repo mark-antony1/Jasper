@@ -57,6 +57,7 @@ type OrderedItem {
   id: ID! @id
   menuItem: MenuItem! @relation(link: INLINE onDelete: SET_NULL)
   optionValues: [OptionValue!]! @relation(link: TABLE)
+  isUpsoldItem: Boolean
   quantity: Int!
 }
 
