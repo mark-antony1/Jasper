@@ -96,13 +96,15 @@ const TABLET_DEVICE = `
 	}
 }`
 
-const ORDER = `{
+const ORDER_LOG = `{
 	id status createdAt
 	location {
 		id
 		name
+		address
 	}
 	orderedItems {
+		id
 		menuItem {
 			id title price
 		}
@@ -120,5 +122,5 @@ module.exports = {
 	MENU_ITEMS,
 	LOCATION,
 	TABLET_DEVICE,
-	ORDER
+	ORDER_LOG
 }

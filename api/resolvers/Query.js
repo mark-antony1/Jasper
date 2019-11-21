@@ -1,5 +1,5 @@
 const { getUserId } = require('../utils/utils')
-const { USER, MENU_ITEMS, LOCATION, TABLET_DEVICE } = require('../utils/fragments')
+const { USER, MENU_ITEMS, LOCATION, TABLET_DEVICE, ORDER_LOG } = require('../utils/fragments')
 const { getStartOfCurrentDay } = require('../utils/utils')
 
 async function menuItem(root, args, context) {
@@ -145,6 +145,8 @@ async function orderLogsFromToday(root, args, context) {
 		.orderLogs({
 			where : { createdAt_gte: startOfCurrentDay }
 		})
+		.$fragment(ORDER_LOG)
+		
 	} else {
 		throw Error("No locations exist for that user id")
 	}
