@@ -9,6 +9,7 @@ type Query {
 	menuItemsByCategory(menuCategoryId: ID!): [MenuItem]!
 	optionsByMenuItem(menuItemId: ID!, orderByOptions: OptionOrderByInput!): [Option]!
 	orderLogsFromToday: [OrderLog!]!
+	orderLogsFromPastWeek: [OrderLog!]!
 }
 
 type Mutation {

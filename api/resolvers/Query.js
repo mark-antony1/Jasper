@@ -1,6 +1,6 @@
 const { getUserId } = require('../utils/utils')
 const { USER, MENU_ITEMS, LOCATION, TABLET_DEVICE, ORDER_LOG } = require('../utils/fragments')
-const { getStartOfCurrentDay } = require('../utils/utils')
+const { getStartOfCurrentDay, getDateOneWeekAgo } = require('../utils/utils')
 
 async function menuItem(root, args, context) {
 	const userId = getUserId(context)
@@ -146,6 +146,30 @@ async function orderLogsFromToday(root, args, context) {
 			where : { createdAt_gte: startOfCurrentDay }
 		})
 		.$fragment(ORDER_LOG)
+
+	} else {
+		throw Error("No locations exist for that user id")
+	}
+}
+
+async function orderLogsFromPastWeek(root, args, context) {
+	const userId = getUserId(context)
+	const locations = await context.prisma
+	.user({
+		id: userId,
+	})
+	.locations()
+
+	if (locations.length > 0) {
+		let location = locations[0]
+		const startOfCurrentDay = getDateOneWeekAgo(location)
+		return context.prisma.location({
+			id: location.id
+		})
+		.orderLogs({
+			where : { createdAt_gte: startOfCurrentDay }
+		})
+		.$fragment(ORDER_LOG)
 		
 	} else {
 		throw Error("No locations exist for that user id")
@@ -163,5 +187,6 @@ module.exports = {
 	user,
 	location,
 	tabletDevice,
-	orderLogsFromToday
+	orderLogsFromToday,
+	orderLogsFromPastWeek
 }

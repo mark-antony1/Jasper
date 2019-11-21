@@ -73,9 +73,18 @@ function getStartOfCurrentDay(location) {
   return currentTime.toISOString().slice(0,10)
 }
 
+function getDateOneWeekAgo(location) {
+  const timezone = location.timeZone
+  const timeZoneDiff =  TIME_ZONE_DIFF[timezone]
+  var currentTime = new Date(new Date().toISOString())
+  currentTime.setHours(currentTime.getHours() - timeZoneDiff - 168);
+  return currentTime.toISOString()
+}
+
 module.exports = {
 	getUserId,
   processUpload,
   getLocationsByUserId,
-  getStartOfCurrentDay
+  getStartOfCurrentDay,
+  getDateOneWeekAgo
 }
