@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@metamodules/postgres": "^1.2.1",
-    "apollo-server-express": "^2.9.2",
+    "apollo-server-express": "^2.14.2",
     "aws-sdk": "^2.521.0",
     "bcryptjs": "^2.4.3",
     "core-util-is": "^1.0.2",
